@@ -50,6 +50,34 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="NetImageLibrary\ColorHandler.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\CIELab.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\CIEXYZ.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\CMYK.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\ColorSpaceHelper.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\HSB.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\HSL.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\RGB.cs" />
+    <Compile Include="NetImageLibrary\ColorSpace\YUV.cs" />
+    <Compile Include="NetImageLibrary\Filters\BrightnessFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\ChromaKeyFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\ContrastFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\ConvolveFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\DesaturationFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\GaussianBlurFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\IFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\InvertFilter.cs" />
+    <Compile Include="NetImageLibrary\Filters\Kernel.cs" />
+    <Compile Include="NetImageLibrary\Filters\UnsharpMaskFilter.cs" />
+    <Compile Include="NetImageLibrary\ImageOutput.cs" />
+    <Compile Include="NetImageLibrary\KalikoImage.cs" />
+    <Compile Include="NetImageLibrary\Scaling\CropScaling.cs" />
+    <Compile Include="NetImageLibrary\Scaling\FitScaling.cs" />
+    <Compile Include="NetImageLibrary\Scaling\PadScaling.cs" />
+    <Compile Include="NetImageLibrary\Scaling\ScalingBase.cs" />
+    <Compile Include="NetImageLibrary\TextField.cs" />
+    <Compile Include="NetImageLibrary\TextShadow.cs" />
+    <Compile Include="NetImageLibrary\ThumbnailMethod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -77,6 +105,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

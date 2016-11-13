@@ -36,7 +36,22 @@ namespace Part2Project
             viewer.Image = bmp;
 
             // Image loaded
-            btnGBIS.Visible = true;
+            viewer2.Image = null;
+
+            if (!btnGBIS.Visible)
+            {
+                btnGBIS.Visible = true;
+                label1.Visible = true;
+                label2.Visible = true;
+                label3.Visible = true;
+                label4.Visible = true;
+                txtK.Visible = true;
+                txtSigma.Visible = true;
+                cmboDisplayType.Visible = true;
+                cmboEdgeWeights.Visible = true;
+                cmboDisplayType.SelectedItem = "Random";
+                cmboEdgeWeights.SelectedItem = "IntensityDiff";
+            }
         }
 
         private void btnChooseImage_Click(object sender, EventArgs e)
@@ -49,7 +64,7 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            GraphBasedImageSegmentation GBIS = new GraphBasedImageSegmentation(bmp, 400, 0.0);
+            GraphBasedImageSegmentation GBIS = new GraphBasedImageSegmentation(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string) cmboDisplayType.SelectedItem, (string) cmboEdgeWeights.SelectedItem);
             GBIS.Start();
 
             viewer2.Image = GBIS.VisualiseSegmentation();

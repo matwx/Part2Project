@@ -126,12 +126,15 @@ namespace Part2Project.ImageSegmentation
         List<GraphEdge> E;
         Bitmap image;
         double k, sigma;
+        string displayType, edgeWeightType;
 
-        public GraphBasedImageSegmentation(Bitmap inputImage, double kParam, double sigmaParam)
+        public GraphBasedImageSegmentation(Bitmap inputImage, double kParam, double sigmaParam, string display = "Random", string edgeType = "Intensity Difference")
         { 
             k = kParam;
             sigma = sigmaParam;
             image = inputImage;
+            displayType = display;
+            edgeWeightType = edgeType;
 
             ScaleAndBlur();
             InitialiseDataStructures();
@@ -165,15 +168,22 @@ namespace Part2Project.ImageSegmentation
             Color c1 = image.GetPixel(x1, y1);
             Color c2 = image.GetPixel(x2, y2);
 
-            // This just works out the intensity difference between two pixels
-            //double i1 = (double)c1.R * 0.21 + (double)c1.G * 0.72 + (double)c1.B * 0.07;
-            //double i2 = (double)c2.R * 0.21 + (double)c2.G * 0.72 + (double)c2.B * 0.07;
-            //return (int) Math.Abs(i1 - i2);
+            if (edgeWeightType.Equals("CIELabDist"))
+            {
+                // This converts the pixels to CIE L*A*B* color space and computes 
+                CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
+                CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
+                return Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+            }
+            else
+            { 
+                // Default to intensity
 
-            // This converts the pixels to CIE L*A*B* color space and computes 
-            CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
-            CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
-            return Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+                // This just works out the intensity difference between two pixels
+                double i1 = (double)c1.R * 0.21 + (double)c1.G * 0.72 + (double)c1.B * 0.07;
+                double i2 = (double)c2.R * 0.21 + (double)c2.G * 0.72 + (double)c2.B * 0.07;
+                return (int)Math.Abs(i1 - i2);
+            }
         }
 
         private void InitialiseDataStructures()
@@ -307,14 +317,22 @@ namespace Part2Project.ImageSegmentation
                     }
                     else
                     {
-                        //componentColours.Add(FindSet(V[x][y]), Color.FromArgb(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256)));
+                        if (displayType.Equals("Average"))
+                        {
+                            // We like the average colour in CIELab space
 
-                        CIELab labColor = new CIELab(FindSet(V[x][y]).TotalL / (double)FindSet(V[x][y]).ComponentSize,
+                            CIELab labColor = new CIELab(FindSet(V[x][y]).TotalL / (double)FindSet(V[x][y]).ComponentSize,
                                                      FindSet(V[x][y]).TotalA / (double)FindSet(V[x][y]).ComponentSize,
                                                      FindSet(V[x][y]).TotalB / (double)FindSet(V[x][y]).ComponentSize);
-                        RGB rgb = ColorSpaceHelper.LabtoRGB(labColor);
+                            RGB rgb = ColorSpaceHelper.LabtoRGB(labColor);
 
-                        componentColours.Add(FindSet(V[x][y]), Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue));
+                            componentColours.Add(FindSet(V[x][y]), Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue));
+                        }
+                        else
+                        { 
+                            // Default to Random
+                            componentColours.Add(FindSet(V[x][y]), Color.FromArgb(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256)));
+                        }
                     }
 
                     outputImage.SetPixel(x, y, componentColours[FindSet(V[x][y])]);

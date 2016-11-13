@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Part2Project.ImageSegmentation;
 
 namespace Part2Project
 {
     public partial class Form1 : Form
     {
+        Bitmap bmp;
+
         public Form1()
         {
             InitializeComponent();
@@ -20,6 +23,36 @@ namespace Part2Project
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void dlgChooseImage_FileOk(object sender, CancelEventArgs e)
+        {
+            // Resize the image so that it's height fits in the viewer
+            Image selected = Image.FromFile(dlgChooseImage.FileName);
+            bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+            Graphics gfx = Graphics.FromImage(bmp);
+
+            gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+            viewer.Image = bmp;
+
+            // Image loaded
+            btnGBIS.Visible = true;
+        }
+
+        private void btnChooseImage_Click(object sender, EventArgs e)
+        {
+            // Choose an image
+            dlgChooseImage.ShowDialog();
+        }
+
+        private void btnGBIS_Click(object sender, EventArgs e)
+        {
+            // Do GBIS on our (resized) input image
+
+            GraphBasedImageSegmentation GBIS = new GraphBasedImageSegmentation(bmp, 400, 0.0);
+            GBIS.Start();
+
+            viewer2.Image = GBIS.VisualiseSegmentation();
         }
     }
 }

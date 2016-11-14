@@ -13,6 +13,8 @@ namespace Part2Project.ImageSegmentation
 {
     static class GraphBasedImageSegmentation
     {
+        private static string edgeWeightType, displayType;
+
         #region Initialisation
 
         private static double ComputeEdgeWeight(Bitmap image, int x1, int y1, int x2, int y2)
@@ -20,15 +22,22 @@ namespace Part2Project.ImageSegmentation
             Color c1 = image.GetPixel(x1, y1);
             Color c2 = image.GetPixel(x2, y2);
 
-            // This just works out the intensity difference between two pixels
-            //double i1 = (double)c1.R * 0.21 + (double)c1.G * 0.72 + (double)c1.B * 0.07;
-            //double i2 = (double)c2.R * 0.21 + (double)c2.G * 0.72 + (double)c2.B * 0.07;
-            //return (int) Math.Abs(i1 - i2);
+            if (edgeWeightType.Equals("CIELabDist"))
+            {
+                // This converts the pixels to CIE L*A*B* color space and computes 
+                CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
+                CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
+                return Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+            }
+            else
+            {
+                // Default to intensity
 
-            // This converts the pixels to CIE L*A*B* color space and computes 
-            CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
-            CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
-            return Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+                // This just works out the intensity difference between two pixels
+                double i1 = (double)c1.R * 0.21 + (double)c1.G * 0.72 + (double)c1.B * 0.07;
+                double i2 = (double)c2.R * 0.21 + (double)c2.G * 0.72 + (double)c2.B * 0.07;
+                return (int)Math.Abs(i1 - i2);
+            }
         }
 
         private static void InitialiseEdges(Bitmap image, GraphBasedDisjointSet S, List<GraphEdge> E)
@@ -86,10 +95,13 @@ namespace Part2Project.ImageSegmentation
 
         #endregion
 
-        public static GraphBasedDisjointSet Segment(Bitmap image, double k, double sigma)
+        public static GraphBasedDisjointSet Segment(Bitmap image, double k, double sigma, string edgeType, string segmentDisplayType)
         {
             List<GraphEdge> E;
             GraphBasedDisjointSet S;
+
+            edgeWeightType = edgeType;
+            displayType = segmentDisplayType;
 
             // Transform the image as required
             image = ScaleAndBlur(image, sigma);
@@ -138,14 +150,22 @@ namespace Part2Project.ImageSegmentation
                 {
                     if (!componentColours.ContainsKey(S.FindSetOfPixel(x,y)))
                     {
-                        //componentColours.Add(FindSet(V[x][y]), Color.FromArgb(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256)));
+                        if (displayType.Equals("Average"))
+                        {
+                            // We like the average colour in CIELab space
 
-                        CIELab labColor = new CIELab(S.FindSetOfPixel(x, y).TotalL / (double)S.FindSetOfPixel(x, y).ComponentSize,
+                            CIELab labColor = new CIELab(S.FindSetOfPixel(x, y).TotalL / (double)S.FindSetOfPixel(x, y).ComponentSize,
                                                      S.FindSetOfPixel(x, y).TotalA / (double)S.FindSetOfPixel(x, y).ComponentSize,
                                                      S.FindSetOfPixel(x, y).TotalB / (double)S.FindSetOfPixel(x, y).ComponentSize);
-                        RGB rgb = ColorSpaceHelper.LabtoRGB(labColor);
+                            RGB rgb = ColorSpaceHelper.LabtoRGB(labColor);
 
-                        componentColours.Add(S.FindSetOfPixel(x, y), Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue));
+                            componentColours.Add(S.FindSetOfPixel(x, y), Color.FromArgb(rgb.Red, rgb.Green, rgb.Blue));
+                        }
+                        else
+                        {
+                            // Default to Random
+                            componentColours.Add(S.FindSetOfPixel(x, y), Color.FromArgb(rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256)));
+                        }
                     }
 
                     outputImage.SetPixel(x, y, componentColours[S.FindSetOfPixel(x, y)]);

@@ -86,7 +86,7 @@ namespace Part2Project.ImageSegmentation
 
         #endregion
 
-        public static void Segment(Bitmap image, double k, double sigma)
+        public static GraphBasedDisjointSet Segment(Bitmap image, double k, double sigma)
         {
             List<GraphEdge> E;
             GraphBasedDisjointSet S;
@@ -118,6 +118,8 @@ namespace Part2Project.ImageSegmentation
                     }
                 }
             }
+
+            return S;
         }
 
         public static Bitmap VisualiseSegmentation(GraphBasedDisjointSet S) 

@@ -64,10 +64,9 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            GraphBasedImageSegmentation GBIS = new GraphBasedImageSegmentation(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string) cmboDisplayType.SelectedItem, (string) cmboEdgeWeights.SelectedItem);
-            GBIS.Start();
+            GraphBasedDataStructures.GraphBasedDisjointSet S = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string) cmboEdgeWeights.SelectedItem);
 
-            viewer2.Image = GBIS.VisualiseSegmentation();
+            viewer2.Image = GraphBasedImageSegmentation.VisualiseSegmentation(S, (string) cmboDisplayType.SelectedItem);
         }
     }
 }

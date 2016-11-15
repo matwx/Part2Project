@@ -25,7 +25,25 @@ namespace Part2Project.ImageSegmentation
                 // This converts the pixels to CIE L*A*B* color space and computes 
                 CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
                 CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
+
                 return Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+            }
+            else if (edgeWeightType.Equals("Hybrid"))
+            {
+                CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
+                CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
+
+                double i1 = (double)c1.R * 0.21 + (double)c1.G * 0.72 + (double)c1.B * 0.07;
+                double i2 = (double)c2.R * 0.21 + (double)c2.G * 0.72 + (double)c2.B * 0.07;
+
+                if (Math.Max(i1, i2) < 20 || Math.Min(i1, i2) > 210)
+                {
+                    return Math.Abs(i1 - i2) / 255;
+                }
+                else
+                {
+                    return Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+                }
             }
             else
             {

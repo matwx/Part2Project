@@ -124,7 +124,8 @@
             this.cmboEdgeWeights.FormattingEnabled = true;
             this.cmboEdgeWeights.Items.AddRange(new object[] {
             "IntensityDiff",
-            "CIELabDist"});
+            "CIELabDist",
+            "Hybrid"});
             this.cmboEdgeWeights.Location = new System.Drawing.Point(528, 21);
             this.cmboEdgeWeights.Name = "cmboEdgeWeights";
             this.cmboEdgeWeights.Size = new System.Drawing.Size(130, 21);

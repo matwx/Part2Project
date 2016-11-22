@@ -13,8 +13,8 @@ namespace Part2Project.ImageSegmentation
     class Segmentation
     {
         private int[][] _pixelAssignments;
-        private Dictionary<int, int> _segmentSizes;
-        private Dictionary<int, CIELab> _segmentColours;
+        protected Dictionary<int, int> _segmentSizes;
+        protected Dictionary<int, CIELab> _segmentColours;
         public int NumSegments { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -60,6 +60,31 @@ namespace Part2Project.ImageSegmentation
             }
 
             NumSegments = currentSegment;
+        }
+
+        protected Segmentation(Segmentation s)
+        {
+            NumSegments = s.NumSegments;
+            Width = s.Width;
+            Height = s.Height;
+
+            _pixelAssignments = new int[Width][];
+            for (int i = 0; i < Width; i++)
+            {
+                _pixelAssignments[i] = new int[Height];
+                for (int j = 0; j < Height; j++)
+                {
+                    _pixelAssignments[i][j] = s._pixelAssignments[i][j];
+                }
+            }
+            
+            _segmentSizes = new Dictionary<int, int>();
+            _segmentColours = new Dictionary<int, CIELab>();
+            for (int i = 0; i < s.NumSegments; i++)
+            {
+                _segmentSizes.Add(i, s._segmentSizes[i]);
+                _segmentColours.Add(i, s._segmentColours[i]);
+            }
         }
 
         public int GetPixelsSegmentSize(int x, int y)

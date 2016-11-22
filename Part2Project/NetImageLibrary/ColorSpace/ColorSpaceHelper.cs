@@ -10,7 +10,7 @@ namespace Kaliko.ImageLibrary.ColorSpace {
     /// Provides methods to convert from a color space to an other.
     /// </summary>
     public class ColorSpaceHelper {
-        private ColorSpaceHelper() {}
+        protected ColorSpaceHelper() {}
 
         #region Color processing
 

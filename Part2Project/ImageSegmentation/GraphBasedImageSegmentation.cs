@@ -14,7 +14,7 @@ namespace Part2Project.ImageSegmentation
     static class GraphBasedImageSegmentation
     {
         #region Initialisation
-
+        
         private static double deltaE(CIELab c1, CIELab c2)
         {
             double k_L = 2, k_C = 1, k_H = 1;

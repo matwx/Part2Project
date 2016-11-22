@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Kaliko.ImageLibrary.ColorSpace;
 using Part2Project.ImageSegmentation;
+using Part2Project.MyColor;
 
 namespace Part2Project
 {
@@ -64,9 +66,19 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            GraphBasedDataStructures.GraphBasedDisjointSet S = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string) cmboEdgeWeights.SelectedItem);
+            Segmentation S = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string) cmboEdgeWeights.SelectedItem);
 
-            viewer2.Image = GraphBasedImageSegmentation.VisualiseSegmentation(S, (string) cmboDisplayType.SelectedItem);
+            Bitmap outImage = new Bitmap(bmp.Width, bmp.Height);
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    RGB pixelColour = ColorSpaceHelper.LabtoRGB(S.GetPixelsSegmentColour(x, y));
+                    outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
+                }
+            }
+
+            viewer2.Image = outImage;
         }
     }
 }

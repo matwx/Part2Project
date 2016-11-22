@@ -66,15 +66,30 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            Segmentation S = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string) cmboEdgeWeights.SelectedItem);
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string) cmboEdgeWeights.SelectedItem);
 
+            // Create output segmentation image
             Bitmap outImage = new Bitmap(bmp.Width, bmp.Height);
+            Color[] randomColours = new Color[s.NumSegments];
+            Random rand = new Random();
+            bool useRandomColours = ((string) (cmboDisplayType.SelectedItem)).Equals("Random");
+
             for (int x = 0; x < bmp.Width; x++)
             {
                 for (int y = 0; y < bmp.Height; y++)
                 {
-                    RGB pixelColour = ColorSpaceHelper.LabtoRGB(S.GetPixelsSegmentColour(x, y));
-                    outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
+                    if (useRandomColours)
+                    {
+                        if (randomColours[s.GetPixelsSegmentIndex(x, y)].IsEmpty)
+                            randomColours[s.GetPixelsSegmentIndex(x, y)] = Color.FromArgb(rand.Next(0, 256),
+                                rand.Next(0, 256), rand.Next(0, 256));
+                        outImage.SetPixel(x, y, randomColours[s.GetPixelsSegmentIndex(x, y)]);
+                    }
+                    else
+                    {
+                        RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
+                        outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
+                    }
                 }
             }
 

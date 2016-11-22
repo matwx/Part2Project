@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 using Kaliko.ImageLibrary.ColorSpace;
 
 namespace Part2Project.GraphBasedDataStructures
 {
     class GraphBasedDisjointSet
     {
-        private GraphNode[][] V;
+        private readonly GraphNode[][] _v;
 
         public GraphBasedDisjointSet(Bitmap image)
         {
             // Create a node for each image pixel
-            V = new GraphNode[image.Width][];
+            _v = new GraphNode[image.Width][];
             for (int x = 0; x < image.Width; x++)
             {
-                V[x] = new GraphNode[image.Height];
+                _v[x] = new GraphNode[image.Height];
 
                 for (int y = 0; y < image.Height; y++)
                 {
-                    V[x][y] = new GraphNode(x, y, ColorSpaceHelper.RGBtoLab(image.GetPixel(x, y)));
+                    _v[x][y] = new GraphNode(x, y, ColorSpaceHelper.RGBtoLab(image.GetPixel(x, y)));
                 }
             }
         }
@@ -35,7 +30,7 @@ namespace Part2Project.GraphBasedDataStructures
         }
 
         public GraphNode FindSetOfPixel(int x, int y) {
-            return FindSet(V[x][y]);
+            return FindSet(_v[x][y]);
         }
 
         public void Union(GraphNode v1, GraphNode v2, double joiningEdgeWeight)
@@ -79,6 +74,6 @@ namespace Part2Project.GraphBasedDataStructures
             }
         }
 
-        public GraphNode[][] getV() { return V; }
+        public GraphNode[][] GetV() { return _v; }
     }
 }

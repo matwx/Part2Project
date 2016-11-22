@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Part2Project.GraphBasedDataStructures
 {
     class GraphEdge : IComparable
     {
-        private GraphNode v1, v2; // The two vertices that this edge connects
-        private double weight;
-
         public GraphEdge(GraphNode node1, GraphNode node2, double w)
         {
-            v1 = node1;
-            v2 = node2;
+            V1 = node1;
+            V2 = node2;
 
-            weight = w;
+            Weight = w;
         }
 
         public int CompareTo(object obj)
@@ -28,24 +21,15 @@ namespace Part2Project.GraphBasedDataStructures
             }
             else
             {
-                return this.weight.CompareTo(otherEdge.weight);
+                return Weight.CompareTo(otherEdge.Weight);
             }
         }
 
         #region Properties
 
-        public double Weight
-        {
-            get { return weight; }
-        } //R
-        public GraphNode V1
-        {
-            get { return v1; }
-        } //R
-        public GraphNode V2
-        {
-            get { return v2; }
-        } //R
+        public double Weight { get; private set; } //R
+        public GraphNode V1 { get; private set; } //R
+        public GraphNode V2 { get; private set; } //R
 
         #endregion
     }

@@ -30,7 +30,7 @@ namespace Part2Project.ImageSegmentation
 
         private static void InitialiseEdges(Bitmap image, GraphBasedDisjointSet dSet, List<GraphEdge> eList)
         {
-            GraphNode[][] v = dSet.getV();
+            GraphNode[][] v = dSet.GetV();
 
             // Create all the edges for an 8-connected grid graph
             for (int x = 0; x < image.Width; x++)
@@ -118,8 +118,8 @@ namespace Part2Project.ImageSegmentation
 
         public static Bitmap VisualiseSegmentation(GraphBasedDisjointSet dSet) 
         {
-            int width = dSet.getV().Length;
-            int height = dSet.getV()[0].Length;
+            int width = dSet.GetV().Length;
+            int height = dSet.GetV()[0].Length;
 
             Random rand = new Random();
             Bitmap outputImage = new Bitmap(width, height);

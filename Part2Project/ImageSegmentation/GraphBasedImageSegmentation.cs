@@ -76,7 +76,7 @@ namespace Part2Project.ImageSegmentation
 
         #endregion
 
-        public static GraphBasedDisjointSet Segment(Bitmap image, double k, double sigma)
+        public static Segmentation Segment(Bitmap image, double k, double sigma)
         {
             // Transform the image as required
             image = ScaleAndBlur(image, sigma);
@@ -106,7 +106,7 @@ namespace Part2Project.ImageSegmentation
                 }
             }
 
-            return dSet;
+            return new Segmentation(dSet);
         }
     }
 }

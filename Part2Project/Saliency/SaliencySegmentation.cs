@@ -15,9 +15,8 @@ namespace Part2Project.Saliency
 {
     class SaliencySegmentation : Segmentation
     {
-        private Dictionary<int, double> _segmentSaliencies;
+        private double[] _segmentSaliencies;
         private double[][] sMap;
-        private double maxS = 0;
 
         public SaliencySegmentation(Segmentation s, Bitmap image, double sigma) : base(s)
         {
@@ -38,6 +37,7 @@ namespace Part2Project.Saliency
 
             // Calculate saliency map of the image
             sMap = new double[Width][];
+            double maxS = 0;
             for (int x = 0; x < Width; x++)
             {
                 sMap[x] = new double[Height];
@@ -53,6 +53,19 @@ namespace Part2Project.Saliency
             }
 
             // Average across segments to get the segmentSaliencies
+            _segmentSaliencies = new double[NumSegments];
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    sMap[x][y] /= maxS; // Normalise sMap
+                    _segmentSaliencies[_pixelAssignments[x][y]] += sMap[x][y];
+                }
+            }
+            for (int i = 0; i < NumSegments; i++)
+            {
+                _segmentSaliencies[i] /= _segmentSizes[i];
+            }
         }
 
         public Bitmap GetSaliencyMap()
@@ -64,8 +77,25 @@ namespace Part2Project.Saliency
                 for (int y = 0; y < Height; y++)
                 {
                     image.SetPixel(x, y,
-                        Color.FromArgb((int) (sMap[x][y]/maxS*255), (int) (sMap[x][y]/maxS*255),
-                            (int) (sMap[x][y]/maxS*255)));
+                        Color.FromArgb((int) (sMap[x][y]*255), (int) (sMap[x][y]*255), (int) (sMap[x][y]*255)));
+                }
+            }
+
+            return image;
+        }
+
+        public Bitmap GetSegmentSaliencyMap()
+        {
+            Bitmap image = new Bitmap(Width, Height);
+
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    image.SetPixel(x, y,
+                        Color.FromArgb((int) (_segmentSaliencies[_pixelAssignments[x][y]]*255),
+                            (int) (_segmentSaliencies[_pixelAssignments[x][y]]*255),
+                            (int) (_segmentSaliencies[_pixelAssignments[x][y]]*255)));
                 }
             }
 

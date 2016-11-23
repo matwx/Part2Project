@@ -8,7 +8,7 @@ namespace Part2Project.MyColor
     {
         private MyColorSpaceHelper() {}
 
-        private static double CIEDE2000(CIELab lab1, CIELab lab2)
+        public static double CIEDE2000(CIELab lab1, CIELab lab2)
         {
             const double kL = 2;
             const double kC = 1;

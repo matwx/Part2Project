@@ -45,12 +45,9 @@ namespace Part2Project.Saliency
                 {
                     // I tried using my hybrid colour difference metric here, but, because it would
                     // require a few transformations between RGB, LAB and back, floating point errors
-                    // became apparent, and ruined the result.
-                    CIELab lab = ColorSpaceHelper.RGBtoLab(blurredImage.GetPixel(x, y));
-                    sMap[x][y] =
-                        Math.Sqrt((averageLab.L - lab.L)*(averageLab.L - lab.L) +
-                                  (averageLab.A - lab.A)*(averageLab.A - lab.A) +
-                                  (averageLab.B - lab.B)*(averageLab.B - lab.B));
+                    // became apparent, and ruined the result. So, CIEDE2000 is used.
+                    sMap[x][y] = MyColorSpaceHelper.CIEDE2000(averageLab,
+                        ColorSpaceHelper.RGBtoLab(blurredImage.GetPixel(x, y)));
                     if (sMap[x][y] > maxS) maxS = sMap[x][y];
                 }
             }

@@ -33,7 +33,7 @@ namespace Part2Project.Saliency
                 totalA += _segmentColours[i].A * _segmentSizes[i];
                 totalB += _segmentColours[i].B * _segmentSizes[i];
             }
-            CIELab averageLab = new CIELab(totalL / Width / Height, totalA / Width / Height, totalB / Width / Height);
+            CIELab averageLab = new CIELab(totalL / Width / Height, totalA / Width / Height, totalB / Width / Height); // fun 8ug
 
             // Calculate saliency map of the image
             sMap = new double[Width][];
@@ -77,7 +77,7 @@ namespace Part2Project.Saliency
                 for (int y = 0; y < Height; y++)
                 {
                     image.SetPixel(x, y,
-                        Color.FromArgb((int) (sMap[x][y]*255), (int) (sMap[x][y]*255), (int) (sMap[x][y]*255)));
+                        Color.FromArgb((int) (sMap[x][y]*255), (int) (sMap[x][y]*255), (int) (sMap[x][y]*255))); // Fun 8ug
                 }
             }
 

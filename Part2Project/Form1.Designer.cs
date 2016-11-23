@@ -37,6 +37,7 @@
             this.viewer2 = new System.Windows.Forms.PictureBox();
             this.viewer = new System.Windows.Forms.PictureBox();
             this.btnChooseImage = new System.Windows.Forms.Button();
+            this.btnSegSaliency = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
@@ -49,7 +50,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(271, 24);
+            this.label2.Location = new System.Drawing.Point(363, 24);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 25;
@@ -59,7 +60,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(196, 24);
+            this.label1.Location = new System.Drawing.Point(288, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(16, 13);
             this.label1.TabIndex = 24;
@@ -68,7 +69,7 @@
             // 
             // txtSigma
             // 
-            this.txtSigma.Location = new System.Drawing.Point(308, 21);
+            this.txtSigma.Location = new System.Drawing.Point(400, 21);
             this.txtSigma.Name = "txtSigma";
             this.txtSigma.Size = new System.Drawing.Size(53, 20);
             this.txtSigma.TabIndex = 21;
@@ -77,7 +78,7 @@
             // 
             // txtK
             // 
-            this.txtK.Location = new System.Drawing.Point(212, 21);
+            this.txtK.Location = new System.Drawing.Point(304, 21);
             this.txtK.Name = "txtK";
             this.txtK.Size = new System.Drawing.Size(53, 20);
             this.txtK.TabIndex = 20;
@@ -121,11 +122,23 @@
             this.btnChooseImage.UseVisualStyleBackColor = true;
             this.btnChooseImage.Click += new System.EventHandler(this.btnChooseImage_Click_1);
             // 
+            // btnSegSaliency
+            // 
+            this.btnSegSaliency.Location = new System.Drawing.Point(196, 10);
+            this.btnSegSaliency.Name = "btnSegSaliency";
+            this.btnSegSaliency.Size = new System.Drawing.Size(86, 37);
+            this.btnSegSaliency.TabIndex = 26;
+            this.btnSegSaliency.Text = "Segment Saliency Map";
+            this.btnSegSaliency.UseVisualStyleBackColor = true;
+            this.btnSegSaliency.Visible = false;
+            this.btnSegSaliency.Click += new System.EventHandler(this.btnSegSaliency_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 311);
+            this.Controls.Add(this.btnSegSaliency);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtSigma);
@@ -155,6 +168,7 @@
         private System.Windows.Forms.PictureBox viewer2;
         private System.Windows.Forms.PictureBox viewer;
         private System.Windows.Forms.Button btnChooseImage;
+        private System.Windows.Forms.Button btnSegSaliency;
     }
 }
 

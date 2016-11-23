@@ -42,6 +42,7 @@ namespace Part2Project
             if (!btnGBIS.Visible)
             {
                 btnGBIS.Visible = true;
+                btnSegSaliency.Visible = true;
                 label1.Visible = true;
                 label2.Visible = true;
                 txtK.Visible = true;
@@ -64,6 +65,17 @@ namespace Part2Project
             SaliencySegmentation ss = new SaliencySegmentation(s, bmp, double.Parse(txtSigma.Text));
 
             viewer2.Image = ss.GetSaliencyMap();
+        }
+
+        private void btnSegSaliency_Click(object sender, EventArgs e)
+        {
+            // Do GBIS on our (resized) input image
+
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text));
+
+            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, double.Parse(txtSigma.Text));
+
+            viewer2.Image = ss.GetSegmentSaliencyMap();
         }
     }
 }

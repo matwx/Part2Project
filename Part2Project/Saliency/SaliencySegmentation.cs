@@ -26,15 +26,15 @@ namespace Part2Project.Saliency
             kImage.ApplyFilter(new GaussianBlurFilter((float)sigma));
             Bitmap blurredImage = kImage.GetAsBitmap();
 
-            // Calculate average colour of the image
+            // Calculate average colour of the image (we already have segment averages)
             double totalL = 0, totalA = 0, totalB = 0;
             for (int i = 0; i < NumSegments; i++)
             {
-                totalL += _segmentColours[i].L;
-                totalA += _segmentColours[i].A;
-                totalB += _segmentColours[i].B;
+                totalL += _segmentColours[i].L * _segmentSizes[i];
+                totalA += _segmentColours[i].A * _segmentSizes[i];
+                totalB += _segmentColours[i].B * _segmentSizes[i];
             }
-            CIELab averageLab = new CIELab(totalL / NumSegments, totalA / NumSegments, totalB / NumSegments);
+            CIELab averageLab = new CIELab(totalL / Width / Height, totalA / Width / Height, totalB / Width / Height);
 
             // Calculate saliency map of the image
             sMap = new double[Width][];
@@ -43,8 +43,14 @@ namespace Part2Project.Saliency
                 sMap[x] = new double[Height];
                 for (int y = 0; y < Height; y++)
                 {
-                    sMap[x][y] = MyColorSpaceHelper.MyColourDifference(averageLab,
-                        ColorSpaceHelper.RGBtoLab(blurredImage.GetPixel(x, y)));
+                    // I tried using my hybrid colour difference metric here, but, because it would
+                    // require a few transformations between RGB, LAB and back, floating point errors
+                    // became apparent, and ruined the result.
+                    CIELab lab = ColorSpaceHelper.RGBtoLab(blurredImage.GetPixel(x, y));
+                    sMap[x][y] =
+                        Math.Sqrt((averageLab.L - lab.L)*(averageLab.L - lab.L) +
+                                  (averageLab.A - lab.A)*(averageLab.A - lab.A) +
+                                  (averageLab.B - lab.B)*(averageLab.B - lab.B));
                     if (sMap[x][y] > maxS) maxS = sMap[x][y];
                 }
             }
@@ -61,8 +67,8 @@ namespace Part2Project.Saliency
                 for (int y = 0; y < Height; y++)
                 {
                     image.SetPixel(x, y,
-                        Color.FromArgb((int) (sMap[x][y]/maxS)*255, (int) (sMap[x][y]/maxS)*255,
-                            (int) (sMap[x][y]/maxS)*255));
+                        Color.FromArgb((int) (sMap[x][y]/maxS*255), (int) (sMap[x][y]/maxS*255),
+                            (int) (sMap[x][y]/maxS*255)));
                 }
             }
 

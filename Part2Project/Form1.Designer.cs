@@ -44,6 +44,7 @@
             // dlgChooseImage
             // 
             this.dlgChooseImage.FileName = "openFileDialog1";
+            this.dlgChooseImage.FileOk += new System.ComponentModel.CancelEventHandler(this.dlgChooseImage_FileOk_1);
             // 
             // label2
             // 
@@ -92,6 +93,7 @@
             this.btnGBIS.Text = "Segment Image";
             this.btnGBIS.UseVisualStyleBackColor = true;
             this.btnGBIS.Visible = false;
+            this.btnGBIS.Click += new System.EventHandler(this.btnGBIS_Click_1);
             // 
             // viewer2
             // 
@@ -117,6 +119,7 @@
             this.btnChooseImage.TabIndex = 16;
             this.btnChooseImage.Text = "Choose Image";
             this.btnChooseImage.UseVisualStyleBackColor = true;
+            this.btnChooseImage.Click += new System.EventHandler(this.btnChooseImage_Click_1);
             // 
             // Form1
             // 

@@ -12,7 +12,7 @@ namespace Part2Project.ImageSegmentation
     // However, it is designed to be extended to add more segment charactersistics.
     class Segmentation
     {
-        private int[][] _pixelAssignments;
+        protected int[][] _pixelAssignments;
         protected Dictionary<int, int> _segmentSizes;
         protected Dictionary<int, CIELab> _segmentColours;
         public int NumSegments { get; private set; }

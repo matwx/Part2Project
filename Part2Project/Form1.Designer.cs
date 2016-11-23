@@ -90,7 +90,7 @@
             this.btnGBIS.Name = "btnGBIS";
             this.btnGBIS.Size = new System.Drawing.Size(86, 37);
             this.btnGBIS.TabIndex = 19;
-            this.btnGBIS.Text = "Segment Image";
+            this.btnGBIS.Text = "Saliency Map";
             this.btnGBIS.UseVisualStyleBackColor = true;
             this.btnGBIS.Visible = false;
             this.btnGBIS.Click += new System.EventHandler(this.btnGBIS_Click_1);

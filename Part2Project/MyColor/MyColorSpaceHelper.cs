@@ -89,30 +89,5 @@ namespace Part2Project.MyColor
                 return CIEDE2000(RGBtoLab(c1), RGBtoLab(c2));
             }
         }
-
-        public static double MyColourDifference(CIELab lab1, CIELab lab2)
-        {
-            // This is the same as CIEDE2000 except when the pixels are quite bright or dark,
-            // in which case we revert back to intensity differences. This seems to help with
-            // a problem I've been finding with the Lab distance metric in very light/dark
-            // regions.
-            RGB rgb1 = ColorSpaceHelper.LabtoRGB(lab1);
-            RGB rgb2 = ColorSpaceHelper.LabtoRGB(lab2);
-
-            Color c1 = Color.FromArgb(rgb1.Red, rgb1.Green, rgb1.Blue);
-            Color c2 = Color.FromArgb(rgb2.Red, rgb2.Green, rgb2.Blue);
-
-            double i1 = c1.R * 0.21 + c1.G * 0.72 + c1.B * 0.07;
-            double i2 = c2.R * 0.21 + c2.G * 0.72 + c2.B * 0.07;
-
-            if (Math.Min(i1, i2) < 20 || Math.Max(i1, i2) > 210)
-            {
-                return Math.Abs(i1 - i2) / 255 * 10;
-            }
-            else
-            {
-                return CIEDE2000(lab1, lab2);
-            }
-        }
     }
 }

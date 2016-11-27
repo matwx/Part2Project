@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Features\FeatureRuleOfThirds.cs" />
     <Compile Include="Features\IFeature.cs" />
+    <Compile Include="ImageSegmentation\RuleOfThirdsSegmentation.cs" />
     <Compile Include="ImageSegmentation\Segmentation.cs" />
     <Compile Include="MyColor\MyColorSpaceHelper.cs" />
     <Compile Include="Form1.cs">

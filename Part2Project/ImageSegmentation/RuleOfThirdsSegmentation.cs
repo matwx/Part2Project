@@ -61,5 +61,10 @@ namespace Part2Project.ImageSegmentation
                 _powerPointDistances[i] = minDist;
             }
         }
+
+        public double GetSegmentsDistance(int i)
+        {
+            return _powerPointDistances[i];
+        }
     }
 }

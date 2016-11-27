@@ -61,6 +61,11 @@ namespace Part2Project.ImageSegmentation
             }
         }
 
+        public double GetSegmentsSaliency(int i)
+        {
+            return _segmentSaliencies[i];
+        }
+
         public Bitmap GetSaliencyMap()
         {
             Bitmap image = new Bitmap(Width, Height);

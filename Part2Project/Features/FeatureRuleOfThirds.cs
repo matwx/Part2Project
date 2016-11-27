@@ -14,9 +14,25 @@ namespace Part2Project.Features
         {
             // Get saliency segmentation
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
 
-            return 0.0;
+            // Compute the scaling factor
+            double factor = 0;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                factor += rots.GetSegmentsSaliency(i)*rots.GetSegmentsSize(i);
+            }
+
+            double result = 0;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                result += rots.GetSegmentsSaliency(i)*rots.GetSegmentsSaliency(i)*
+                          Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*0.17));
+            }
+
+            result /= factor;
+
+            return result;
         }
     }
 }

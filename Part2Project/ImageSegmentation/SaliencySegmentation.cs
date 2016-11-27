@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using Kaliko.ImageLibrary;
 using Kaliko.ImageLibrary.ColorSpace;
 using Kaliko.ImageLibrary.Filters;
-using Part2Project.GraphBasedDataStructures;
-using Part2Project.ImageSegmentation;
 using Part2Project.MyColor;
 
-namespace Part2Project.Saliency
+namespace Part2Project.ImageSegmentation
 {
     class SaliencySegmentation : Segmentation
     {

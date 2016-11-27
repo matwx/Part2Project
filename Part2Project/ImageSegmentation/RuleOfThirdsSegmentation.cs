@@ -31,6 +31,12 @@ namespace Part2Project.ImageSegmentation
                 }
             }
 
+            // Find a max distance to normalise these distances
+            double norm =
+                Math.Sqrt((Width / 3.0) * (Width / 3.0) +
+                          (Height / 3.0) * (Height/ 3.0));
+
+
             for (int i = 0; i < NumSegments; i++)
             {
                 // Compute centre position
@@ -58,7 +64,8 @@ namespace Part2Project.ImageSegmentation
                               (centreY - (Height * 2.0 / 3.0)) * (centreY - (Height * 2.0 / 3.0)));
                 if (nextDist < minDist) minDist = nextDist;
 
-                _powerPointDistances[i] = minDist;
+                _powerPointDistances[i] = minDist / norm;
+                //_powerPointDistances[i] = minDist;
             }
         }
 

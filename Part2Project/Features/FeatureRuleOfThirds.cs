@@ -24,10 +24,10 @@ namespace Part2Project.Features
             }
 
             double result = 0;
+            const double sigma = 0.17 * 4.0;
             for (int i = 0; i < rots.NumSegments; i++)
             {
-                result += rots.GetSegmentsSaliency(i)*rots.GetSegmentsSize(i)*
-                          Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*0.17));
+                result += rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
             }
 
             result /= factor;

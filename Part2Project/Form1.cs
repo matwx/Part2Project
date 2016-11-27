@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -96,6 +97,44 @@ namespace Part2Project
             gfx.DrawLine(Pens.Red, bmp.Width * 2 / 3, 0, bmp.Width * 2 / 3, bmp.Height);
             gfx.DrawLine(Pens.Red, 0, bmp.Height / 3, bmp.Width, bmp.Height / 3);
             gfx.DrawLine(Pens.Red, 0, bmp.Height * 2 / 3, bmp.Width, bmp.Height * 2 / 3);
+        }
+
+        private void btnBatchROT_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            Dictionary<double, string> newNames = new Dictionary<double, string>();
+
+            var files = Directory.GetFiles(dlgChooseFolder.SelectedPath);
+            foreach (string filename in files)
+            {
+                using (Image selected = Image.FromFile(filename))
+                {
+                    bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+                    Graphics gfx = Graphics.FromImage(bmp);
+
+                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+
+                    double value = new FeatureRuleOfThirds().ComputeFeature(bmp);
+
+                    //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
+                    newNames.Add(value, filename);
+                }
+                
+            }
+
+            List<double> keyList = new List<double>();
+            foreach (double key in newNames.Keys)
+            {
+                keyList.Add(key);
+            }
+            keyList.Sort();
+            keyList.Reverse();
+            int current = 0;
+            foreach (double key in keyList)
+            {
+                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + ".jpg");
+                current++;
+            }
         }
     }
 }

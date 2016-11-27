@@ -35,6 +35,8 @@
             this.btnChooseImage = new System.Windows.Forms.Button();
             this.btnSegSaliency = new System.Windows.Forms.Button();
             this.btnROT = new System.Windows.Forms.Button();
+            this.btnBatchROT = new System.Windows.Forms.Button();
+            this.dlgChooseFolder = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
@@ -103,11 +105,22 @@
             this.btnROT.Visible = false;
             this.btnROT.Click += new System.EventHandler(this.btnROT_Click);
             // 
+            // btnBatchROT
+            // 
+            this.btnBatchROT.Location = new System.Drawing.Point(572, 12);
+            this.btnBatchROT.Name = "btnBatchROT";
+            this.btnBatchROT.Size = new System.Drawing.Size(86, 37);
+            this.btnBatchROT.TabIndex = 28;
+            this.btnBatchROT.Text = "RoT Folder";
+            this.btnBatchROT.UseVisualStyleBackColor = true;
+            this.btnBatchROT.Click += new System.EventHandler(this.btnBatchROT_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 311);
+            this.Controls.Add(this.btnBatchROT);
             this.Controls.Add(this.btnROT);
             this.Controls.Add(this.btnSegSaliency);
             this.Controls.Add(this.btnGBIS);
@@ -132,6 +145,8 @@
         private System.Windows.Forms.Button btnChooseImage;
         private System.Windows.Forms.Button btnSegSaliency;
         private System.Windows.Forms.Button btnROT;
+        private System.Windows.Forms.Button btnBatchROT;
+        private System.Windows.Forms.FolderBrowserDialog dlgChooseFolder;
     }
 }
 

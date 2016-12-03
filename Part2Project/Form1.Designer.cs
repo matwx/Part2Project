@@ -99,7 +99,7 @@
             // 
             // btnROT
             // 
-            this.btnROT.Location = new System.Drawing.Point(288, 10);
+            this.btnROT.Location = new System.Drawing.Point(564, 10);
             this.btnROT.Name = "btnROT";
             this.btnROT.Size = new System.Drawing.Size(86, 37);
             this.btnROT.TabIndex = 27;
@@ -120,7 +120,7 @@
             // 
             // btnROTHeatmap
             // 
-            this.btnROTHeatmap.Location = new System.Drawing.Point(380, 10);
+            this.btnROTHeatmap.Location = new System.Drawing.Point(472, 10);
             this.btnROTHeatmap.Name = "btnROTHeatmap";
             this.btnROTHeatmap.Size = new System.Drawing.Size(86, 37);
             this.btnROTHeatmap.TabIndex = 29;
@@ -131,7 +131,7 @@
             // 
             // btnROTDistmap
             // 
-            this.btnROTDistmap.Location = new System.Drawing.Point(472, 10);
+            this.btnROTDistmap.Location = new System.Drawing.Point(288, 10);
             this.btnROTDistmap.Name = "btnROTDistmap";
             this.btnROTDistmap.Size = new System.Drawing.Size(86, 37);
             this.btnROTDistmap.TabIndex = 30;
@@ -142,7 +142,7 @@
             // 
             // btnROTSpreadmap
             // 
-            this.btnROTSpreadmap.Location = new System.Drawing.Point(564, 10);
+            this.btnROTSpreadmap.Location = new System.Drawing.Point(380, 10);
             this.btnROTSpreadmap.Name = "btnROTSpreadmap";
             this.btnROTSpreadmap.Size = new System.Drawing.Size(86, 37);
             this.btnROTSpreadmap.TabIndex = 31;

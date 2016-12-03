@@ -47,6 +47,9 @@ namespace Part2Project
                 btnGBIS.Visible = true;
                 btnSegSaliency.Visible = true;
                 btnROT.Visible = true;
+                btnROTHeatmap.Visible = true;
+                btnROTDistmap.Visible = true;
+                btnROTSpreadmap.Visible = true;
             }
         }
 
@@ -135,6 +138,30 @@ namespace Part2Project
                 File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + ".jpg");
                 current++;
             }
+        }
+
+        private void btnROTHeatmap_Click(object sender, EventArgs e)
+        {
+            Bitmap result = new FeatureRuleOfThirds().GetRoTHeatMap(bmp);
+
+            viewer2.Image = result;
+            DrawThirdLines();
+        }
+
+        private void btnROTDistmap_Click(object sender, EventArgs e)
+        {
+            Bitmap result = new FeatureRuleOfThirds().GetRoTDistanceMap(bmp);
+
+            viewer2.Image = result;
+            DrawThirdLines();
+        }
+
+        private void btnROTSpreadmap_Click(object sender, EventArgs e)
+        {
+            Bitmap result = new FeatureRuleOfThirds().GetRoTSpreadMap(bmp);
+
+            viewer2.Image = result;
+            DrawThirdLines();
         }
     }
 }

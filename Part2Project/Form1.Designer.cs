@@ -37,6 +37,9 @@
             this.btnROT = new System.Windows.Forms.Button();
             this.btnBatchROT = new System.Windows.Forms.Button();
             this.dlgChooseFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnROTHeatmap = new System.Windows.Forms.Button();
+            this.btnROTDistmap = new System.Windows.Forms.Button();
+            this.btnROTSpreadmap = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
@@ -107,7 +110,7 @@
             // 
             // btnBatchROT
             // 
-            this.btnBatchROT.Location = new System.Drawing.Point(572, 12);
+            this.btnBatchROT.Location = new System.Drawing.Point(699, 10);
             this.btnBatchROT.Name = "btnBatchROT";
             this.btnBatchROT.Size = new System.Drawing.Size(86, 37);
             this.btnBatchROT.TabIndex = 28;
@@ -115,11 +118,47 @@
             this.btnBatchROT.UseVisualStyleBackColor = true;
             this.btnBatchROT.Click += new System.EventHandler(this.btnBatchROT_Click);
             // 
+            // btnROTHeatmap
+            // 
+            this.btnROTHeatmap.Location = new System.Drawing.Point(380, 10);
+            this.btnROTHeatmap.Name = "btnROTHeatmap";
+            this.btnROTHeatmap.Size = new System.Drawing.Size(86, 37);
+            this.btnROTHeatmap.TabIndex = 29;
+            this.btnROTHeatmap.Text = "RoT Heatmap";
+            this.btnROTHeatmap.UseVisualStyleBackColor = true;
+            this.btnROTHeatmap.Visible = false;
+            this.btnROTHeatmap.Click += new System.EventHandler(this.btnROTHeatmap_Click);
+            // 
+            // btnROTDistmap
+            // 
+            this.btnROTDistmap.Location = new System.Drawing.Point(472, 10);
+            this.btnROTDistmap.Name = "btnROTDistmap";
+            this.btnROTDistmap.Size = new System.Drawing.Size(86, 37);
+            this.btnROTDistmap.TabIndex = 30;
+            this.btnROTDistmap.Text = "RoT Distance Map";
+            this.btnROTDistmap.UseVisualStyleBackColor = true;
+            this.btnROTDistmap.Visible = false;
+            this.btnROTDistmap.Click += new System.EventHandler(this.btnROTDistmap_Click);
+            // 
+            // btnROTSpreadmap
+            // 
+            this.btnROTSpreadmap.Location = new System.Drawing.Point(564, 10);
+            this.btnROTSpreadmap.Name = "btnROTSpreadmap";
+            this.btnROTSpreadmap.Size = new System.Drawing.Size(86, 37);
+            this.btnROTSpreadmap.TabIndex = 31;
+            this.btnROTSpreadmap.Text = "RoT Spread Map";
+            this.btnROTSpreadmap.UseVisualStyleBackColor = true;
+            this.btnROTSpreadmap.Visible = false;
+            this.btnROTSpreadmap.Click += new System.EventHandler(this.btnROTSpreadmap_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 311);
+            this.ClientSize = new System.Drawing.Size(797, 311);
+            this.Controls.Add(this.btnROTSpreadmap);
+            this.Controls.Add(this.btnROTDistmap);
+            this.Controls.Add(this.btnROTHeatmap);
             this.Controls.Add(this.btnBatchROT);
             this.Controls.Add(this.btnROT);
             this.Controls.Add(this.btnSegSaliency);
@@ -147,6 +186,9 @@
         private System.Windows.Forms.Button btnROT;
         private System.Windows.Forms.Button btnBatchROT;
         private System.Windows.Forms.FolderBrowserDialog dlgChooseFolder;
+        private System.Windows.Forms.Button btnROTHeatmap;
+        private System.Windows.Forms.Button btnROTDistmap;
+        private System.Windows.Forms.Button btnROTSpreadmap;
     }
 }
 

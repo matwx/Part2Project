@@ -40,7 +40,7 @@ namespace Part2Project.Features
 //                6) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) / segmentSpreads[i];
                 if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
                 {
-                    result += rots.GetSegmentsSaliency(i)/segmentSpreads[i]*
+                    result += rots.GetSegmentsSaliency(i)/segmentSpreads[i]* 
                               Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
                     factor += rots.GetSegmentsSaliency(i) / segmentSpreads[i];
                 }
@@ -99,6 +99,7 @@ namespace Part2Project.Features
             double[] segmentRights = new double[rots.NumSegments];
             double[] segmentTops = new double[rots.NumSegments];
             double[] segmentBottoms = new double[rots.NumSegments];
+            bool[] initialised = new bool[rots.NumSegments];
             double[] segmentSpreads = new double[rots.NumSegments];
 
             for (int x = 0; x < rots.Width; x++)
@@ -106,10 +107,22 @@ namespace Part2Project.Features
                 for (int y = 0; y < rots.Height; y++)
                 {
                     int i = rots.GetPixelsSegmentIndex(x, y);
-                    if (x < segmentLefts[i]) segmentLefts[i] = x;
-                    if (x > segmentRights[i]) segmentRights[i] = x;
-                    if (y < segmentTops[i]) segmentTops[i] = y;
-                    if (y > segmentBottoms[i]) segmentBottoms[i] = y;
+                    if (initialised[i])
+                    {
+                        if (x < segmentLefts[i]) segmentLefts[i] = x;
+                        if (x > segmentRights[i]) segmentRights[i] = x;
+                        if (y < segmentTops[i]) segmentTops[i] = y;
+                        if (y > segmentBottoms[i]) segmentBottoms[i] = y;
+                    }
+                    else
+                    {
+                        segmentLefts[i] = x;
+                        segmentRights[i] = x;
+                        segmentTops[i] = y;
+                        segmentBottoms[i] = y;
+
+                        initialised[i] = true;
+                    }
                 }
             }
 
@@ -172,6 +185,7 @@ namespace Part2Project.Features
             double[] segmentRights = new double[rots.NumSegments];
             double[] segmentTops = new double[rots.NumSegments];
             double[] segmentBottoms = new double[rots.NumSegments];
+            bool[] initialised = new bool[rots.NumSegments];
             double[] segmentSpreads = new double[rots.NumSegments];
 
             for (int x = 0; x < rots.Width; x++)
@@ -179,10 +193,22 @@ namespace Part2Project.Features
                 for (int y = 0; y < rots.Height; y++)
                 {
                     int i = rots.GetPixelsSegmentIndex(x, y);
-                    if (x < segmentLefts[i]) segmentLefts[i] = x;
-                    if (x > segmentRights[i]) segmentRights[i] = x;
-                    if (y < segmentTops[i]) segmentTops[i] = y;
-                    if (y > segmentBottoms[i]) segmentBottoms[i] = y;
+                    if (initialised[i])
+                    {
+                        if (x < segmentLefts[i]) segmentLefts[i] = x;
+                        if (x > segmentRights[i]) segmentRights[i] = x;
+                        if (y < segmentTops[i]) segmentTops[i] = y;
+                        if (y > segmentBottoms[i]) segmentBottoms[i] = y;
+                    }
+                    else
+                    {
+                        segmentLefts[i] = x;
+                        segmentRights[i] = x;
+                        segmentTops[i] = y;
+                        segmentBottoms[i] = y;
+
+                        initialised[i] = true;
+                    }
                 }
             }
 

@@ -28,7 +28,7 @@ namespace Part2Project.Features
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    total += GetIntensityFromRGB(image.GetPixel(x, y)) - I_average;
+                    total += Math.Abs(GetIntensityFromRGB(image.GetPixel(x, y)) - I_average);
                 }
             }
             total = total/I_average/image.Width/image.Height;

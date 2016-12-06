@@ -53,7 +53,86 @@ namespace Part2Project.Features
         {
             Bitmap result = new Bitmap(image.Width, image.Height);
 
+            // Compute the average intensity of the image
+            double total = 0;
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    total += GetIntensityFromRGB(image.GetPixel(x, y));
+                }
+            }
+            double I_average = total / image.Width / image.Height;
 
+            // Set each pixel based on the difference from the average
+            double[][] values = new double[image.Width][];
+            double maxVal = 0;
+            for (int x = 0; x < image.Width; x++)
+            {
+                values[x] = new double[image.Height];
+                for (int y = 0; y < image.Height; y++)
+                {
+                    values[x][y] = GetIntensityFromRGB(image.GetPixel(x, y)) - I_average;
+                    if (Math.Abs(values[x][y]) > maxVal) maxVal = Math.Abs(values[x][y]);
+                }
+            }
+
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    if (values[x][y] < 0)
+                    {
+                        result.SetPixel(x, y, Color.FromArgb(0, -(int)(values[x][y] / maxVal * 255), -(int)(values[x][y] / maxVal * 255)));
+                    }
+                    else
+                    {
+                        result.SetPixel(x, y, Color.FromArgb((int)(values[x][y] / maxVal * 255), (int)(values[x][y] / maxVal * 255), 0));
+                    }
+                    
+                }
+            }
+
+            return result;
+        }
+
+        public Bitmap GetDifferenceMap(Bitmap image)
+        {
+            Bitmap result = new Bitmap(image.Width, image.Height);
+
+            // Compute the average intensity of the image
+            double total = 0;
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    total += GetIntensityFromRGB(image.GetPixel(x, y));
+                }
+            }
+            double I_average = total / image.Width / image.Height;
+
+            // Set each pixel based on the difference from the average
+            double[][] values = new double[image.Width][];
+            double maxVal = 0;
+            for (int x = 0; x < image.Width; x++)
+            {
+                values[x] = new double[image.Height];
+                for (int y = 0; y < image.Height; y++)
+                {
+                    values[x][y] = Math.Abs(GetIntensityFromRGB(image.GetPixel(x, y)) - I_average);
+                    if (values[x][y] > maxVal) maxVal = values[x][y];
+                }
+            }
+
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    result.SetPixel(x, y,
+                        Color.FromArgb((int) (values[x][y]/maxVal*255), (int) (values[x][y]/maxVal*255),
+                            (int) (values[x][y]/maxVal*255)));
+                }
+            }
 
             return result;
         }

@@ -37,6 +37,7 @@
             this.btnICFolder = new System.Windows.Forms.Button();
             this.btnIC = new System.Windows.Forms.Button();
             this.viewer2 = new System.Windows.Forms.PictureBox();
+            this.btnICDiffMap = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             this.SuspendLayout();
@@ -114,11 +115,23 @@
             this.viewer2.TabIndex = 31;
             this.viewer2.TabStop = false;
             // 
+            // btnICDiffMap
+            // 
+            this.btnICDiffMap.Location = new System.Drawing.Point(288, 10);
+            this.btnICDiffMap.Name = "btnICDiffMap";
+            this.btnICDiffMap.Size = new System.Drawing.Size(95, 37);
+            this.btnICDiffMap.TabIndex = 32;
+            this.btnICDiffMap.Text = "Intensity Difference Map";
+            this.btnICDiffMap.UseVisualStyleBackColor = true;
+            this.btnICDiffMap.Visible = false;
+            this.btnICDiffMap.Click += new System.EventHandler(this.btnICDiffMap_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(675, 311);
+            this.Controls.Add(this.btnICDiffMap);
             this.Controls.Add(this.viewer2);
             this.Controls.Add(this.btnIC);
             this.Controls.Add(this.btnICFolder);
@@ -146,6 +159,7 @@
         private System.Windows.Forms.Button btnICFolder;
         private System.Windows.Forms.Button btnIC;
         private System.Windows.Forms.PictureBox viewer2;
+        private System.Windows.Forms.Button btnICDiffMap;
     }
 }
 

@@ -47,6 +47,7 @@ namespace Part2Project
             {
                 btnROT.Visible = true;
                 btnIC.Visible = true;
+                btnICDiffMap.Visible = true;
             }
         }
 
@@ -119,7 +120,7 @@ namespace Part2Project
             double value = f.ComputeFeature(bmp);
             btnIC.Text = value.ToString(CultureInfo.InvariantCulture);
 
-            viewer2.Image = f.GetWeberContrastMap(bmp);
+            viewer2.Image = f.GetDifferenceMap(bmp);
         }
 
         private void btnICFolder_Click(object sender, EventArgs e)
@@ -158,6 +159,11 @@ namespace Part2Project
                 File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--IC.jpg");
                 current++;
             }
+        }
+
+        private void btnICDiffMap_Click(object sender, EventArgs e)
+        {
+            viewer2.Image = new FeatureIntensityContrast().GetWeberContrastMap(bmp);
         }
     }
 }

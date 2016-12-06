@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\FeatureIntensityContrast.cs" />
     <Compile Include="Features\FeatureRuleOfThirds.cs" />
     <Compile Include="Features\IFeature.cs" />
     <Compile Include="ImageSegmentation\RuleOfThirdsSegmentation.cs" />

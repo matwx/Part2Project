@@ -41,15 +41,12 @@ namespace Part2Project
             // Image loaded
             viewer2.Image = null;
             btnROT.Text = @"Rule Of Thirds";
+            btnIC.Text = @"Intensity Contrast";
 
-            if (!btnGBIS.Visible)
+            if (!btnROT.Visible)
             {
-                btnGBIS.Visible = true;
-                btnSegSaliency.Visible = true;
                 btnROT.Visible = true;
-                btnROTHeatmap.Visible = true;
-                btnROTDistmap.Visible = true;
-                btnROTSpreadmap.Visible = true;
+                btnIC.Visible = true;
             }
         }
 
@@ -57,30 +54,6 @@ namespace Part2Project
         {
             // Choose an image
             dlgChooseImage.ShowDialog();
-        }
-
-        private void btnGBIS_Click_1(object sender, EventArgs e)
-        {
-            // Do GBIS on our (resized) input image
-
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, 150, 0.8);
-
-            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.8);
-
-            viewer2.Image = ss.GetSaliencyMap();
-            DrawThirdLines();
-        }
-
-        private void btnSegSaliency_Click(object sender, EventArgs e)
-        {
-            // Do GBIS on our (resized) input image
-
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, 150, 0.8);
-
-            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.8);
-
-            viewer2.Image = ss.GetSegmentSaliencyMap();
-            DrawThirdLines();
         }
 
         private void btnROT_Click(object sender, EventArgs e)
@@ -135,33 +108,56 @@ namespace Part2Project
             int current = 0;
             foreach (double key in keyList)
             {
-                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + ".jpg");
+                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--RoT.jpg");
                 current++;
             }
         }
 
-        private void btnROTHeatmap_Click(object sender, EventArgs e)
+        private void btnIC_Click(object sender, EventArgs e)
         {
-            Bitmap result = new FeatureRuleOfThirds().GetRoTHeatMap(bmp);
+            FeatureIntensityContrast f = new FeatureIntensityContrast();
+            double value = f.ComputeFeature(bmp);
+            btnIC.Text = value.ToString(CultureInfo.InvariantCulture);
 
-            viewer2.Image = result;
-            DrawThirdLines();
+            viewer2.Image = f.GetWeberContrastMap(bmp);
         }
 
-        private void btnROTDistmap_Click(object sender, EventArgs e)
+        private void btnICFolder_Click(object sender, EventArgs e)
         {
-            Bitmap result = new FeatureRuleOfThirds().GetRoTDistanceMap(bmp);
+            dlgChooseFolder.ShowDialog();
+            Dictionary<double, string> newNames = new Dictionary<double, string>();
 
-            viewer2.Image = result;
-            DrawThirdLines();
-        }
+            var files = Directory.GetFiles(dlgChooseFolder.SelectedPath);
+            foreach (string filename in files)
+            {
+                using (Image selected = Image.FromFile(filename))
+                {
+                    bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+                    Graphics gfx = Graphics.FromImage(bmp);
 
-        private void btnROTSpreadmap_Click(object sender, EventArgs e)
-        {
-            Bitmap result = new FeatureRuleOfThirds().GetRoTSpreadMap(bmp);
+                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
 
-            viewer2.Image = result;
-            DrawThirdLines();
+                    double value = new FeatureIntensityContrast().ComputeFeature(bmp);
+
+                    //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
+                    newNames.Add(value, filename);
+                }
+
+            }
+
+            List<double> keyList = new List<double>();
+            foreach (double key in newNames.Keys)
+            {
+                keyList.Add(key);
+            }
+            keyList.Sort();
+            keyList.Reverse();
+            int current = 0;
+            foreach (double key in keyList)
+            {
+                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--IC.jpg");
+                current++;
+            }
         }
     }
 }

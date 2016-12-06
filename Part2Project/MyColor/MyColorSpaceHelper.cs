@@ -89,5 +89,17 @@ namespace Part2Project.MyColor
                 return CIEDE2000(RGBtoLab(c1), RGBtoLab(c2));
             }
         }
+
+        public static double GetIntensityFromRGB(int r, int g, int b)
+        {
+            // https://en.wikipedia.org/wiki/Relative_luminance, since we're comparing intensities
+
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        public static double GetIntensityFromRGB(Color c)
+        {
+            return GetIntensityFromRGB(c.R, c.G, c.B);
+        }
     }
 }

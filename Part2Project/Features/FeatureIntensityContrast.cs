@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Part2Project.MyColor;
 
 namespace Part2Project.Features
 {
@@ -17,7 +18,7 @@ namespace Part2Project.Features
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    total += GetIntensityFromRGB(image.GetPixel(x, y));
+                    total += MyColorSpaceHelper.GetIntensityFromRGB(image.GetPixel(x, y));
                 }
             }
             double I_average = total/image.Width/image.Height;
@@ -28,24 +29,12 @@ namespace Part2Project.Features
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    total += Math.Abs(GetIntensityFromRGB(image.GetPixel(x, y)) - I_average);
+                    total += Math.Abs(MyColorSpaceHelper.GetIntensityFromRGB(image.GetPixel(x, y)) - I_average);
                 }
             }
             total = total/I_average/image.Width/image.Height;
 
             return total;
-        }
-
-        private double GetIntensityFromRGB(int r, int g, int b)
-        {
-            // https://en.wikipedia.org/wiki/Relative_luminance, since we're comparing intensities
-
-            return 0.2126*r + 0.7152*g + 0.0722*b;
-        }
-
-        private double GetIntensityFromRGB(Color c)
-        {
-            return GetIntensityFromRGB(c.R, c.G, c.B);
         }
     }
 }

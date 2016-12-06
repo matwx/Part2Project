@@ -101,5 +101,10 @@ namespace Part2Project.ImageSegmentation
         {
             return _segmentSizes[i];
         }
+
+        public int GetPixelsSegmentIndex(int x, int y)
+        {
+            return _pixelAssignments[x][y];
+        }
     }
 }

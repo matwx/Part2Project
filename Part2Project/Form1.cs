@@ -42,12 +42,13 @@ namespace Part2Project
             viewer2.Image = null;
             btnROT.Text = @"Rule Of Thirds";
             btnIC.Text = @"Intensity Contrast";
+            btnBrightness.Text = @"Brightness";
 
             if (!btnROT.Visible)
             {
                 btnROT.Visible = true;
                 btnIC.Visible = true;
-                btnICDiffMap.Visible = true;
+                btnBrightness.Visible = true;
             }
         }
 
@@ -55,6 +56,16 @@ namespace Part2Project
         {
             // Choose an image
             dlgChooseImage.ShowDialog();
+        }
+
+        private void DrawThirdLines()
+        {
+            Graphics gfx = Graphics.FromImage(viewer2.Image);
+
+            gfx.DrawLine(Pens.Red, bmp.Width / 3, 0, bmp.Width / 3, bmp.Height);
+            gfx.DrawLine(Pens.Red, bmp.Width * 2 / 3, 0, bmp.Width * 2 / 3, bmp.Height);
+            gfx.DrawLine(Pens.Red, 0, bmp.Height / 3, bmp.Width, bmp.Height / 3);
+            gfx.DrawLine(Pens.Red, 0, bmp.Height * 2 / 3, bmp.Width, bmp.Height * 2 / 3);
         }
 
         private void btnROT_Click(object sender, EventArgs e)
@@ -66,14 +77,22 @@ namespace Part2Project
             DrawThirdLines();
         }
 
-        private void DrawThirdLines()
+        private void btnIC_Click(object sender, EventArgs e)
         {
-            Graphics gfx = Graphics.FromImage(viewer2.Image);
+            FeatureIntensityContrast f = new FeatureIntensityContrast();
+            double value = f.ComputeFeature(bmp);
+            btnIC.Text = value.ToString(CultureInfo.InvariantCulture);
 
-            gfx.DrawLine(Pens.Red, bmp.Width / 3, 0, bmp.Width / 3, bmp.Height);
-            gfx.DrawLine(Pens.Red, bmp.Width * 2 / 3, 0, bmp.Width * 2 / 3, bmp.Height);
-            gfx.DrawLine(Pens.Red, 0, bmp.Height / 3, bmp.Width, bmp.Height / 3);
-            gfx.DrawLine(Pens.Red, 0, bmp.Height * 2 / 3, bmp.Width, bmp.Height * 2 / 3);
+            viewer2.Image = f.GetDifferenceMap(bmp);
+        }
+
+        private void btnBrightness_Click(object sender, EventArgs e)
+        {
+            FeatureBrightness f = new FeatureBrightness();
+            double value = f.ComputeFeature(bmp);
+            btnBrightness.Text = value.ToString(CultureInfo.InvariantCulture);
+
+            viewer2.Image = f.GetIntensityMap(bmp);
         }
 
         private void btnBatchROT_Click(object sender, EventArgs e)
@@ -96,7 +115,7 @@ namespace Part2Project
                     //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
                     newNames.Add(value, filename);
                 }
-                
+
             }
 
             List<double> keyList = new List<double>();
@@ -112,15 +131,6 @@ namespace Part2Project
                 File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--RoT.jpg");
                 current++;
             }
-        }
-
-        private void btnIC_Click(object sender, EventArgs e)
-        {
-            FeatureIntensityContrast f = new FeatureIntensityContrast();
-            double value = f.ComputeFeature(bmp);
-            btnIC.Text = value.ToString(CultureInfo.InvariantCulture);
-
-            viewer2.Image = f.GetDifferenceMap(bmp);
         }
 
         private void btnICFolder_Click(object sender, EventArgs e)
@@ -176,7 +186,7 @@ namespace Part2Project
 
                     gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
 
-                    double value = new FeatureIntensityContrast().ComputeFeature(bmp);
+                    double value = new FeatureBrightness().ComputeFeature(bmp);
 
                     //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
                     newNames.Add(value, filename);
@@ -194,16 +204,9 @@ namespace Part2Project
             int current = 0;
             foreach (double key in keyList)
             {
-                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--IC.jpg");
+                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--B.jpg");
                 current++;
             }
         }
-
-        private void btnBrightness_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        
     }
 }

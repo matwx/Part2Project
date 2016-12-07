@@ -39,6 +39,8 @@
             this.viewer2 = new System.Windows.Forms.PictureBox();
             this.btnBrightnessFolder = new System.Windows.Forms.Button();
             this.btnBrightness = new System.Windows.Forms.Button();
+            this.btnSat = new System.Windows.Forms.Button();
+            this.btnSatFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             this.SuspendLayout();
@@ -79,7 +81,7 @@
             // 
             // btnBatchROT
             // 
-            this.btnBatchROT.Location = new System.Drawing.Point(572, 10);
+            this.btnBatchROT.Location = new System.Drawing.Point(756, 10);
             this.btnBatchROT.Name = "btnBatchROT";
             this.btnBatchROT.Size = new System.Drawing.Size(86, 37);
             this.btnBatchROT.TabIndex = 28;
@@ -89,7 +91,7 @@
             // 
             // btnICFolder
             // 
-            this.btnICFolder.Location = new System.Drawing.Point(480, 10);
+            this.btnICFolder.Location = new System.Drawing.Point(664, 10);
             this.btnICFolder.Name = "btnICFolder";
             this.btnICFolder.Size = new System.Drawing.Size(86, 37);
             this.btnICFolder.TabIndex = 29;
@@ -118,7 +120,7 @@
             // 
             // btnBrightnessFolder
             // 
-            this.btnBrightnessFolder.Location = new System.Drawing.Point(388, 10);
+            this.btnBrightnessFolder.Location = new System.Drawing.Point(572, 10);
             this.btnBrightnessFolder.Name = "btnBrightnessFolder";
             this.btnBrightnessFolder.Size = new System.Drawing.Size(86, 37);
             this.btnBrightnessFolder.TabIndex = 32;
@@ -137,11 +139,34 @@
             this.btnBrightness.Visible = false;
             this.btnBrightness.Click += new System.EventHandler(this.btnBrightness_Click);
             // 
+            // btnSat
+            // 
+            this.btnSat.Location = new System.Drawing.Point(380, 10);
+            this.btnSat.Name = "btnSat";
+            this.btnSat.Size = new System.Drawing.Size(86, 37);
+            this.btnSat.TabIndex = 34;
+            this.btnSat.Text = "Saturation";
+            this.btnSat.UseVisualStyleBackColor = true;
+            this.btnSat.Visible = false;
+            this.btnSat.Click += new System.EventHandler(this.btnSat_Click);
+            // 
+            // btnSatFolder
+            // 
+            this.btnSatFolder.Location = new System.Drawing.Point(480, 10);
+            this.btnSatFolder.Name = "btnSatFolder";
+            this.btnSatFolder.Size = new System.Drawing.Size(86, 37);
+            this.btnSatFolder.TabIndex = 35;
+            this.btnSatFolder.Text = "Saturation Folder";
+            this.btnSatFolder.UseVisualStyleBackColor = true;
+            this.btnSatFolder.Click += new System.EventHandler(this.btnSatFolder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(849, 311);
+            this.Controls.Add(this.btnSatFolder);
+            this.Controls.Add(this.btnSat);
             this.Controls.Add(this.btnBrightness);
             this.Controls.Add(this.btnBrightnessFolder);
             this.Controls.Add(this.viewer2);
@@ -173,6 +198,8 @@
         private System.Windows.Forms.PictureBox viewer2;
         private System.Windows.Forms.Button btnBrightnessFolder;
         private System.Windows.Forms.Button btnBrightness;
+        private System.Windows.Forms.Button btnSat;
+        private System.Windows.Forms.Button btnSatFolder;
     }
 }
 

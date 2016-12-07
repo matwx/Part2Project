@@ -43,12 +43,14 @@ namespace Part2Project
             btnROT.Text = @"Rule Of Thirds";
             btnIC.Text = @"Intensity Contrast";
             btnBrightness.Text = @"Brightness";
+            btnSat.Text = @"Saturation";
 
             if (!btnROT.Visible)
             {
                 btnROT.Visible = true;
                 btnIC.Visible = true;
                 btnBrightness.Visible = true;
+                btnSat.Visible = true;
             }
         }
 
@@ -93,6 +95,15 @@ namespace Part2Project
             btnBrightness.Text = value.ToString(CultureInfo.InvariantCulture);
 
             viewer2.Image = f.GetIntensityMap(bmp);
+        }
+
+        private void btnSat_Click(object sender, EventArgs e)
+        {
+            FeatureSaturation f = new FeatureSaturation();
+            double value = f.ComputeFeature(bmp);
+            btnSat.Text = value.ToString(CultureInfo.InvariantCulture);
+
+            viewer2.Image = f.GetSaturationMap(bmp);
         }
 
         private void btnBatchROT_Click(object sender, EventArgs e)
@@ -205,6 +216,44 @@ namespace Part2Project
             foreach (double key in keyList)
             {
                 File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--B.jpg");
+                current++;
+            }
+        }
+
+        private void btnSatFolder_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            Dictionary<double, string> newNames = new Dictionary<double, string>();
+
+            var files = Directory.GetFiles(dlgChooseFolder.SelectedPath);
+            foreach (string filename in files)
+            {
+                using (Image selected = Image.FromFile(filename))
+                {
+                    bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+                    Graphics gfx = Graphics.FromImage(bmp);
+
+                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+
+                    double value = new FeatureSaturation().ComputeFeature(bmp);
+
+                    //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
+                    newNames.Add(value, filename);
+                }
+
+            }
+
+            List<double> keyList = new List<double>();
+            foreach (double key in newNames.Keys)
+            {
+                keyList.Add(key);
+            }
+            keyList.Sort();
+            keyList.Reverse();
+            int current = 0;
+            foreach (double key in keyList)
+            {
+                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--Sat.jpg");
                 current++;
             }
         }

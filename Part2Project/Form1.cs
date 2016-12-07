@@ -161,9 +161,49 @@ namespace Part2Project
             }
         }
 
-        private void btnICDiffMap_Click(object sender, EventArgs e)
+        private void btnBrightnessFolder_Click(object sender, EventArgs e)
         {
-            viewer2.Image = new FeatureIntensityContrast().GetWeberContrastMap(bmp);
+            dlgChooseFolder.ShowDialog();
+            Dictionary<double, string> newNames = new Dictionary<double, string>();
+
+            var files = Directory.GetFiles(dlgChooseFolder.SelectedPath);
+            foreach (string filename in files)
+            {
+                using (Image selected = Image.FromFile(filename))
+                {
+                    bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+                    Graphics gfx = Graphics.FromImage(bmp);
+
+                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+
+                    double value = new FeatureIntensityContrast().ComputeFeature(bmp);
+
+                    //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
+                    newNames.Add(value, filename);
+                }
+
+            }
+
+            List<double> keyList = new List<double>();
+            foreach (double key in newNames.Keys)
+            {
+                keyList.Add(key);
+            }
+            keyList.Sort();
+            keyList.Reverse();
+            int current = 0;
+            foreach (double key in keyList)
+            {
+                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--IC.jpg");
+                current++;
+            }
         }
+
+        private void btnBrightness_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        
     }
 }

@@ -93,6 +93,7 @@ namespace Part2Project.MyColor
         public static double GetIntensityFromRGB(int r, int g, int b)
         {
             // https://en.wikipedia.org/wiki/Relative_luminance, since we're comparing intensities
+            // rather than wanting an absolute luminance value.
 
             return 0.2126 * r + 0.7152 * g + 0.0722 * b;
         }

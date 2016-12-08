@@ -19,19 +19,21 @@ namespace Part2Project.Features
                 for (int y = 0; y < image.Height; y++)
                 {
                     Color c = image.GetPixel(x, y);
-                    double M = (double) Math.Max(c.R, Math.Max(c.G, c.B));
-                    double m = (double) Math.Min(c.R, Math.Max(c.G, c.B));
+                    double r = c.R / 255.0;
+                    double g = c.G / 255.0;
+                    double b = c.B / 255.0;
+                    double M = Math.Max(r, Math.Max(g, b));
+                    double m = Math.Min(r, Math.Max(g, b));
                     double C = M - m;
-                    double V = MyColorSpaceHelper.GetIntensityFromRGB(c) / 255.0;
 
                     double sat = 0;
-                    if (V != 0.0) sat = C/V;
+                    if (M != 0.0) sat = C / M;
 
                     totalSat += sat;
                 }
             }
 
-            return totalSat/image.Width/image.Height;
+            return totalSat / image.Width / image.Height;
         }
     }
 }

@@ -44,13 +44,16 @@ namespace Part2Project
             btnIC.Text = @"Intensity Contrast";
             btnBrightness.Text = @"Brightness";
             btnSat.Text = @"Saturation";
+            btnSimplicity.Text = @"Simplicity";
 
             if (!btnROT.Visible)
             {
+                btnSegSal.Visible = true;
                 btnROT.Visible = true;
                 btnIC.Visible = true;
                 btnBrightness.Visible = true;
                 btnSat.Visible = true;
+                btnSimplicity.Visible = true;
             }
         }
 
@@ -68,6 +71,14 @@ namespace Part2Project
             gfx.DrawLine(Pens.Red, bmp.Width * 2 / 3, 0, bmp.Width * 2 / 3, bmp.Height);
             gfx.DrawLine(Pens.Red, 0, bmp.Height / 3, bmp.Width, bmp.Height / 3);
             gfx.DrawLine(Pens.Red, 0, bmp.Height * 2 / 3, bmp.Width, bmp.Height * 2 / 3);
+        }
+
+        private void btnSegSal_Click(object sender, EventArgs e)
+        {
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, 150.0, 0.8);
+            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.8);
+
+            viewer2.Image = ss.GetSegmentSaliencyMap();
         }
 
         private void btnROT_Click(object sender, EventArgs e)
@@ -104,6 +115,15 @@ namespace Part2Project
             btnSat.Text = value.ToString(CultureInfo.InvariantCulture);
 
             viewer2.Image = f.GetSaturationMap(bmp);
+        }
+
+        private void btnSimplicity_Click(object sender, EventArgs e)
+        {
+            FeatureSimplicity f = new FeatureSimplicity();
+            double value = f.ComputeFeature(bmp);
+            btnSimplicity.Text = value.ToString(CultureInfo.InvariantCulture);
+
+            viewer2.Image = f.GetBoundingBoxMap(bmp);
         }
 
         private void btnBatchROT_Click(object sender, EventArgs e)
@@ -254,6 +274,44 @@ namespace Part2Project
             foreach (double key in keyList)
             {
                 File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--Sat.jpg");
+                current++;
+            }
+        }
+
+        private void btnSimpFolder_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            Dictionary<double, string> newNames = new Dictionary<double, string>();
+
+            var files = Directory.GetFiles(dlgChooseFolder.SelectedPath);
+            foreach (string filename in files)
+            {
+                using (Image selected = Image.FromFile(filename))
+                {
+                    bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+                    Graphics gfx = Graphics.FromImage(bmp);
+
+                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+
+                    double value = new FeatureSimplicity().ComputeFeature(bmp);
+
+                    //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
+                    newNames.Add(value, filename);
+                }
+
+            }
+
+            List<double> keyList = new List<double>();
+            foreach (double key in newNames.Keys)
+            {
+                keyList.Add(key);
+            }
+            keyList.Sort();
+            keyList.Reverse();
+            int current = 0;
+            foreach (double key in keyList)
+            {
+                File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--Simp.jpg");
                 current++;
             }
         }

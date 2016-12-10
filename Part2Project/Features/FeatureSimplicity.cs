@@ -10,20 +10,33 @@ namespace Part2Project.Features
 {
     class FeatureSimplicity : IFeature
     {
+        const double alpha = 0.67;
+
         public double ComputeFeature(Bitmap image)
         {
-            const double alpha = 0.67;
-
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150.0, 0.8);
             SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
 
             bool[] trueSegments = new bool[ss.NumSegments];
+            double[] newSaliencies = new double[ss.NumSegments];
             int numTrueSegments = 0;
+
+            // Re-normalise the segment saliencies, excluding the smallest ones
+            double maxSal = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01*ss.Width*ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
+                    maxSal = ss.GetSegmentsSaliency(i);
+            }
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                newSaliencies[i] = ss.GetSegmentsSaliency(i)/maxSal;
+            }
 
             // Convert segment saliency map into a binary map, using a threshold, alpha
             for (int i = 0; i < ss.NumSegments; i++)
             {
-                if (ss.GetSegmentsSaliency(i) > alpha)
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && newSaliencies[i] > alpha)
                 {
                     trueSegments[i] = true;
                     numTrueSegments++;
@@ -109,20 +122,31 @@ namespace Part2Project.Features
 
         public Bitmap GetBoundingBoxMap(Bitmap image)
         {
-            Bitmap result = new Bitmap(image.Width, image.Height);
-
-            const double alpha = 0.67;
+            Bitmap result = new Bitmap(image);
 
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150.0, 0.8);
             SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
 
             bool[] trueSegments = new bool[ss.NumSegments];
+            double[] newSaliencies = new double[ss.NumSegments];
             int numTrueSegments = 0;
+
+            // Re-normalise the segment saliencies, excluding the smallest ones
+            double maxSal = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
+                    maxSal = ss.GetSegmentsSaliency(i);
+            }
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                newSaliencies[i] = ss.GetSegmentsSaliency(i) / maxSal;
+            }
 
             // Convert segment saliency map into a binary map, using a threshold, alpha
             for (int i = 0; i < ss.NumSegments; i++)
             {
-                if (ss.GetSegmentsSaliency(i) > alpha)
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && newSaliencies[i] > alpha)
                 {
                     trueSegments[i] = true;
                     numTrueSegments++;
@@ -174,7 +198,8 @@ namespace Part2Project.Features
                     }
 
                     // Also clear the result image
-                    result.SetPixel(x, y, Color.Black);
+                    Color c = image.GetPixel(x, y);
+                    result.SetPixel(x, y, Color.FromArgb(Math.Max(0, c.R -50), Math.Max(0, c.G -50), Math.Max(0, c.B -50)));
                 }
             }
 
@@ -185,7 +210,8 @@ namespace Part2Project.Features
                 {
                     for (int y = tops[i]; y < bottoms[i] + 1; y++)
                     {
-                        result.SetPixel(x, y, Color.White);
+                        Color c = image.GetPixel(x, y);
+                        result.SetPixel(x, y, Color.FromArgb(Math.Min(255, c.R +50), Math.Min(255, c.G +50), Math.Min(255, c.B +50)));
                     }
                 }
             }

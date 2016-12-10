@@ -296,7 +296,7 @@ namespace Part2Project
                     double value = new FeatureSimplicity().ComputeFeature(bmp);
 
                     //newNames.Add(filename, dlgChooseFolder.SelectedPath + "\\" + value.ToString() + ".jpg");
-                    newNames.Add(value, filename);
+                    if (!newNames.ContainsKey(value)) newNames.Add(value, filename);
                 }
 
             }

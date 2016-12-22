@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Part2Project.Infrastructure
 {
@@ -14,6 +14,7 @@ namespace Part2Project.Infrastructure
         // directory.
         private string _dPath;
         private List<string> _imageFilenames;
+        private int _numImages = 0;
         private List<List<double>> _imageFeatures;
 
         public ImageDirectoryFeatures(string dPath)
@@ -30,8 +31,36 @@ namespace Part2Project.Infrastructure
                 {
                     // We'll accept these file extensions as images
                     _imageFilenames.Add(filename);
+                    _numImages++;
                 }
             }
+        }
+
+        public List<List<double>> GetDirectoryFeatures()
+        {
+            List<List<double>> result = new List<List<double>>();
+
+            ManualResetEvent[] doneEvents = new ManualResetEvent[_numImages];
+            ImageFeatures[] imFeatArray = new ImageFeatures[_numImages];
+
+            // Configure and launch threads using ThreadPool
+            for (int i = 0; i < _numImages; i++)
+            {
+                doneEvents[i] = new ManualResetEvent(false);
+                ImageFeatures imFeat = new ImageFeatures(_imageFilenames.ElementAt(i), doneEvents[i]);
+                imFeatArray[i] = imFeat;
+                ThreadPool.QueueUserWorkItem(imFeat.ThreadPoolCallback, i);
+            }
+
+            // Wait for all threads in the pool to finish computing image features
+            WaitHandle.WaitAll(doneEvents);
+
+            for (int i = 0; i < _numImages; i++)
+            {
+                result.Add(imFeatArray[i].Features);
+            }
+
+            return result;
         }
     }
 }

@@ -65,6 +65,7 @@ namespace Part2Project.Infrastructure
     }
 }
 
+//   Some code from another branch to remind me how to get files from directory
 //            dlgChooseFolder.ShowDialog();
 //            Dictionary<double, string> newNames = new Dictionary<double, string>();
 //

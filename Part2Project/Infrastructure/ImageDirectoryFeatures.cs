@@ -48,7 +48,7 @@ namespace Part2Project.Infrastructure
             {
                 ImageFeatures imFeat = new ImageFeatures(_imageFilenames.ElementAt(i));
                 imFeatArray[i] = imFeat;
-                Task.Run(() => imFeat.ThreadPoolCallback());
+                tasks[i] = Task.Run(() => imFeat.ThreadPoolCallback());
             }
 
             // Wait for all threads in the pool to finish computing image features

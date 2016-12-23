@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace Part2Project.Features
             return result;
         }
 
-        private double[] GetRoTSpreads(RuleOfThirdsSegmentation rots)
+        public double[] GetRoTSpreads(RuleOfThirdsSegmentation rots)
         {
             // Get max x and y values for each segment
             double[] segmentLefts = new double[rots.NumSegments];

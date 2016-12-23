@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace Part2Project.Features
                     total += Math.Abs(MyColorSpaceHelper.GetIntensityFromRGB(image.GetPixel(x, y)) - I_average);
                 }
             }
-            total = total/I_average/image.Width/image.Height;
+            total = total / I_average / image.Width / image.Height;
 
             return total;
         }

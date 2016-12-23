@@ -21,7 +21,7 @@ namespace Part2Project.Features
                     total += MyColorSpaceHelper.GetIntensityFromRGB(image.GetPixel(x, y));
                 }
             }
-            total = total/image.Width/image.Height/255;
+            total = total / image.Width / image.Height / 255;
 
             return total;
         }

@@ -10,20 +10,33 @@ namespace Part2Project.Features
 {
     class FeatureSimplicity : IFeature
     {
+        const double alpha = 0.67;
+
         public double ComputeFeature(Bitmap image)
         {
-            const double alpha = 0.67;
-
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150.0, 0.8);
             SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
 
             bool[] trueSegments = new bool[ss.NumSegments];
+            double[] newSaliencies = new double[ss.NumSegments];
             int numTrueSegments = 0;
+
+            // Re-normalise the segment saliencies, excluding the smallest ones
+            double maxSal = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01*ss.Width*ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
+                    maxSal = ss.GetSegmentsSaliency(i);
+            }
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                newSaliencies[i] = ss.GetSegmentsSaliency(i)/maxSal;
+            }
 
             // Convert segment saliency map into a binary map, using a threshold, alpha
             for (int i = 0; i < ss.NumSegments; i++)
             {
-                if (ss.GetSegmentsSaliency(i) > alpha)
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && newSaliencies[i] > alpha)
                 {
                     trueSegments[i] = true;
                     numTrueSegments++;
@@ -47,6 +60,7 @@ namespace Part2Project.Features
             int[] rights = new int[ss.NumSegments];
             int[] tops = new int[ss.NumSegments];
             int[] bottoms = new int[ss.NumSegments];
+            bool[] initialised = new bool[ss.NumSegments];
 
             for (int x = 0; x < ss.Width; x++)
             {
@@ -55,10 +69,22 @@ namespace Part2Project.Features
                     int i = ss.GetPixelsSegmentIndex(x, y);
                     if (trueSegments[i])
                     {
-                        if (x < lefts[i]) lefts[i] = x;
-                        if (x > rights[i]) rights[i] = x;
-                        if (y < tops[i]) tops[i] = y;
-                        if (y > bottoms[i]) bottoms[i] = y;
+                        if (initialised[i])
+                        {
+                            if (x < lefts[i]) lefts[i] = x;
+                            if (x > rights[i]) rights[i] = x;
+                            if (y < tops[i]) tops[i] = y;
+                            if (y > bottoms[i]) bottoms[i] = y;
+                        }
+                        else
+                        {
+                            lefts[i] = x;
+                            rights[i] = x;
+                            tops[i] = y;
+                            bottoms[i] = y;
+
+                            initialised[i] = true;
+                        }
                     }
                 }
             }
@@ -91,7 +117,7 @@ namespace Part2Project.Features
                 }
             }
 
-            return ((double) total)/ss.Width/ss.Height;
+            return ((double)total) / ss.Width / ss.Height;
         }
     }
 }

@@ -19,9 +19,9 @@ namespace Part2Project.Features
                 for (int y = 0; y < image.Height; y++)
                 {
                     Color c = image.GetPixel(x, y);
-                    double r = c.R / 255.0;
-                    double g = c.G / 255.0;
-                    double b = c.B / 255.0;
+                    double r = c.R/255.0;
+                    double g = c.G/255.0;
+                    double b = c.B/255.0;
                     double M = Math.Max(r, Math.Max(g, b));
                     double m = Math.Min(r, Math.Max(g, b));
                     double C = M - m;

@@ -15,7 +15,7 @@ namespace Part2Project.Infrastructure
         private string _filename;
         private Bitmap _image;
         private ManualResetEvent _doneEvent;
-        public List<double> Features { get; private set; }
+        public ImageFeatureList Features { get; private set; }
 
         public ImageFeatures(string filename, ManualResetEvent doneEvent)
         {
@@ -29,13 +29,10 @@ namespace Part2Project.Infrastructure
             _doneEvent.Set();
         }
 
-        public List<double> GetFeatures()
+        public ImageFeatureList GetFeatures()
         {
-            List<double> result = new List<double>();
-            // Feature order:
-            // 1. Brightness
-            // 2. 
-
+            ImageFeatureList result = new ImageFeatureList();
+           
             // First try to check the Exif metadata for feature values
 
 

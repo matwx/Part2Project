@@ -15,7 +15,7 @@ namespace Part2Project.Infrastructure
         private string _dPath;
         private List<string> _imageFilenames;
         private int _numImages = 0;
-        private List<List<double>> _imageFeatures;
+        private List<ImageFeatureList> _imageFeatures;
 
         public ImageDirectoryFeatures(string dPath)
         {
@@ -36,9 +36,9 @@ namespace Part2Project.Infrastructure
             }
         }
 
-        public List<List<double>> GetDirectoryFeatures()
+        public List<ImageFeatureList> GetDirectoryFeatures()
         {
-            List<List<double>> result = new List<List<double>>();
+            List<ImageFeatureList> result = new List<ImageFeatureList>();
 
             ManualResetEvent[] doneEvents = new ManualResetEvent[_numImages];
             ImageFeatures[] imFeatArray = new ImageFeatures[_numImages];

@@ -8,13 +8,19 @@ namespace Part2Project.Infrastructure
 {
     class ImageFeatureList
     {
-        //TODO: Add conversions to/from the Exif byte array
+        // TODO: Add conversions to/from the Exif byte array
+        // Feature order:
+        // 1. Brightness
+        // 2. Intensity Contrast
+        // 3. Saturation
+        // 4. Rule Of Thirds
+        // 5. Simplicity (Bounding box area)
 
         public const int VersionNumber = 1;
         public const int NumFeatures = 5;
         private bool[] _featuresSet;
 
-        ImageFeatureList()
+        public ImageFeatureList()
         {
             _featuresSet = new bool[NumFeatures];
         }

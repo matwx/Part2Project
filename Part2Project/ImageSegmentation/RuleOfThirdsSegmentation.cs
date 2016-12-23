@@ -11,7 +11,8 @@ namespace Part2Project.ImageSegmentation
     {
         private double[] _powerPointDistances;
 
-        public RuleOfThirdsSegmentation(Segmentation s, Bitmap image, double sigma) : base(s, image, sigma)
+        public RuleOfThirdsSegmentation(Segmentation s, Bitmap image, double sigma)
+            : base(s, image, sigma)
         {
             _powerPointDistances = new double[NumSegments];
 
@@ -31,17 +32,23 @@ namespace Part2Project.ImageSegmentation
                 }
             }
 
+            // Find a max distance to normalise these distances
+            double norm =
+                Math.Sqrt((Width / 3.0) * (Width / 3.0) +
+                          (Height / 3.0) * (Height / 3.0));
+
+
             for (int i = 0; i < NumSegments; i++)
             {
                 // Compute centre position
-                double centreX = (double) totalX[i] / _segmentSizes[i];
-                double centreY = (double) totalY[i] / _segmentSizes[i];
+                double centreX = (double)totalX[i] / _segmentSizes[i];
+                double centreY = (double)totalY[i] / _segmentSizes[i];
 
                 // Compute distance to each powerpoint, and keep the minimum
                 // Top-left
                 double minDist =
-                    Math.Sqrt((centreX - (Width/3.0))*(centreX - (Width/3.0)) +
-                              (centreY - (Height/3.0))*(centreY - (Height/3.0)));
+                    Math.Sqrt((centreX - (Width / 3.0)) * (centreX - (Width / 3.0)) +
+                              (centreY - (Height / 3.0)) * (centreY - (Height / 3.0)));
                 // Top-right
                 double nextDist =
                     Math.Sqrt((centreX - (Width * 2.0 / 3.0)) * (centreX - (Width * 2.0 / 3.0)) +
@@ -58,7 +65,7 @@ namespace Part2Project.ImageSegmentation
                               (centreY - (Height * 2.0 / 3.0)) * (centreY - (Height * 2.0 / 3.0)));
                 if (nextDist < minDist) minDist = nextDist;
 
-                _powerPointDistances[i] = minDist;
+                _powerPointDistances[i] = minDist / norm;
             }
         }
 

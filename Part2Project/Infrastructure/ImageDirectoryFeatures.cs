@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Part2Project.Infrastructure
 {
@@ -15,7 +16,6 @@ namespace Part2Project.Infrastructure
         private string _dPath;
         private List<string> _imageFilenames;
         private int _numImages = 0;
-        private List<ImageFeatureList> _imageFeatures;
 
         public ImageDirectoryFeatures(string dPath)
         {
@@ -40,20 +40,19 @@ namespace Part2Project.Infrastructure
         {
             List<ImageFeatureList> result = new List<ImageFeatureList>();
 
-            ManualResetEvent[] doneEvents = new ManualResetEvent[_numImages];
+            Task[] tasks = new Task[_numImages];
             ImageFeatures[] imFeatArray = new ImageFeatures[_numImages];
 
             // Configure and launch threads using ThreadPool
             for (int i = 0; i < _numImages; i++)
             {
-                doneEvents[i] = new ManualResetEvent(false);
-                ImageFeatures imFeat = new ImageFeatures(_imageFilenames.ElementAt(i), doneEvents[i]);
+                ImageFeatures imFeat = new ImageFeatures(_imageFilenames.ElementAt(i));
                 imFeatArray[i] = imFeat;
-                ThreadPool.QueueUserWorkItem(imFeat.ThreadPoolCallback, i);
+                Task.Run(() => imFeat.ThreadPoolCallback());
             }
 
             // Wait for all threads in the pool to finish computing image features
-            WaitHandle.WaitAll(doneEvents);
+            Task.WaitAll(tasks);
 
             for (int i = 0; i < _numImages; i++)
             {

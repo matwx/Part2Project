@@ -15,19 +15,16 @@ namespace Part2Project.Infrastructure
         // Retrieves/computes a list of all features for a particular image
         private string _filename;
         private Bitmap _image;
-        private ManualResetEvent _doneEvent;
         public ImageFeatureList Features { get; private set; }
 
-        public ImageFeatures(string filename, ManualResetEvent doneEvent)
+        public ImageFeatures(string filename)
         {
-            _doneEvent = doneEvent;
             _filename = filename;
         }
 
-        public void ThreadPoolCallback(Object threadContext)
+        public void ThreadPoolCallback()
         {
             Features = GetFeatures();
-            _doneEvent.Set();
         }
 
         public ImageFeatureList GetFeatures()

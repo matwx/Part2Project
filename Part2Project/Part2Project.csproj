@@ -52,6 +52,7 @@
     <Compile Include="Features\IFeature.cs" />
     <Compile Include="ImageSegmentation\RuleOfThirdsSegmentation.cs" />
     <Compile Include="ImageSegmentation\Segmentation.cs" />
+    <Compile Include="Infrastructure\ImageFeatureList.cs" />
     <Compile Include="Infrastructure\ImageFeatures.cs" />
     <Compile Include="Infrastructure\ImageDirectoryFeatures.cs" />
     <Compile Include="MyColor\MyColorSpaceHelper.cs" />

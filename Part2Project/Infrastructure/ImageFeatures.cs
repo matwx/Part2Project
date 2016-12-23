@@ -32,14 +32,22 @@ namespace Part2Project.Infrastructure
         public List<double> GetFeatures()
         {
             List<double> result = new List<double>();
+            // Feature order:
+            // 1. Brightness
+            // 2. 
 
-            // Read the image as a bitmap
+            // First try to check the Exif metadata for feature values
+
+
+            // If they can't be retrieved from there, we need to compute them
+
+            // Read the image from file as a bitmap
             Image selected = Image.FromFile(_filename);
             _image = new Bitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
             Graphics gfx = Graphics.FromImage(_image);
             gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
 
-            //Todo: Fill this in with feature retrieval or extraction.
+            
 
             return result;
         }

@@ -25,6 +25,21 @@ namespace Part2Project.Infrastructure
             _featuresSet = new bool[NumFeatures];
         }
 
+        public bool LoadFromByteArray(byte[] data)
+        {
+            // Returns boolean indicating if it was successful in parsing the correct number of doubles
+            // from the array, and that the version was up-to-date
+            // TODO: add conversion from byte array
+
+            return false;
+        }
+
+        public byte[] ToByteArray()
+        {
+            // TODO: implement this
+            throw new NotImplementedException();
+        }
+
         public bool AllFeaturesSet()
         {
             bool result = _featuresSet[0];

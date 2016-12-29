@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,25 +32,71 @@ namespace Part2Project.Infrastructure
         public ImageFeatureList GetFeatures()
         {
             ImageFeatureList result = new ImageFeatureList();
-            Image selected = Image.FromFile(_filename);
 
-            // TODO: First try to check the Exif metadata for feature values
+            // TODO: Need to check for jpg before checking metadata
+            byte[] makerNote = GetExifMakerNote(_filename);
+            if (makerNote == null || !result.LoadFromByteArray(makerNote))
+            {
+                // If they can't be retrieved from there, we need to compute them
 
-            // If they can't be retrieved from there, we need to compute them
+                // Read the image from file as a bitmap
+                Image selected = Image.FromFile(_filename);
+                _image = new Bitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                Graphics gfx = Graphics.FromImage(_image);
+                gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
 
-            // Read the image from file as a bitmap
-            _image = new Bitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-            Graphics gfx = Graphics.FromImage(_image);
-            gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                // Compute the features and store the results
+                result.Brightness = new FeatureBrightness().ComputeFeature(_image);
+                result.IntensityContrast = new FeatureIntensityContrast().ComputeFeature(_image);
+                result.Saturation = new FeatureSaturation().ComputeFeature(_image);
+                result.RuleOfThirds = new FeatureRuleOfThirds().ComputeFeature(_image);
+                result.Simplicity = new FeatureSimplicity().ComputeFeature(_image);
 
-            // Compute the features and store the results
-            result.Brightness = new FeatureBrightness().ComputeFeature(_image);
-            result.IntensityContrast = new FeatureIntensityContrast().ComputeFeature(_image);
-            result.Saturation = new FeatureSaturation().ComputeFeature(_image);
-            result.RuleOfThirds = new FeatureRuleOfThirds().ComputeFeature(_image);
-            result.Simplicity = new FeatureSimplicity().ComputeFeature(_image);
+                // TODO: Save the new computed features in the MakerNote
+            }
 
             return result;
+        }
+
+        private void SaveExifMakerNote(string filename, byte[] data)
+        {
+            // Make a copy of the file 
+            Random rand = new Random();
+            string tmpFileName = Path.GetTempPath() + "\\" + rand.Next(10000, 99999) + ".jpg";
+            byte[] imageBytes = File.ReadAllBytes(filename);
+            File.WriteAllBytes(tmpFileName, imageBytes);
+
+            using (Bitmap image = new Bitmap(tmpFileName))
+            {
+                PropertyItem pi = image.PropertyItems[0];
+                pi.Type = 7; // Undefined
+                pi.Len = data.Length;
+                pi.Value = (byte[])data.Clone();
+                pi.Id = 0x927C; // MakerNote field Id
+
+                image.SetPropertyItem(pi);
+
+                image.Save(filename);
+            }
+
+            File.Delete(tmpFileName);
+        }
+
+        private byte[] GetExifMakerNote(string filename) // Returns null if the MakerNote field doesn't exist
+        {
+            using (Bitmap image = new Bitmap(filename))
+            {
+                PropertyItem[] pis = image.PropertyItems;
+                foreach (PropertyItem pi in pis)
+                {
+                    if (pi.Id == 0x927C) // Id of the MakerNote field
+                    {
+                        return (byte[])pi.Value.Clone();
+                    }
+                }
+
+                return null;
+            }
         }
     }
 }

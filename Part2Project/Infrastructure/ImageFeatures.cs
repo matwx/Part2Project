@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -30,14 +31,13 @@ namespace Part2Project.Infrastructure
         public ImageFeatureList GetFeatures()
         {
             ImageFeatureList result = new ImageFeatureList();
-           
-            // TODO: First try to check the Exif metadata for feature values
+            Image selected = Image.FromFile(_filename);
 
+            // TODO: First try to check the Exif metadata for feature values
 
             // If they can't be retrieved from there, we need to compute them
 
             // Read the image from file as a bitmap
-            Image selected = Image.FromFile(_filename);
             _image = new Bitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
             Graphics gfx = Graphics.FromImage(_image);
             gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);

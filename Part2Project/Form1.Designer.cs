@@ -39,7 +39,7 @@
             this.txt.Multiline = true;
             this.txt.Name = "txt";
             this.txt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt.Size = new System.Drawing.Size(307, 662);
+            this.txt.Size = new System.Drawing.Size(563, 662);
             this.txt.TabIndex = 0;
             // 
             // btnChooseFolder
@@ -56,7 +56,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(430, 686);
+            this.ClientSize = new System.Drawing.Size(679, 686);
             this.Controls.Add(this.btnChooseFolder);
             this.Controls.Add(this.txt);
             this.Name = "Form1";

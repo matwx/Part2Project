@@ -31,7 +31,7 @@ namespace Part2Project.Infrastructure
 
         public ImageFeatureList GetFeatures()
         {
-            ImageFeatureList result = new ImageFeatureList();
+            ImageFeatureList result = new ImageFeatureList(_filename);
 
             string ext = _filename.Split('.').Last();
             byte[] makerNote = GetExifMakerNote(_filename);

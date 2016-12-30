@@ -64,7 +64,7 @@ namespace Part2Project
             string nl = Environment.NewLine;
             for (int i = 0; i < features.Count; i++)
             {
-                txt.Text += "Image " + (i + 1) + nl;
+                txt.Text += "Image " + (i + 1) + " - \"" + features[i].ImageFilename + "\"" + nl;
                 txt.Text += "  Brightness: " + features[i].Brightness + nl;
                 txt.Text += "  IntensityContrast: " + features[i].IntensityContrast + nl;
                 txt.Text += "  Saturation: " + features[i].Saturation + nl;

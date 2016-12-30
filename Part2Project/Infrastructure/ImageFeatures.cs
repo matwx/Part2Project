@@ -33,26 +33,32 @@ namespace Part2Project.Infrastructure
         {
             ImageFeatureList result = new ImageFeatureList();
 
-            // TODO: Need to check for jpg before checking metadata
+            string ext = _filename.Split('.').Last();
             byte[] makerNote = GetExifMakerNote(_filename);
-            if (makerNote == null || !result.LoadFromByteArray(makerNote))
+            if (!(ext.Equals("jpg") || ext.Equals("jpeg")) || makerNote == null || !result.LoadFromByteArray(makerNote))
             {
-                // If they can't be retrieved from there, we need to compute them
+                // If they can't be retrieved from Exif, we need to compute them
+                // First read the image from file as a bitmap
+                using (Image selected = Image.FromFile(_filename))
+                {
+                    using (_image = new Bitmap((int) ((double) selected.Width/(double) selected.Height*240.0), 240))
+                    {
+                        using (Graphics gfx = Graphics.FromImage(_image))
+                        {
+                            gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                        } 
+                        
+                        // Then compute the features and store the results
+                        result.Brightness = new FeatureBrightness().ComputeFeature(_image);
+                        result.IntensityContrast = new FeatureIntensityContrast().ComputeFeature(_image);
+                        result.Saturation = new FeatureSaturation().ComputeFeature(_image);
+                        result.RuleOfThirds = new FeatureRuleOfThirds().ComputeFeature(_image);
+                        result.Simplicity = new FeatureSimplicity().ComputeFeature(_image);
+                    }
+                }
 
-                // Read the image from file as a bitmap
-                Image selected = Image.FromFile(_filename);
-                _image = new Bitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-                Graphics gfx = Graphics.FromImage(_image);
-                gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-
-                // Compute the features and store the results
-                result.Brightness = new FeatureBrightness().ComputeFeature(_image);
-                result.IntensityContrast = new FeatureIntensityContrast().ComputeFeature(_image);
-                result.Saturation = new FeatureSaturation().ComputeFeature(_image);
-                result.RuleOfThirds = new FeatureRuleOfThirds().ComputeFeature(_image);
-                result.Simplicity = new FeatureSimplicity().ComputeFeature(_image);
-
-                // TODO: Save the new computed features in the MakerNote
+                // Save the new computed features in the MakerNote
+                SaveExifMakerNote(_filename, result.ToByteArray());
             }
 
             return result;

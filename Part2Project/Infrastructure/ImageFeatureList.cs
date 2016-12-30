@@ -8,7 +8,6 @@ namespace Part2Project.Infrastructure
 {
     class ImageFeatureList
     {
-        // TODO: Add conversions to/from the Exif byte array
         // Feature order:
         // 1. Brightness
         // 2. Intensity Contrast
@@ -19,25 +18,66 @@ namespace Part2Project.Infrastructure
         public const int VersionNumber = 1;
         public const int NumFeatures = 5;
         private bool[] _featuresSet;
+        private double[] _features;
 
         public ImageFeatureList()
         {
             _featuresSet = new bool[NumFeatures];
+            _features = new double[NumFeatures];
         }
 
         public bool LoadFromByteArray(byte[] data)
         {
             // Returns boolean indicating if it was successful in parsing the correct number of doubles
             // from the array, and that the version was up-to-date
-            // TODO: add conversion from byte array
+            
+            // Byte format:
+            // 0     :  byte  : Version number
+            // 1     :  byte  : Number of Features ((size - 2) / 8) Not really needed, but extra protection from error
+            // 2-9   : double : Feature 1
+            // 10-17 : double : Feature 2
+            // ...
+            int length = data.Length;
 
-            return false;
+            if (length != NumFeatures*8 + 2) return false;
+
+            // Check that version is up-to-date
+            int dVersionNumber = data[0];
+            if (dVersionNumber < VersionNumber) return false;
+
+            // Check that number of features is consistent with current version
+            int dNumFeatures = data[1];
+            if (dNumFeatures != NumFeatures) return false;
+
+            // Read all of the features
+            for (int i = 0; i < NumFeatures; i++)
+            {
+                _features[i] = BitConverter.ToDouble(data, 8*i + 2);
+                _featuresSet[i] = true;
+            }
+
+            return true;
         }
 
-        public byte[] ToByteArray()
+        public byte[] ToByteArray() // Returns null if not all of the features have been set
         {
-            // TODO: implement this
-            throw new NotImplementedException();
+            if (!AllFeaturesSet()) return null;
+
+            byte[] array = new byte[NumFeatures * 8 + 2];
+            array[0] = VersionNumber;
+            array[1] = NumFeatures;
+
+            for (int i = 0; i < NumFeatures; i++)
+            {
+                byte[] featureBytes = BitConverter.GetBytes(_features[i]);
+
+                for (int j = 0; j < 8; j++)
+                {
+                    array[2 + 8*i + j] = featureBytes[j];
+                }
+            }
+
+            return array;
         }
 
         public bool AllFeaturesSet()
@@ -54,49 +94,48 @@ namespace Part2Project.Infrastructure
 
         #region Features
 
-        private double _brightness, _intensityContrast, _saturation, _ruleOfThirds, _simplicity;
         public double Brightness
         {
-            get { return _brightness; }
+            get { return _features[0]; }
             set
             {
-                _brightness = value;
+                _features[0] = value;
                 _featuresSet[0] = true;
             }
         }
         public double IntensityContrast
         {
-            get { return _intensityContrast; }
+            get { return _features[1]; }
             set
             {
-                _intensityContrast = value;
+                _features[1] = value;
                 _featuresSet[1] = true;
             }
         }
         public double Saturation
         {
-            get { return _saturation; }
+            get { return _features[2]; }
             set
             {
-                _saturation = value;
+                _features[2] = value;
                 _featuresSet[2] = true;
             }
         }
         public double RuleOfThirds
         {
-            get { return _ruleOfThirds; }
+            get { return _features[3]; }
             set
             {
-                _ruleOfThirds = value;
+                _features[3] = value;
                 _featuresSet[3] = true;
             }
         }
         public double Simplicity
         {
-            get { return _simplicity; }
+            get { return _features[4]; }
             set
             {
-                _simplicity = value;
+                _features[4] = value;
                 _featuresSet[4] = true;
             }
         }

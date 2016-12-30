@@ -15,15 +15,17 @@ namespace Part2Project.Infrastructure
         // 4. Rule Of Thirds
         // 5. Simplicity (Bounding box area)
 
-        public const int VersionNumber = 1;
+        public const int VersionNumber = 2;
         public const int NumFeatures = 5;
         private bool[] _featuresSet;
         private double[] _features;
+        public string ImageFilename { get; private set; }
 
-        public ImageFeatureList()
+        public ImageFeatureList(string filename)
         {
             _featuresSet = new bool[NumFeatures];
             _features = new double[NumFeatures];
+            ImageFilename = filename;
         }
 
         public bool LoadFromByteArray(byte[] data)
@@ -43,7 +45,7 @@ namespace Part2Project.Infrastructure
 
             // Check that version is up-to-date
             int dVersionNumber = data[0];
-            if (dVersionNumber < VersionNumber) return false;
+            if (dVersionNumber != VersionNumber) return false;
 
             // Check that number of features is consistent with current version
             int dNumFeatures = data[1];

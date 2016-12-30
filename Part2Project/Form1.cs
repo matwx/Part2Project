@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,11 +58,72 @@ namespace Part2Project
 
             if (dlgFolder1.SelectedPath == "") return;
 
+            DateTime before = DateTime.Now;
+
             ImageDirectoryFeatures featureManager = new ImageDirectoryFeatures(dlgFolder1.SelectedPath);
             List<ImageFeatureList> features = featureManager.GetDirectoryFeatures();
 
+            DateTime after = DateTime.Now;
+
+            TimeSpan diff = after - before;
+
             txt.Text = "";
             string nl = Environment.NewLine;
+
+            txt.Text += "Time taken to get features for " + features.Count + " image(s) was " + diff.TotalSeconds +
+                        " seconds." + nl + nl;
+
+            for (int i = 0; i < features.Count; i++)
+            {
+                txt.Text += "Image " + (i + 1) + " - \"" + features[i].ImageFilename + "\"" + nl;
+                txt.Text += "  Brightness: " + features[i].Brightness + nl;
+                txt.Text += "  IntensityContrast: " + features[i].IntensityContrast + nl;
+                txt.Text += "  Saturation: " + features[i].Saturation + nl;
+                txt.Text += "  RuleOfThirds: " + features[i].RuleOfThirds + nl;
+                txt.Text += "  Simplicity: " + features[i].Simplicity + nl;
+                txt.Text += nl;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dlgFolder1.ShowDialog();
+
+            DateTime before = DateTime.Now;
+
+            List<ImageFeatureList> features = new List<ImageFeatureList>();
+            
+            List<string> imageFilenames = new List<string>();
+            int numImages = 0;
+            string[] filenames = Directory.GetFiles(dlgFolder1.SelectedPath);
+            foreach (string filename in filenames)
+            {
+                string ext = filename.Split('.').Last();
+                if (ext.Equals("jpg") || ext.Equals("jpeg") || ext.Equals("png"))
+                {
+                    // We'll accept these file extensions as images
+                    imageFilenames.Add(filename);
+                    numImages++;
+                }
+            }
+            
+            for (int i = 0; i < numImages; i++)
+            {
+                ImageFeatures imFeat = new ImageFeatures(imageFilenames.ElementAt(i));
+                imFeat.ThreadPoolCallback();
+                features.Add(imFeat.Features);
+            }
+
+            DateTime after = DateTime.Now;
+
+            TimeSpan diff = after - before;
+
+            txt.Text = "";
+            string nl = Environment.NewLine;
+
+            txt.Text += "Time taken to get features for " + features.Count + " image(s) was " + diff.TotalSeconds +
+                        " seconds." + nl + nl;
+
             for (int i = 0; i < features.Count; i++)
             {
                 txt.Text += "Image " + (i + 1) + " - \"" + features[i].ImageFilename + "\"" + nl;

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Part2Project.Infrastructure;
 
 namespace Part2Project
 {
@@ -48,6 +49,29 @@ namespace Part2Project
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnChooseFolder_Click(object sender, EventArgs e)
+        {
+            dlgFolder1.ShowDialog();
+
+            if (dlgFolder1.SelectedPath == "") return;
+
+            ImageDirectoryFeatures featureManager = new ImageDirectoryFeatures(dlgFolder1.SelectedPath);
+            List<ImageFeatureList> features = featureManager.GetDirectoryFeatures();
+
+            txt.Text = "";
+            string nl = Environment.NewLine;
+            for (int i = 0; i < features.Count; i++)
+            {
+                txt.Text += "Image " + (i + 1) + nl;
+                txt.Text += "  Brightness: " + features[i].Brightness + nl;
+                txt.Text += "  IntensityContrast: " + features[i].IntensityContrast + nl;
+                txt.Text += "  Saturation: " + features[i].Saturation + nl;
+                txt.Text += "  RuleOfThirds: " + features[i].RuleOfThirds + nl;
+                txt.Text += "  Simplicity: " + features[i].Simplicity + nl;
+                txt.Text += nl;
+            }
         }
     }
 }

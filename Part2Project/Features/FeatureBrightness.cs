@@ -8,9 +8,9 @@ using Part2Project.MyColor;
 
 namespace Part2Project.Features
 {
-    class FeatureBrightness : IFeature
+    static class FeatureBrightness
     {
-        public double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(Bitmap image)
         {
             // Compute the average intensity of the image
             double total = 0;

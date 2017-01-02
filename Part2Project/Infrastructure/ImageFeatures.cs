@@ -49,11 +49,11 @@ namespace Part2Project.Infrastructure
                         } 
                         
                         // Then compute the features and store the results
-                        result.Brightness = new FeatureBrightness().ComputeFeature(_image);
-                        result.IntensityContrast = new FeatureIntensityContrast().ComputeFeature(_image);
-                        result.Saturation = new FeatureSaturation().ComputeFeature(_image);
-                        result.RuleOfThirds = new FeatureRuleOfThirds().ComputeFeature(_image);
-                        result.Simplicity = new FeatureSimplicity().ComputeFeature(_image);
+                        result.Brightness = FeatureBrightness.ComputeFeature(_image);
+                        result.IntensityContrast = FeatureIntensityContrast.ComputeFeature(_image);
+                        result.Saturation = FeatureSaturation.ComputeFeature(_image);
+                        result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(_image);
+                        result.Simplicity = FeatureSimplicity.ComputeFeature(_image);
                     }
                 }
 

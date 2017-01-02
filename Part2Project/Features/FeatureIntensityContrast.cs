@@ -9,9 +9,9 @@ using Part2Project.MyColor;
 
 namespace Part2Project.Features
 {
-    class FeatureIntensityContrast : IFeature // Uses Weber Constrast
+    static class FeatureIntensityContrast // Uses Weber Constrast
     {
-        public double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(Bitmap image)
         {
             // Compute the average intensity of the image
             double total = 0;

@@ -8,11 +8,11 @@ using Part2Project.ImageSegmentation;
 
 namespace Part2Project.Features
 {
-    class FeatureSimplicity : IFeature
+    static class FeatureSimplicity
     {
         const double alpha = 0.67;
 
-        public double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(Bitmap image)
         {
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150.0, 0.8);
             SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);

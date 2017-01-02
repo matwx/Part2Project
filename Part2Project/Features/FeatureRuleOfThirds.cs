@@ -9,9 +9,9 @@ using Part2Project.ImageSegmentation;
 
 namespace Part2Project.Features
 {
-    class FeatureRuleOfThirds : IFeature
+    static class FeatureRuleOfThirds
     {
-        public double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(Bitmap image)
         {
             // Get saliency segmentation
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
@@ -38,7 +38,7 @@ namespace Part2Project.Features
             return result;
         }
 
-        public double[] GetRoTSpreads(RuleOfThirdsSegmentation rots)
+        public static double[] GetRoTSpreads(RuleOfThirdsSegmentation rots)
         {
             // Get max x and y values for each segment
             double[] segmentLefts = new double[rots.NumSegments];

@@ -49,7 +49,6 @@
     <Compile Include="Features\FeatureRuleOfThirds.cs" />
     <Compile Include="Features\FeatureSaturation.cs" />
     <Compile Include="Features\FeatureSimplicity.cs" />
-    <Compile Include="Features\IFeature.cs" />
     <Compile Include="ImageSegmentation\RuleOfThirdsSegmentation.cs" />
     <Compile Include="ImageSegmentation\Segmentation.cs" />
     <Compile Include="Infrastructure\ImageFeatureList.cs" />

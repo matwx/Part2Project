@@ -8,9 +8,9 @@ using Part2Project.MyColor;
 
 namespace Part2Project.Features
 {
-    class FeatureSaturation : IFeature
+    static class FeatureSaturation
     {
-        public double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(Bitmap image)
         {
             // Compute the average saturation of all of the pixels in the image
             double totalSat = 0;

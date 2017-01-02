@@ -66,42 +66,38 @@ namespace Part2Project.Infrastructure
 
         private void SaveExifMakerNote(string filename, byte[] data)
         {
-            // Make a copy of the file 
-            Random rand = new Random();
-            string tmpFileName = Path.GetTempPath() + "\\" + rand.Next(10000, 99999) + ".jpg";
+            // Make a copy of the file
             byte[] imageBytes = File.ReadAllBytes(filename);
-            File.WriteAllBytes(tmpFileName, imageBytes);
 
-            using (Bitmap image = new Bitmap(tmpFileName))
+            using (MemoryStream ms = new MemoryStream(imageBytes))
             {
-                PropertyItem pi = image.PropertyItems[0];
-                pi.Type = 7; // Undefined
-                pi.Len = data.Length;
-                pi.Value = (byte[])data.Clone();
-                pi.Id = 0x927C; // MakerNote field Id
+                using (Bitmap image = new Bitmap(ms))
+                {
+                    PropertyItem pi = image.PropertyItems[0];
+                    pi.Type = 7; // Undefined
+                    pi.Len = data.Length;
+                    pi.Value = (byte[])data.Clone();
+                    pi.Id = 0x927C; // MakerNote field Id
 
-                image.SetPropertyItem(pi);
+                    image.SetPropertyItem(pi);
 
-                image.Save(filename);
+                    image.Save(filename);
+                }
             }
-
-            File.Delete(tmpFileName);
         }
 
         private byte[] GetExifMakerNote(string filename) // Returns null if the MakerNote field doesn't exist
         {
             using (Bitmap image = new Bitmap(filename))
             {
-                PropertyItem[] pis = image.PropertyItems;
-                foreach (PropertyItem pi in pis)
+                try
                 {
-                    if (pi.Id == 0x927C) // Id of the MakerNote field
-                    {
-                        return (byte[])pi.Value.Clone();
-                    }
+                    return image.GetPropertyItem(0x927C).Value;
                 }
-
-                return null;
+                catch (ArgumentException)
+                {
+                    return null;
+                }
             }
         }
     }

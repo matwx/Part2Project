@@ -135,5 +135,81 @@ namespace Part2Project
                 txt.Text += nl;
             }
         }
+
+        private void AppendToTextBox(string toAppend)
+        {
+            txt.Text += toAppend;
+        }
+
+        private void btnTestBoth_Click(object sender, EventArgs e)
+        {
+            dlgFolder1.ShowDialog();
+
+            if (dlgFolder1.SelectedPath == "") return;
+
+            string nl = Environment.NewLine;
+            txt.Text = "Multi-Threaded:" + nl;
+            double totalSeconds = 0.0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                DateTime before = DateTime.Now;
+
+                ImageDirectoryFeatures featureManager = new ImageDirectoryFeatures(dlgFolder1.SelectedPath);
+                List<ImageFeatureList> features = featureManager.GetDirectoryFeatures();
+
+                DateTime after = DateTime.Now;
+
+                double seconds = (after - before).TotalSeconds;
+                totalSeconds += seconds;
+
+                string toAppend = (i + 1) + " - time taken to get features for " + features.Count + " image(s) was " + seconds + " seconds." + nl;
+                AppendToTextBox(toAppend);
+            }
+
+            string ToAppend = "Average time taken was " + totalSeconds/10 + " seconds." + nl;
+            AppendToTextBox(ToAppend);
+
+            txt.Text += nl + "Single-Threaded:" + nl;
+            totalSeconds = 0.0;
+            for (int i = 0; i < 10; i++)
+            {
+                DateTime before = DateTime.Now;
+
+                List<ImageFeatureList> features = new List<ImageFeatureList>();
+
+                List<string> imageFilenames = new List<string>();
+                int numImages = 0;
+                string[] filenames = Directory.GetFiles(dlgFolder1.SelectedPath);
+                foreach (string filename in filenames)
+                {
+                    string ext = filename.Split('.').Last();
+                    if (ext.Equals("jpg") || ext.Equals("jpeg") || ext.Equals("png"))
+                    {
+                        // We'll accept these file extensions as images
+                        imageFilenames.Add(filename);
+                        numImages++;
+                    }
+                }
+
+                for (int j = 0; j < numImages; j++)
+                {
+                    ImageFeatures imFeat = new ImageFeatures(imageFilenames.ElementAt(j));
+                    imFeat.ThreadPoolCallback();
+                    features.Add(imFeat.Features);
+                }
+
+                DateTime after = DateTime.Now;
+
+                TimeSpan diff = after - before;
+
+                string toAppend = (i + 1) + " - time taken to get features for " + features.Count + " image(s) was " + diff.TotalSeconds +
+                            " seconds." + nl;
+                AppendToTextBox(toAppend);
+            }
+
+            ToAppend = "Average time taken was " + totalSeconds / 10 + " seconds." + nl;
+            AppendToTextBox(ToAppend);
+        }
     }
 }

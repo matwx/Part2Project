@@ -32,6 +32,7 @@
             this.btnChooseFolder = new System.Windows.Forms.Button();
             this.dlgFolder1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button1 = new System.Windows.Forms.Button();
+            this.btnTestBoth = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txt
@@ -63,11 +64,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnTestBoth
+            // 
+            this.btnTestBoth.Location = new System.Drawing.Point(12, 133);
+            this.btnTestBoth.Name = "btnTestBoth";
+            this.btnTestBoth.Size = new System.Drawing.Size(86, 35);
+            this.btnTestBoth.TabIndex = 3;
+            this.btnTestBoth.Text = "Test Both 10 times";
+            this.btnTestBoth.UseVisualStyleBackColor = true;
+            this.btnTestBoth.Click += new System.EventHandler(this.btnTestBoth_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(679, 686);
+            this.Controls.Add(this.btnTestBoth);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnChooseFolder);
             this.Controls.Add(this.txt);
@@ -85,6 +97,7 @@
         private System.Windows.Forms.Button btnChooseFolder;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnTestBoth;
     }
 }
 

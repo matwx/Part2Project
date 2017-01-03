@@ -6,12 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Part2Project.ImageSegmentation;
+using Part2Project.Infrastructure;
 
 namespace Part2Project.Features
 {
     static class FeatureRuleOfThirds
     {
-        public static double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(DirectBitmap image)
         {
             // Get saliency segmentation
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);

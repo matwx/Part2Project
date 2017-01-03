@@ -2,6 +2,7 @@
 using Kaliko.ImageLibrary;
 using Kaliko.ImageLibrary.ColorSpace;
 using Kaliko.ImageLibrary.Filters;
+using Part2Project.Infrastructure;
 using Part2Project.MyColor;
 
 namespace Part2Project.ImageSegmentation
@@ -11,12 +12,12 @@ namespace Part2Project.ImageSegmentation
         private double[] _segmentSaliencies;
         private double[][] sMap;
 
-        public SaliencySegmentation(Segmentation s, Bitmap image, double sigma) : base(s)
+        public SaliencySegmentation(Segmentation s, DirectBitmap image, double sigma) : base(s)
         {
             // Gaussian blur the image
-            KalikoImage kImage = new KalikoImage(image);
+            KalikoImage kImage = new KalikoImage(image.Bitmap);
             kImage.ApplyFilter(new GaussianBlurFilter((float)sigma));
-            Bitmap blurredImage = kImage.GetAsBitmap();
+            DirectBitmap blurredImage = new DirectBitmap(kImage.GetAsBitmap());
 
             // Calculate average colour of the image (we already have segment averages)
             double totalL = 0, totalA = 0, totalB = 0;

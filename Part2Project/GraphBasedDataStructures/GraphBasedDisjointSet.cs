@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Kaliko.ImageLibrary.ColorSpace;
+using Part2Project.Infrastructure;
 
 namespace Part2Project.GraphBasedDataStructures
 {
@@ -7,7 +8,7 @@ namespace Part2Project.GraphBasedDataStructures
     {
         private readonly GraphNode[][] _v;
 
-        public GraphBasedDisjointSet(Bitmap image)
+        public GraphBasedDisjointSet(DirectBitmap image)
         {
             // Create a node for each image pixel
             _v = new GraphNode[image.Width][];

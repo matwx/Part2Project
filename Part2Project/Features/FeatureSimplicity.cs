@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Part2Project.ImageSegmentation;
+using Part2Project.Infrastructure;
 
 namespace Part2Project.Features
 {
@@ -12,7 +13,7 @@ namespace Part2Project.Features
     {
         const double alpha = 0.67;
 
-        public static double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(DirectBitmap image)
         {
             Segmentation s = GraphBasedImageSegmentation.Segment(image, 150.0, 0.8);
             SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);

@@ -16,7 +16,7 @@ namespace Part2Project.Infrastructure
     {
         // Retrieves/computes a list of all features for a particular image
         private string _filename;
-        private Bitmap _image;
+        private DirectBitmap _image;
         public ImageFeatureList Features { get; private set; }
 
         public ImageFeatures(string filename)
@@ -41,9 +41,9 @@ namespace Part2Project.Infrastructure
                 // First read the image from file as a bitmap
                 using (Image selected = Image.FromFile(_filename))
                 {
-                    using (_image = new Bitmap((int) ((double) selected.Width/(double) selected.Height*240.0), 240))
+                    using (_image = new DirectBitmap((int) ((double) selected.Width/(double) selected.Height*240.0), 240))
                     {
-                        using (Graphics gfx = Graphics.FromImage(_image))
+                        using (Graphics gfx = Graphics.FromImage(_image.Bitmap))
                         {
                             gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
                         } 

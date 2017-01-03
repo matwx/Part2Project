@@ -6,6 +6,7 @@ using Kaliko.ImageLibrary.Filters;
 using Kaliko.ImageLibrary.ColorSpace;
 using Part2Project.MyColor;
 using Part2Project.GraphBasedDataStructures;
+using Part2Project.Infrastructure;
 
 namespace Part2Project.ImageSegmentation
 {
@@ -13,7 +14,7 @@ namespace Part2Project.ImageSegmentation
     {
         #region Initialisation
 
-        private static double ComputeEdgeWeight(Bitmap image, int x1, int y1, int x2, int y2)
+        private static double ComputeEdgeWeight(DirectBitmap image, int x1, int y1, int x2, int y2)
         {
             Color c1 = image.GetPixel(x1, y1);
             Color c2 = image.GetPixel(x2, y2);
@@ -21,7 +22,7 @@ namespace Part2Project.ImageSegmentation
             return MyColorSpaceHelper.MyColourDifference(c1, c2);
         }
 
-        private static void InitialiseEdges(Bitmap image, GraphBasedDisjointSet dSet, List<GraphEdge> eList)
+        private static void InitialiseEdges(DirectBitmap image, GraphBasedDisjointSet dSet, List<GraphEdge> eList)
         {
             GraphNode[][] v = dSet.GetV();
 
@@ -76,10 +77,10 @@ namespace Part2Project.ImageSegmentation
 
         #endregion
 
-        public static Segmentation Segment(Bitmap image, double k, double sigma)
+        public static Segmentation Segment(DirectBitmap image, double k, double sigma)
         {
             // Transform the image as required
-            image = ScaleAndBlur(image, sigma);
+            image = new DirectBitmap(ScaleAndBlur(image.Bitmap, sigma));
 
             // Set up Data Structures
             GraphBasedDisjointSet dSet = new GraphBasedDisjointSet(image);

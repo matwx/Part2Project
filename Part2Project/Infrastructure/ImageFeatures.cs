@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Part2Project.Features;
+using Part2Project.ImageSegmentation;
 
 namespace Part2Project.Infrastructure
 {
@@ -49,11 +50,15 @@ namespace Part2Project.Infrastructure
                         } 
                         
                         // Then compute the features and store the results
+                        // Low-level
                         result.Brightness = FeatureBrightness.ComputeFeature(_image);
                         result.IntensityContrast = FeatureIntensityContrast.ComputeFeature(_image);
                         result.Saturation = FeatureSaturation.ComputeFeature(_image);
-                        result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(_image);
-                        result.Simplicity = FeatureSimplicity.ComputeFeature(_image);
+
+                        // Segmentation-Derived
+                        Segmentation s = GraphBasedImageSegmentation.Segment(_image, 150, 0.8);
+                        result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(_image, s);
+                        result.Simplicity = FeatureSimplicity.ComputeFeature(_image, s);
                     }
                 }
 

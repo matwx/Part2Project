@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Part2Project.Infrastructure;
 using Part2Project.MyColor;
 
 namespace Part2Project.Features
 {
     static class FeatureSaturation
     {
-        public static double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(DirectBitmap image)
         {
             // Compute the average saturation of all of the pixels in the image
             double totalSat = 0;

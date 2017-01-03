@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Part2Project.Infrastructure;
 using Part2Project.MyColor;
 
 namespace Part2Project.Features
 {
     static class FeatureBrightness
     {
-        public static double ComputeFeature(Bitmap image)
+        public static double ComputeFeature(DirectBitmap image)
         {
             // Compute the average intensity of the image
             double total = 0;

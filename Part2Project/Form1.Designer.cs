@@ -33,6 +33,7 @@
             this.dlgFolder1 = new System.Windows.Forms.FolderBrowserDialog();
             this.button1 = new System.Windows.Forms.Button();
             this.btnTestBoth = new System.Windows.Forms.Button();
+            this.btnReset19 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txt
@@ -74,11 +75,22 @@
             this.btnTestBoth.UseVisualStyleBackColor = true;
             this.btnTestBoth.Click += new System.EventHandler(this.btnTestBoth_Click);
             // 
+            // btnReset19
+            // 
+            this.btnReset19.Location = new System.Drawing.Point(12, 639);
+            this.btnReset19.Name = "btnReset19";
+            this.btnReset19.Size = new System.Drawing.Size(86, 35);
+            this.btnReset19.TabIndex = 4;
+            this.btnReset19.Text = "Reset 19 Images";
+            this.btnReset19.UseVisualStyleBackColor = true;
+            this.btnReset19.Click += new System.EventHandler(this.btnReset19_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(679, 686);
+            this.Controls.Add(this.btnReset19);
             this.Controls.Add(this.btnTestBoth);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnChooseFolder);
@@ -98,6 +110,7 @@
         private System.Windows.Forms.FolderBrowserDialog dlgFolder1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnTestBoth;
+        private System.Windows.Forms.Button btnReset19;
     }
 }
 

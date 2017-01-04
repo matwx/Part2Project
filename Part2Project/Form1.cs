@@ -211,5 +211,15 @@ namespace Part2Project
             ToAppend = "Average time taken was " + totalSeconds / 10 + " seconds." + nl;
             AppendToTextBox(ToAppend);
         }
+
+        private void btnReset19_Click(object sender, EventArgs e)
+        {
+            Directory.Delete("C:\\Users\\Matt\\Desktop\\Upload", true);
+            Directory.CreateDirectory("C:\\Users\\Matt\\Desktop\\Upload");
+            foreach (string filename in Directory.GetFiles("C:\\Users\\Matt\\Desktop\\Upload - Copy"))
+            {
+                File.Copy(filename, "C:\\Users\\Matt\\Desktop\\Upload\\" + filename.Split('\\').Last());
+            }
+        }
     }
 }

@@ -107,7 +107,10 @@ namespace Part2Project.ImageSegmentation
                 }
             }
 
-            return new Segmentation(dSet);
+            eList.Clear();
+            Segmentation result = new Segmentation(dSet);
+            dSet.ClearData();
+            return result;
         }
     }
 }

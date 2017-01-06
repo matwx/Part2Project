@@ -8,6 +8,17 @@ namespace Part2Project.GraphBasedDataStructures
     {
         private readonly GraphNode[][] _v;
 
+        public void ClearData()
+        {
+            foreach (GraphNode[] graphNodes in _v)
+            {
+                for (int i = 0; i < graphNodes.Length; i++)
+                {
+                    graphNodes[i] = null;
+                }
+            }
+        }
+
         public GraphBasedDisjointSet(DirectBitmap image)
         {
             // Create a node for each image pixel

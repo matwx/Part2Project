@@ -10,7 +10,7 @@ namespace Part2Project.ImageSegmentation
 {
     // This base class is itself very similar to the 2-D array of Graph Nodes in the GraphBasedDisjointSet.
     // However, it is designed to be extended to add more segment charactersistics.
-    class Segmentation
+    class Segmentation : IDisposable
     {
         protected int[][] _pixelAssignments;
         protected Dictionary<int, int> _segmentSizes;
@@ -19,10 +19,16 @@ namespace Part2Project.ImageSegmentation
         public int Width { get; private set; }
         public int Height { get; private set; }
 
+        public void Dispose()
+        {
+            _segmentSizes.Clear();
+            _segmentColours.Clear();
+        }
+
         public Segmentation(GraphBasedDisjointSet set)
         {
             // Need to enumerate each segment, computing the sizes and colour of each segment as we come across it
-
+           
             _segmentSizes = new Dictionary<int, int>();
             _segmentColours = new Dictionary<int, CIELab>();
 

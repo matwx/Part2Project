@@ -31,6 +31,7 @@
             this.btnChooseFolder = new System.Windows.Forms.Button();
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.box = new System.Windows.Forms.TextBox();
+            this.btnResizeOriginals = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnChooseFolder
@@ -52,11 +53,22 @@
             this.box.Size = new System.Drawing.Size(522, 258);
             this.box.TabIndex = 1;
             // 
+            // btnResizeOriginals
+            // 
+            this.btnResizeOriginals.Location = new System.Drawing.Point(113, 13);
+            this.btnResizeOriginals.Name = "btnResizeOriginals";
+            this.btnResizeOriginals.Size = new System.Drawing.Size(95, 46);
+            this.btnResizeOriginals.TabIndex = 2;
+            this.btnResizeOriginals.Text = "Resize Originals";
+            this.btnResizeOriginals.UseVisualStyleBackColor = true;
+            this.btnResizeOriginals.Click += new System.EventHandler(this.btnResizeOriginals_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 335);
+            this.Controls.Add(this.btnResizeOriginals);
             this.Controls.Add(this.box);
             this.Controls.Add(this.btnChooseFolder);
             this.Name = "Form1";
@@ -72,6 +84,7 @@
         private System.Windows.Forms.Button btnChooseFolder;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
         private System.Windows.Forms.TextBox box;
+        private System.Windows.Forms.Button btnResizeOriginals;
     }
 }
 

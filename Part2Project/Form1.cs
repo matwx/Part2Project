@@ -56,92 +56,40 @@ namespace Part2Project
 
         }
 
-        private void GenerateImageForParameterValue(string filename, string destFilename, int k, double sigma)
+        private void GenerateImageForParameterValue(DirectBitmap original, string destFilename, int k, double sigma)
         {
-            // Need to make sure that the files are already in dimesions 320x240
-            DirectBitmap image = null;
+            Segmentation s = GraphBasedImageSegmentation.Segment(original, k, sigma);
 
-            try
+            // Create output segmentation image
+            using (DirectBitmap outImage = new DirectBitmap(original.Width, original.Height))
             {
-                using (Bitmap selected = new Bitmap(filename))
+                for (int x = 0; x < original.Width; x++)
                 {
-                    image = new DirectBitmap((int) ((double) selected.Width / (double) selected.Height * 240.0), 240);
-                    using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                    for (int y = 0; y < original.Height; y++)
                     {
-                        gfx.DrawImage(selected, 0, 0, (int) ((double) selected.Width / (double) selected.Height * 240.0),
-                            240);
+                        RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
+                        outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
                     }
                 }
 
-                Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
-                
-                // Create output segmentation image
-                using (DirectBitmap outImage = new DirectBitmap(image.Width, image.Height))
-                {
-                    for (int x = 0; x < image.Width; x++)
-                    {
-                        for (int y = 0; y < image.Height; y++)
-                        {
-                            RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
-                            outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
-                        }
-                    }
-                
-                    outImage.Bitmap.Save(destFilename);
-                }
+                outImage.Bitmap.Save(destFilename);
             }
-            finally
-            {
-                if (image != null) image.Dispose();
-            }
-            
-
-
-//            using (Bitmap selected = new Bitmap(filename))
-//            {
-//                using (DirectBitmap image = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240))
-//                {
-//                    using (Graphics gfx = Graphics.FromImage(image.Bitmap))
-//                    {
-//                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-//                    }
-//
-//                    Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
-//
-//                    // Create output segmentation image
-//                    using (DirectBitmap outImage = new DirectBitmap(image.Width, image.Height))
-//                    {
-//                        for (int x = 0; x < image.Width; x++)
-//                        {
-//                            for (int y = 0; y < image.Height; y++)
-//                            {
-//                                RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
-//                                outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
-//                            }
-//                        }
-//
-//                        outImage.Bitmap.Save(destFilename);
-//                    }
-//                }
-//            }
         }
 
-        private void GenerateFolderForParameterValue(string dName, int k, double sigma)
+        private void GenerateFolderForParameterValue(string dName, string[] filenames, DirectBitmap[] originals, int k, double sigma)
         {
-            string[] fileNames = Directory.GetFiles(dName + "\\originals");
-            Task[] tasks = new Task[fileNames.Length];
+            Task[] tasks = new Task[originals.Length];
 
             string dExt = "\\k" + k + "sigma" + sigma;
             Directory.CreateDirectory(dName + dExt);
 
-            for (int i = 0; i < fileNames.Length; i++)
+            for (int i = 0; i < originals.Length; i++)
             {
-                string filename = fileNames[i];
+                var i1 = i;
                 tasks[i] =
                     Task.Run(
                         () =>
-                            GenerateImageForParameterValue(filename,
-                                dName + dExt + "\\" + filename.Split('\\').Last(), k, sigma));
+                            GenerateImageForParameterValue(originals[i1], dName + dExt + "\\" + filenames[i1].Split('\\').Last(), k, sigma));
             }
             Task.WaitAll(tasks);
             
@@ -153,11 +101,9 @@ namespace Part2Project
 
         private void DoSweep()
         {
-            //            dlgFolder.ShowDialog();
 
             DateTime totalBefore = DateTime.Now;
             DateTime before, after;
-            //            string dName = dlgFolder.SelectedPath;
             string dName =
                 "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma";
             int[] kValues = { 25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400 };
@@ -167,6 +113,24 @@ namespace Part2Project
 
             box.Text = "";
             string nl = Environment.NewLine;
+
+            // Get the small images in memory
+            string[] fileNames = Directory.GetFiles(dName + "\\originals");
+            DirectBitmap[] originals = new DirectBitmap[fileNames.Length];
+
+            for (int i = 0; i < originals.Length; i++)
+            {
+                // Load image from file, and shrink it down
+                using (Bitmap selected = new Bitmap(fileNames[i]))
+                {
+                    originals[i] = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                    using (Graphics gfx = Graphics.FromImage(originals[i].Bitmap))
+                    {
+                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0),
+                            240);
+                    }
+                }
+            }
 
             int count = 0, k;
             double sigma;
@@ -179,29 +143,20 @@ namespace Part2Project
 
                     before = DateTime.Now;
 
-                    GenerateFolderForParameterValue(dName, k, sigma);
+                    GenerateFolderForParameterValue(dName, fileNames, originals, k, sigma);
 
                     after = DateTime.Now;
                     box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
                     Application.DoEvents();
 
-//                    GC.WaitForPendingFinalizers();
-//                    GC.Collect();
-//
-//                    System.Threading.Thread.Sleep(2000);
-
                     count++;
                 }
             }
 
-            //            before = DateTime.Now;
-            //            int k = int.Parse(txtK.Text);
-            //            double sigma = double.Parse(txtSigma.Text);
-            //            
-            //            GenerateFolderForParameterValue(dName, k, sigma);
-            //            
-            //            after = DateTime.Now;
-            //            box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
+            for (int i = 0; i < originals.Length; i++)
+            {
+                originals[i].Dispose();
+            }
 
             DateTime totalAfter = DateTime.Now;
 

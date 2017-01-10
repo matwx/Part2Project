@@ -192,5 +192,23 @@ namespace Part2Project
                 }
             }
         }
+
+        private void RoTRenameFromSegmentations()
+        {
+            string dName =
+                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma";
+
+            string[] directories = Directory.GetDirectories(dName);
+
+            for (int i = 0; i < directories.Length - 1; i++) // Not including the last folder, which should be the originals one
+            {
+                
+            }
+        }
+
+        private void btnRoTRename_Click(object sender, EventArgs e)
+        {
+            RoTRenameFromSegmentations();
+        }
     }
 }

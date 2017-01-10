@@ -32,6 +32,7 @@
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.box = new System.Windows.Forms.TextBox();
             this.btnResizeOriginals = new System.Windows.Forms.Button();
+            this.btnRoTRename = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnChooseFolder
@@ -63,11 +64,22 @@
             this.btnResizeOriginals.UseVisualStyleBackColor = true;
             this.btnResizeOriginals.Click += new System.EventHandler(this.btnResizeOriginals_Click);
             // 
+            // btnRoTRename
+            // 
+            this.btnRoTRename.Location = new System.Drawing.Point(214, 13);
+            this.btnRoTRename.Name = "btnRoTRename";
+            this.btnRoTRename.Size = new System.Drawing.Size(95, 46);
+            this.btnRoTRename.TabIndex = 3;
+            this.btnRoTRename.Text = "Rename Results with RoT values";
+            this.btnRoTRename.UseVisualStyleBackColor = true;
+            this.btnRoTRename.Click += new System.EventHandler(this.btnRoTRename_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 335);
+            this.Controls.Add(this.btnRoTRename);
             this.Controls.Add(this.btnResizeOriginals);
             this.Controls.Add(this.box);
             this.Controls.Add(this.btnChooseFolder);
@@ -85,6 +97,7 @@
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
         private System.Windows.Forms.TextBox box;
         private System.Windows.Forms.Button btnResizeOriginals;
+        private System.Windows.Forms.Button btnRoTRename;
     }
 }
 

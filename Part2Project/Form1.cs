@@ -59,29 +59,71 @@ namespace Part2Project
         private void GenerateImageForParameterValue(string filename, string destFilename, int k, double sigma)
         {
             // Need to make sure that the files are already in dimesions 320x240
+            DirectBitmap image = null;
 
-            using (Bitmap selected = new Bitmap(filename))
+            try
             {
-                using (DirectBitmap image = new DirectBitmap(selected))
+                using (Bitmap selected = new Bitmap(filename))
                 {
-                    Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
-
-                    // Create output segmentation image
-                    using (DirectBitmap outImage = new DirectBitmap(image.Width, image.Height))
+                    image = new DirectBitmap((int) ((double) selected.Width / (double) selected.Height * 240.0), 240);
+                    using (Graphics gfx = Graphics.FromImage(image.Bitmap))
                     {
-                        for (int x = 0; x < image.Width; x++)
-                        {
-                            for (int y = 0; y < image.Height; y++)
-                            {
-                                RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
-                                outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
-                            }
-                        }
-
-                        outImage.Bitmap.Save(destFilename);
+                        gfx.DrawImage(selected, 0, 0, (int) ((double) selected.Width / (double) selected.Height * 240.0),
+                            240);
                     }
                 }
+
+                Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+                
+                // Create output segmentation image
+                using (DirectBitmap outImage = new DirectBitmap(image.Width, image.Height))
+                {
+                    for (int x = 0; x < image.Width; x++)
+                    {
+                        for (int y = 0; y < image.Height; y++)
+                        {
+                            RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
+                            outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
+                        }
+                    }
+                
+                    outImage.Bitmap.Save(destFilename);
+                }
             }
+            finally
+            {
+                if (image != null) image.Dispose();
+            }
+            
+
+
+//            using (Bitmap selected = new Bitmap(filename))
+//            {
+//                using (DirectBitmap image = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240))
+//                {
+//                    using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+//                    {
+//                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+//                    }
+//
+//                    Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+//
+//                    // Create output segmentation image
+//                    using (DirectBitmap outImage = new DirectBitmap(image.Width, image.Height))
+//                    {
+//                        for (int x = 0; x < image.Width; x++)
+//                        {
+//                            for (int y = 0; y < image.Height; y++)
+//                            {
+//                                RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
+//                                outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
+//                            }
+//                        }
+//
+//                        outImage.Bitmap.Save(destFilename);
+//                    }
+//                }
+//            }
         }
 
         private void GenerateFolderForParameterValue(string dName, int k, double sigma)
@@ -118,8 +160,8 @@ namespace Part2Project
             //            string dName = dlgFolder.SelectedPath;
             string dName =
                 "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma";
-//            int[] kValues = { 25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400 };
-            int[] kValues = { 150, 175, 200, 250, 300, 400 };
+            int[] kValues = { 25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400 };
+            //int[] kValues = { 150, 175, 200, 250, 300, 400 };
             //            int[] kValues = {25};
             double[] sigmaValues = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.5, 3.0, 4.0, 5.0 };
 
@@ -143,10 +185,10 @@ namespace Part2Project
                     box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
                     Application.DoEvents();
 
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
-
-                    System.Threading.Thread.Sleep(2000);
+//                    GC.WaitForPendingFinalizers();
+//                    GC.Collect();
+//
+//                    System.Threading.Thread.Sleep(2000);
 
                     count++;
                 }

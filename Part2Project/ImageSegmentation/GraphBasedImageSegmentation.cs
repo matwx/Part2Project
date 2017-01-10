@@ -79,35 +79,44 @@ namespace Part2Project.ImageSegmentation
 
         public static Segmentation Segment(DirectBitmap image, double k, double sigma)
         {
+            GraphBasedDisjointSet dSet;
+
             // Transform the image as required
-            image = new DirectBitmap(ScaleAndBlur(image.Bitmap, sigma));
-
-            // Set up Data Structures
-            GraphBasedDisjointSet dSet = new GraphBasedDisjointSet(image);
-            List<GraphEdge> eList = new List<GraphEdge>();
-            InitialiseEdges(image, dSet, eList); // Create all the edges for an 8-connected grid graph
-
-            // Sort E by non-decreasing edge weight
-            eList.Sort();
-
-            // For each edge eList
-            foreach (GraphEdge e in eList)
+            using (KalikoImage kImage = new KalikoImage(image.Bitmap))
             {
-                // If the edge joins two discinct components
-                if (dSet.FindSet(e.V1) != dSet.FindSet(e.V2))
-                { 
-                    // If the weight is small enough compared to the components
-                    // w <= MInt(C1, C2)
-                    if (e.Weight <= Math.Min(dSet.FindSet(e.V1).InternalDifference + k / dSet.FindSet(e.V1).ComponentSize,
-                                             dSet.FindSet(e.V2).InternalDifference + k / dSet.FindSet(e.V2).ComponentSize))
-                    { 
-                        // Then merge the two components
-                        dSet.Union(e.V1, e.V2, e.Weight);
+                kImage.ApplyFilter(new GaussianBlurFilter((float)sigma));
+
+                using (DirectBitmap blurredImage = new DirectBitmap(kImage.GetAsBitmap()))
+                {
+                    // Set up Data Structures
+                    dSet = new GraphBasedDisjointSet(blurredImage);
+                    List<GraphEdge> eList = new List<GraphEdge>();
+                    InitialiseEdges(blurredImage, dSet, eList); // Create all the edges for an 8-connected grid graph
+
+                    // Sort E by non-decreasing edge weight
+                    eList.Sort();
+
+                    // For each edge eList
+                    foreach (GraphEdge e in eList)
+                    {
+                        // If the edge joins two discinct components
+                        if (dSet.FindSet(e.V1) != dSet.FindSet(e.V2))
+                        {
+                            // If the weight is small enough compared to the components
+                            // w <= MInt(C1, C2)
+                            if (e.Weight <= Math.Min(dSet.FindSet(e.V1).InternalDifference + k / dSet.FindSet(e.V1).ComponentSize,
+                                                     dSet.FindSet(e.V2).InternalDifference + k / dSet.FindSet(e.V2).ComponentSize))
+                            {
+                                // Then merge the two components
+                                dSet.Union(e.V1, e.V2, e.Weight);
+                            }
+                        }
                     }
+
+                    eList.Clear();
                 }
             }
 
-            eList.Clear();
             Segmentation result = new Segmentation(dSet);
             dSet.ClearData();
             return result;

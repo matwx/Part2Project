@@ -6,17 +6,19 @@ namespace Part2Project.GraphBasedDataStructures
 {
     class GraphBasedDisjointSet
     {
-        private readonly GraphNode[][] _v;
+        private GraphNode[][] _v;
 
         public void ClearData()
         {
-            foreach (GraphNode[] graphNodes in _v)
+            for (int i = 0; i < _v.Length; i++)
             {
-                for (int i = 0; i < graphNodes.Length; i++)
+                for (int j = 0; j < _v[i].Length; j++)
                 {
-                    graphNodes[i] = null;
+                    _v[i][j] = null;
                 }
+                _v[i] = null;
             }
+            _v = null;
         }
 
         public GraphBasedDisjointSet(DirectBitmap image)

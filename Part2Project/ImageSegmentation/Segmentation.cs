@@ -52,7 +52,9 @@ namespace Part2Project.ImageSegmentation
 
                         _pixelAssignments[x][y] = currentSegment;
                         _segmentSizes.Add(currentSegment, rep.ComponentSize);
-                        _segmentColours.Add(currentSegment, new CIELab(rep.TotalL / rep.ComponentSize, rep.TotalA / rep.ComponentSize, rep.TotalB / rep.ComponentSize));
+                        _segmentColours.Add(currentSegment,
+                            new CIELab(rep.TotalL / rep.ComponentSize, rep.TotalA / rep.ComponentSize,
+                                rep.TotalB / rep.ComponentSize));
                         
                         currentSegment++;
                     }

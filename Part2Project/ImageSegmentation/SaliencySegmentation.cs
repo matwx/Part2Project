@@ -15,10 +15,7 @@ namespace Part2Project.ImageSegmentation
         public SaliencySegmentation(Segmentation s, DirectBitmap image, double sigma)
             : base(s)
         {
-            // Gaussian blur the image
-            KalikoImage kImage = new KalikoImage(image.Bitmap);
-            kImage.ApplyFilter(new GaussianBlurFilter((float)sigma));
-            DirectBitmap blurredImage = new DirectBitmap(kImage.GetAsBitmap());
+            double maxS = 0;
 
             // Calculate average colour of the image (we already have segment averages)
             double totalL = 0, totalA = 0, totalB = 0;
@@ -30,20 +27,28 @@ namespace Part2Project.ImageSegmentation
             }
             CIELab averageLab = new CIELab(totalL / Width / Height, totalA / Width / Height, totalB / Width / Height);
 
-            // Calculate saliency map of the image
-            sMap = new double[Width][];
-            double maxS = 0;
-            for (int x = 0; x < Width; x++)
+            // Gaussian blur the image
+            using (KalikoImage kImage = new KalikoImage(image.Bitmap))
             {
-                sMap[x] = new double[Height];
-                for (int y = 0; y < Height; y++)
+                kImage.ApplyFilter(new GaussianBlurFilter((float)sigma));
+                using (DirectBitmap blurredImage = new DirectBitmap(kImage.GetAsBitmap()))
                 {
-                    // I tried using my hybrid colour difference metric here, but, because it would
-                    // require a few transformations between RGB, LAB and back, floating point errors
-                    // became apparent, and ruined the result. So, CIEDE2000 is used.
-                    sMap[x][y] = MyColorSpaceHelper.CIEDE2000(averageLab,
-                        ColorSpaceHelper.RGBtoLab(blurredImage.GetPixel(x, y)));
-                    if (sMap[x][y] > maxS) maxS = sMap[x][y];
+                    // Calculate saliency map of the image
+                    sMap = new double[Width][];
+                    
+                    for (int x = 0; x < Width; x++)
+                    {
+                        sMap[x] = new double[Height];
+                        for (int y = 0; y < Height; y++)
+                        {
+                            // I tried using my hybrid colour difference metric here, but, because it would
+                            // require a few transformations between RGB, LAB and back, floating point errors
+                            // became apparent, and ruined the result. So, CIEDE2000 is used.
+                            sMap[x][y] = MyColorSpaceHelper.CIEDE2000(averageLab,
+                                ColorSpaceHelper.RGBtoLab(blurredImage.GetPixel(x, y)));
+                            if (sMap[x][y] > maxS) maxS = sMap[x][y];
+                        }
+                    }
                 }
             }
 

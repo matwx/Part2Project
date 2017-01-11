@@ -13,9 +13,9 @@ namespace Part2Project.Features
     {
         const double alpha = 0.67;
 
-        public static double ComputeFeature(DirectBitmap image, Segmentation s)
+        public static double ComputeFeature(DirectBitmap image, Segmentation s, double sigma)
         {
-            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
+            SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
 
             bool[] trueSegments = new bool[ss.NumSegments];
             double[] newSaliencies = new double[ss.NumSegments];

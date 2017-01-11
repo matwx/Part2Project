@@ -12,11 +12,11 @@ namespace Part2Project.Features
 {
     static class FeatureRuleOfThirds
     {
-        public static double ComputeFeature(DirectBitmap image, Segmentation s)
+        public static double ComputeFeature(DirectBitmap image, Segmentation s, double segSigma)
         {
             // Get saliency segmentation
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
-
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+            
             double[] segmentSpreads = GetRoTSpreads(rots);
 
             double factor = 0;

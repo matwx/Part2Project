@@ -56,6 +56,7 @@ namespace Part2Project.Infrastructure
 
             for (int i = 0; i < _numImages; i++)
             {
+                tasks[i].Dispose();
                 result.Add(imFeatArray[i].Features);
             }
 

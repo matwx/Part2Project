@@ -48,6 +48,11 @@ namespace Part2Project.Infrastructure
             return Color.FromArgb(Bits[x + y * Width]);
         }
 
+        public void SetPixel(int x, int y, Color c)
+        {
+            Bits[x + y * Width] = c.ToArgb();
+        }
+
         public void Dispose()
         {
             if (Disposed) return;

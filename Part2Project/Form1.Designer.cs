@@ -33,15 +33,16 @@
             this.box = new System.Windows.Forms.TextBox();
             this.btnResizeOriginals = new System.Windows.Forms.Button();
             this.btnRoTRename = new System.Windows.Forms.Button();
+            this.btnSegBoundBox = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnChooseFolder
             // 
-            this.btnChooseFolder.Location = new System.Drawing.Point(12, 12);
+            this.btnChooseFolder.Location = new System.Drawing.Point(114, 13);
             this.btnChooseFolder.Name = "btnChooseFolder";
             this.btnChooseFolder.Size = new System.Drawing.Size(95, 46);
             this.btnChooseFolder.TabIndex = 0;
-            this.btnChooseFolder.Text = "Choose Sweep Folder";
+            this.btnChooseFolder.Text = "Segmenation k+sigma sweep";
             this.btnChooseFolder.UseVisualStyleBackColor = true;
             this.btnChooseFolder.Click += new System.EventHandler(this.btnChooseFolder_Click);
             // 
@@ -56,7 +57,7 @@
             // 
             // btnResizeOriginals
             // 
-            this.btnResizeOriginals.Location = new System.Drawing.Point(113, 13);
+            this.btnResizeOriginals.Location = new System.Drawing.Point(13, 13);
             this.btnResizeOriginals.Name = "btnResizeOriginals";
             this.btnResizeOriginals.Size = new System.Drawing.Size(95, 46);
             this.btnResizeOriginals.TabIndex = 2;
@@ -70,15 +71,26 @@
             this.btnRoTRename.Name = "btnRoTRename";
             this.btnRoTRename.Size = new System.Drawing.Size(95, 46);
             this.btnRoTRename.TabIndex = 3;
-            this.btnRoTRename.Text = "Rename Results with RoT values";
+            this.btnRoTRename.Text = "Seg k+sigma w/ RoT renaming";
             this.btnRoTRename.UseVisualStyleBackColor = true;
             this.btnRoTRename.Click += new System.EventHandler(this.btnRoTRename_Click);
+            // 
+            // btnSegBoundBox
+            // 
+            this.btnSegBoundBox.Location = new System.Drawing.Point(315, 13);
+            this.btnSegBoundBox.Name = "btnSegBoundBox";
+            this.btnSegBoundBox.Size = new System.Drawing.Size(95, 46);
+            this.btnSegBoundBox.TabIndex = 4;
+            this.btnSegBoundBox.Text = "Seg k+sigma w/ Bounding boxes";
+            this.btnSegBoundBox.UseVisualStyleBackColor = true;
+            this.btnSegBoundBox.Click += new System.EventHandler(this.btnSegBoundBox_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 335);
+            this.Controls.Add(this.btnSegBoundBox);
             this.Controls.Add(this.btnRoTRename);
             this.Controls.Add(this.btnResizeOriginals);
             this.Controls.Add(this.box);
@@ -98,6 +110,7 @@
         private System.Windows.Forms.TextBox box;
         private System.Windows.Forms.Button btnResizeOriginals;
         private System.Windows.Forms.Button btnRoTRename;
+        private System.Windows.Forms.Button btnSegBoundBox;
     }
 }
 

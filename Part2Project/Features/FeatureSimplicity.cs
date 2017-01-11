@@ -13,9 +13,9 @@ namespace Part2Project.Features
     {
         const double alpha = 0.67;
 
-        public static double ComputeFeature(DirectBitmap image, Segmentation s)
+        public static double ComputeFeature(DirectBitmap image, Segmentation s, double sigma)
         {
-            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
+            SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
 
             bool[] trueSegments = new bool[ss.NumSegments];
             double[] newSaliencies = new double[ss.NumSegments];
@@ -118,6 +118,103 @@ namespace Part2Project.Features
             }
 
             return ((double)total) / ss.Width / ss.Height;
+        }
+
+        public static DirectBitmap GetBoundingBoxMap(DirectBitmap image, Segmentation s, double sigma)
+        {
+            DirectBitmap result = new DirectBitmap(image.Width, image.Height);
+
+            SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
+
+            bool[] trueSegments = new bool[ss.NumSegments];
+            double[] newSaliencies = new double[ss.NumSegments];
+            int numTrueSegments = 0;
+
+            // Re-normalise the segment saliencies, excluding the smallest ones
+            double maxSal = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
+                    maxSal = ss.GetSegmentsSaliency(i);
+            }
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                newSaliencies[i] = ss.GetSegmentsSaliency(i) / maxSal;
+            }
+
+            // Convert segment saliency map into a binary map, using a threshold, alpha
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && newSaliencies[i] > alpha)
+                {
+                    trueSegments[i] = true;
+                    numTrueSegments++;
+                }
+                else trueSegments[i] = false;
+            }
+
+            int[] trueSegmentIndicies = new int[numTrueSegments];
+            int count = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (trueSegments[i])
+                {
+                    trueSegmentIndicies[count] = i;
+                    count++;
+                }
+            }
+
+            // Generate bounding boxes for all of the segments that are 'true' in the binary ROI map
+            int[] lefts = new int[ss.NumSegments];
+            int[] rights = new int[ss.NumSegments];
+            int[] tops = new int[ss.NumSegments];
+            int[] bottoms = new int[ss.NumSegments];
+            bool[] initialised = new bool[ss.NumSegments];
+
+            for (int x = 0; x < ss.Width; x++)
+            {
+                for (int y = 0; y < ss.Height; y++)
+                {
+                    int i = ss.GetPixelsSegmentIndex(x, y);
+                    if (trueSegments[i])
+                    {
+                        if (initialised[i])
+                        {
+                            if (x < lefts[i]) lefts[i] = x;
+                            if (x > rights[i]) rights[i] = x;
+                            if (y < tops[i]) tops[i] = y;
+                            if (y > bottoms[i]) bottoms[i] = y;
+                        }
+                        else
+                        {
+                            lefts[i] = x;
+                            rights[i] = x;
+                            tops[i] = y;
+                            bottoms[i] = y;
+
+                            initialised[i] = true;
+                        }
+                    }
+
+                    // Also clear the result image
+                    Color c = image.GetPixel(x, y);
+                    result.SetPixel(x, y, Color.FromArgb(Math.Max(0, c.R - 50), Math.Max(0, c.G - 50), Math.Max(0, c.B - 50)));
+                }
+            }
+
+            foreach (int i in trueSegmentIndicies)
+            {
+                // Add this segment's bounding box to the map
+                for (int x = lefts[i]; x < rights[i] + 1; x++)
+                {
+                    for (int y = tops[i]; y < bottoms[i] + 1; y++)
+                    {
+                        Color c = image.GetPixel(x, y);
+                        result.SetPixel(x, y, Color.FromArgb(Math.Min(255, c.R + 50), Math.Min(255, c.G + 50), Math.Min(255, c.B + 50)));
+                    }
+                }
+            }
+            return result;
         }
     }
 }

@@ -56,9 +56,11 @@ namespace Part2Project.Infrastructure
                         result.Saturation = FeatureSaturation.ComputeFeature(_image);
 
                         // Segmentation-Derived
-                        Segmentation s = GraphBasedImageSegmentation.Segment(_image, 150, 0.8);
+                        const int k = 150;
+                        const double sigma = 0.8;
+                        Segmentation s = GraphBasedImageSegmentation.Segment(_image, k, sigma);
                         result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(_image, s);
-                        result.Simplicity = FeatureSimplicity.ComputeFeature(_image, s);
+                        result.Simplicity = FeatureSimplicity.ComputeFeature(_image, s, sigma);
                     }
                 }
 

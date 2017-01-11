@@ -317,5 +317,114 @@ namespace Part2Project
         {
             RoTRenameSegmentationSweep();
         }
+
+        private void btnSegBoundBox_Click(object sender, EventArgs e)
+        {
+            BoundBoxSegmentationSweep();
+        }
+
+        private void BoundBoxSegmentationSweep()
+        {
+            DateTime totalBefore = DateTime.Now;
+            DateTime before, after;
+            string dName =
+                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma - Bounding Boxes";
+//            int[] kValues = { 25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400 };
+            int[] kValues = { 150, 175, 200, 250, 300, 400 };
+            double[] sigmaValues = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.5, 3.0, 4.0, 5.0 };
+
+            box.Text = "";
+            string nl = Environment.NewLine;
+
+            // Get the small images in memory
+            string[] fileNames = Directory.GetFiles(dName + "\\originals");
+            DirectBitmap[] originals = new DirectBitmap[fileNames.Length];
+
+            box.Text += "Segmentation k and sigma parameter sweep using Salient Bounding Boxes" + nl + nl +
+                        "Loading original images" + nl;
+            Application.DoEvents();
+            for (int i = 0; i < originals.Length; i++)
+            {
+                // Load image from file, and shrink it down
+                using (Bitmap selected = new Bitmap(fileNames[i]))
+                {
+                    originals[i] = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                    using (Graphics gfx = Graphics.FromImage(originals[i].Bitmap))
+                    {
+                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0),
+                            240);
+                    }
+                }
+            }
+
+            box.Text += "Images loaded" + nl;
+            Application.DoEvents();
+
+            int count = 0, k;
+            double sigma;
+            foreach (int kValue in kValues)
+            {
+                foreach (double sigmaValue in sigmaValues)
+                {
+                    k = kValue;
+                    sigma = sigmaValue;
+
+                    before = DateTime.Now;
+
+                    BoundingBoxSegFolder(dName, fileNames, originals, k, sigma);
+
+//                    GC.WaitForPendingFinalizers();
+//                    GC.Collect();
+//
+//                    Thread.Sleep(2000);
+
+                    after = DateTime.Now;
+                    box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
+                    Application.DoEvents();
+
+                    count++;
+                }
+            }
+
+            for (int i = 0; i < originals.Length; i++)
+            {
+                originals[i].Dispose();
+            }
+
+            DateTime totalAfter = DateTime.Now;
+
+            box.Text += nl + "In total took " + (totalAfter - totalBefore).TotalSeconds + " seconds to complete";
+        }
+
+        private void BoundingBoxSegFolder(string dName, string[] filenames, DirectBitmap[] originals, int k,
+            double sigma)
+        {
+            Task[] tasks = new Task[originals.Length];
+
+            string dExt = "\\k" + k + "sigma" + sigma;
+            Directory.CreateDirectory(dName + dExt);
+
+            for (int i = 0; i < originals.Length; i++)
+            {
+                var i1 = i;
+                tasks[i1] = Task.Run(() =>
+                {
+                    using (Segmentation s = GraphBasedImageSegmentation.Segment(originals[i1], k, sigma))
+                    {
+                        using (DirectBitmap resultImage = FeatureSimplicity.GetBoundingBoxMap(originals[i1], s, sigma))
+                        {
+                            resultImage.Bitmap.Save(dName + dExt + "\\" + filenames[i1].Split('\\').Last());
+                        }
+                    }
+                    
+                });
+            }
+            Task.WaitAll(tasks);
+
+            foreach (Task task in tasks)
+            {
+                task.Dispose();
+            }
+        }
     }
 }

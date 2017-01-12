@@ -11,11 +11,14 @@ namespace Part2Project.Features
 {
     class FeatureRuleOfThirds : IFeature
     {
+        private const int k = 150;
+        private const double segSigma = 0.8;
+
         public double ComputeFeature(Bitmap image)
         {
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             double[] segmentSpreads = GetRoTSpreads(rots);
 
@@ -57,8 +60,8 @@ namespace Part2Project.Features
             Bitmap result = new Bitmap(image);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             double[] segmentSpreads = GetRoTSpreads(rots);
             double[] segmentTemps = new double[rots.NumSegments];
@@ -91,8 +94,8 @@ namespace Part2Project.Features
             Bitmap result = new Bitmap(image);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             // Get max x and y values for each segment
             double[] segmentLefts = new double[rots.NumSegments];
@@ -151,8 +154,8 @@ namespace Part2Project.Features
             Bitmap result = new Bitmap(image);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             double[] segmentDists = new double[rots.NumSegments];
 

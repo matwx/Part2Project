@@ -218,6 +218,83 @@ namespace Part2Project
             resultsTask.Dispose();
         }
 
+        private void RoTRenameSegmentationSweepSelective()
+        {
+            DateTime totalBefore = DateTime.Now;
+            DateTime before, after;
+            string dName =
+                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma - RoT 2";
+            Tuple<int, double>[] pairs =
+            {
+                Tuple.Create(50, 1.4),
+                Tuple.Create(50, 1.8),
+                Tuple.Create(75, 0.8),
+                Tuple.Create(75, 1.0),
+                Tuple.Create(100, 0.0),
+                Tuple.Create(100, 0.6),
+                Tuple.Create(125, 0.0),
+                Tuple.Create(125, 0.6),
+                Tuple.Create(150, 0.8)
+            };
+
+            box.Text = "";
+            string nl = Environment.NewLine;
+
+            // Get the small images in memory
+            string[] fileNames = Directory.GetFiles(dName + "\\originals");
+            DirectBitmap[] originals = new DirectBitmap[fileNames.Length];
+
+            box.Text += "Segmentation k and sigma parameter sweep using RoT calculation" + nl + nl +
+                        "Loading original images" + nl;
+            Application.DoEvents();
+            for (int i = 0; i < originals.Length; i++)
+            {
+                // Load image from file, and shrink it down
+                using (Bitmap selected = new Bitmap(fileNames[i]))
+                {
+                    originals[i] = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                    using (Graphics gfx = Graphics.FromImage(originals[i].Bitmap))
+                    {
+                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0),
+                            240);
+                    }
+                }
+            }
+
+            box.Text += "Images loaded" + nl;
+            Application.DoEvents();
+
+            int k;
+            double sigma;
+            foreach (var pair in pairs)
+            {
+                k = pair.Item1;
+                sigma = pair.Item2;
+
+                before = DateTime.Now;
+
+                RoTRenameFolder(dName, fileNames, originals, k, sigma);
+
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                Thread.Sleep(1000);
+
+                after = DateTime.Now;
+                box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
+                Application.DoEvents();
+            }
+
+            for (int i = 0; i < originals.Length; i++)
+            {
+                originals[i].Dispose();
+            }
+
+            DateTime totalAfter = DateTime.Now;
+
+            box.Text += nl + "In total took " + (totalAfter - totalBefore).TotalSeconds + " seconds to complete";
+        }
+
         private void RoTRenameSegmentationSweep()
         {
             DateTime totalBefore = DateTime.Now;
@@ -527,7 +604,7 @@ namespace Part2Project
 
         private void btnRoTRename_Click(object sender, EventArgs e)
         {
-            RoTRenameSegmentationSweep();
+            RoTRenameSegmentationSweepSelective();
         }
 
         private void btnSegBoundBox_Click(object sender, EventArgs e)

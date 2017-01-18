@@ -17,36 +17,11 @@ using Part2Project.Infrastructure;
 
 namespace Part2Project
 {
-//        ** Single threaded feature computer **
-//        dlgFolder.ShowDialog();
-//
-//        List<ImageFeatureList> features = new List<ImageFeatureList>();
-//
-//        List<string> imageFilenames = new List<string>();
-//        int numImages = 0;
-//        string[] filenames = Directory.GetFiles(dlgFolder.SelectedPath);
-//        foreach (string filename in filenames)
-//        {
-//            string ext = filename.Split('.').Last();
-//            if (ext.Equals("jpg") || ext.Equals("jpeg") || ext.Equals("png"))
-//            {
-//                // We'll accept these file extensions as images
-//                imageFilenames.Add(filename);
-//                numImages++;
-//            }
-//        }
-//
-//        for (int i = 0; i < numImages; i++)
-//        {
-//            ImageFeatures imFeat = new ImageFeatures(imageFilenames.ElementAt(i));
-//            imFeat.ThreadPoolCallback();
-//            features.Add(imFeat.Features);
-//        }
-//
-//        Console.Write(features[0].Brightness);
-
     public partial class Form1 : Form
     {
+        public const int segK = 125;
+        public const double segSigma = 0.6;
+
         public Form1()
         {
             InitializeComponent();
@@ -57,123 +32,13 @@ namespace Part2Project
 
         }
 
-        #region Segmentation
+        #region RoT Sweep
 
-        private void GenerateImageForParameterValue(DirectBitmap original, string destFilename, int k, double sigma)
-        {
-            Segmentation s = GraphBasedImageSegmentation.Segment(original, k, sigma);
-
-            // Create output segmentation image
-            using (DirectBitmap outImage = new DirectBitmap(original.Width, original.Height))
-            {
-                for (int x = 0; x < original.Width; x++)
-                {
-                    for (int y = 0; y < original.Height; y++)
-                    {
-                        RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
-                        outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
-                    }
-                }
-
-                outImage.Bitmap.Save(destFilename);
-            }
-        }
-
-        private void GenerateFolderForParameterValue(string dName, string[] filenames, DirectBitmap[] originals, int k, double sigma)
-        {
-            Task[] tasks = new Task[originals.Length];
-
-            string dExt = "\\k" + k + "sigma" + sigma;
-            Directory.CreateDirectory(dName + dExt);
-
-            for (int i = 0; i < originals.Length; i++)
-            {
-                var i1 = i;
-                tasks[i] =
-                    Task.Run(
-                        () =>
-                            GenerateImageForParameterValue(originals[i1], dName + dExt + "\\" + filenames[i1].Split('\\').Last(), k, sigma));
-            }
-            Task.WaitAll(tasks);
-            
-            foreach (Task task in tasks)
-            {
-                task.Dispose();
-            }
-        }
-
-        private void DoSweep()
-        {
-            DateTime totalBefore = DateTime.Now;
-            DateTime before, after;
-            string dName =
-                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma";
-            int[] kValues = { 25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400 };
-            //int[] kValues = { 150, 175, 200, 250, 300, 400 };
-            //            int[] kValues = {25};
-            double[] sigmaValues = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.5, 3.0, 4.0, 5.0 };
-
-            box.Text = "";
-            string nl = Environment.NewLine;
-
-            // Get the small images in memory
-            string[] fileNames = Directory.GetFiles(dName + "\\originals");
-            DirectBitmap[] originals = new DirectBitmap[fileNames.Length];
-
-            for (int i = 0; i < originals.Length; i++)
-            {
-                // Load image from file, and shrink it down
-                using (Bitmap selected = new Bitmap(fileNames[i]))
-                {
-                    originals[i] = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-                    using (Graphics gfx = Graphics.FromImage(originals[i].Bitmap))
-                    {
-                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0),
-                            240);
-                    }
-                }
-            }
-
-            int count = 0, k;
-            double sigma;
-            foreach (int kValue in kValues)
-            {
-                foreach (double sigmaValue in sigmaValues)
-                {
-                    k = kValue;
-                    sigma = sigmaValue;
-
-                    before = DateTime.Now;
-
-                    GenerateFolderForParameterValue(dName, fileNames, originals, k, sigma);
-
-                    after = DateTime.Now;
-                    box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
-                    Application.DoEvents();
-
-                    count++;
-                }
-            }
-
-            for (int i = 0; i < originals.Length; i++)
-            {
-                originals[i].Dispose();
-            }
-
-            DateTime totalAfter = DateTime.Now;
-
-            box.Text += nl + "In total took " + (totalAfter - totalBefore).TotalSeconds + " seconds to complete";
-        }
-
-        #endregion
-
-        #region RoT Rename Segmentation
-
-        private void RoTRenameFolder(string dName, string[] filenames, DirectBitmap[] originals, int k, double sigma)
+        private void RoTRenameFolder(string dName, string[] filenames, DirectBitmap[] originals, double sigma)
         {
             Task<double>[] tasks = new Task<double>[originals.Length];
 
-            string dExt = "\\k" + k + "sigma" + sigma;
+            string dExt = "\\sigma" + sigma;
             Directory.CreateDirectory(dName + dExt);
 
             for (int i = 0; i < originals.Length; i++)
@@ -181,8 +46,8 @@ namespace Part2Project
                 var i1 = i;
                 tasks[i1] = Task<double>.Factory.StartNew(() =>
                 {
-                    Segmentation s = GraphBasedImageSegmentation.Segment(originals[i1], k, sigma);
-                    double result = FeatureRuleOfThirds.ComputeFeature(originals[i1], s);
+                    Segmentation s = GraphBasedImageSegmentation.Segment(originals[i1], segK, segSigma);
+                    double result = FeatureRuleOfThirds.ComputeFeature(originals[i1], s, sigma);
                     return result;
                 });
             }
@@ -218,7 +83,7 @@ namespace Part2Project
             resultsTask.Dispose();
         }
 
-        private void RoTRenameSegmentationSweepSelective()
+        private void RoTRenameSigmaSweepSelective()
         {
             DateTime totalBefore = DateTime.Now;
             DateTime before, after;
@@ -273,7 +138,7 @@ namespace Part2Project
 
                 before = DateTime.Now;
 
-                RoTRenameFolder(dName, fileNames, originals, k, sigma);
+                RoTRenameFolder(dName, fileNames, originals, sigma);
 
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
@@ -295,15 +160,13 @@ namespace Part2Project
             box.Text += nl + "In total took " + (totalAfter - totalBefore).TotalSeconds + " seconds to complete";
         }
 
-        private void RoTRenameSegmentationSweep()
+        private void RoTRenameSigmaSweep()
         {
             DateTime totalBefore = DateTime.Now;
             DateTime before, after;
             string dName =
-                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma - RoT";
-            //            int[] kValues = { 25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400 };
-            int[] kValues = { 125, 150, 175, 200, 250, 300, 400 };
-            double[] sigmaValues = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.5, 3.0, 4.0, 5.0 };
+                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\RoT sigma";
+            double[] sigmaValues = { 0.06, 0.07, 0.08, 0.09, 0.11, 0.12, 0.13, 0.14, 0.16, 0.17, 0.18, 0.19, 0.21, 0.22, 0.23, 0.24 };
 
             box.Text = "";
             string nl = Environment.NewLine;
@@ -312,112 +175,10 @@ namespace Part2Project
             string[] fileNames = Directory.GetFiles(dName + "\\originals");
             DirectBitmap[] originals = new DirectBitmap[fileNames.Length];
 
-            box.Text += "Segmentation k and sigma parameter sweep using RoT calculation" + nl + nl +
-                        "Loading original images" + nl;
-            for (int i = 0; i < originals.Length; i++)
-            {
-                // Load image from file, and shrink it down
-                using (Bitmap selected = new Bitmap(fileNames[i]))
-                {
-                    originals[i] = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-                    using (Graphics gfx = Graphics.FromImage(originals[i].Bitmap))
-                    {
-                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0),
-                            240);
-                    }
-                }
-            }
-
-            box.Text += "Images loaded" + nl;
-
-            int count = 0, k;
-            double sigma;
-            foreach (int kValue in kValues)
-            {
-                foreach (double sigmaValue in sigmaValues)
-                {
-                    k = kValue;
-                    sigma = sigmaValue;
-
-                    before = DateTime.Now;
-
-                    RoTRenameFolder(dName, fileNames, originals, k, sigma);
-
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
-
-                    Thread.Sleep(2000);
-
-                    after = DateTime.Now;
-                    box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
-                    Application.DoEvents();
-
-                    count++;
-                }
-            }
-
-            for (int i = 0; i < originals.Length; i++)
-            {
-                originals[i].Dispose();
-            }
-
-            DateTime totalAfter = DateTime.Now;
-
-            box.Text += nl + "In total took " + (totalAfter - totalBefore).TotalSeconds + " seconds to complete";
-        }
-
-        #endregion
-
-        #region Bounding Box Segmentation
-
-        private void BoundBoxSegmentationSweepSelective()
-        {
-            DateTime totalBefore = DateTime.Now;
-            DateTime before, after;
-            string dName =
-                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma - Bounding Boxes 2";
-            Tuple<int, double>[] pairs =
-            {
-                Tuple.Create(25, 1.0),
-                Tuple.Create(25, 1.4),
-                Tuple.Create(25, 2.5),
-                Tuple.Create(50, 0.4),
-                Tuple.Create(50, 0.6),
-                Tuple.Create(50, 0.8),
-                Tuple.Create(50, 1.4),
-                Tuple.Create(50, 1.8),
-                Tuple.Create(75, 0.0),
-                Tuple.Create(75, 0.4),
-                Tuple.Create(75, 0.6),
-                Tuple.Create(75, 0.8),
-                Tuple.Create(75, 1.0),
-                Tuple.Create(75, 1.4),
-                Tuple.Create(75, 1.8),
-                Tuple.Create(100, 0.0),
-                Tuple.Create(100, 0.4),
-                Tuple.Create(100, 0.6),
-                Tuple.Create(100, 1.8),
-                Tuple.Create(125, 0.0),
-                Tuple.Create(125, 0.4),
-                Tuple.Create(125, 0.6),
-                Tuple.Create(125, 0.8),
-                Tuple.Create(150, 0.0),
-                Tuple.Create(150, 0.8),
-                Tuple.Create(175, 1.4),
-                Tuple.Create(200, 0.0),
-                Tuple.Create(250, 0.6)
-            };
-
-            box.Text = "";
-            string nl = Environment.NewLine;
-
-            // Get the small images in memory
-            string[] fileNames = Directory.GetFiles(dName + "\\originals");
-            DirectBitmap[] originals = new DirectBitmap[fileNames.Length];
-
-            box.Text += "Segmentation k and sigma parameter sweep using Salient Bounding Boxes" + nl + nl +
+            box.Text += "RoT sigma parameter sweep" + nl + nl +
                         "Loading original images" + nl;
             Application.DoEvents();
+
             for (int i = 0; i < originals.Length; i++)
             {
                 // Load image from file, and shrink it down
@@ -435,98 +196,26 @@ namespace Part2Project
             box.Text += "Images loaded" + nl;
             Application.DoEvents();
 
-            int  k;
+            int count = 0;
             double sigma;
-            foreach (var pair in pairs)
+            foreach (double sigmaValue in sigmaValues)
             {
-                k = pair.Item1;
-                sigma = pair.Item2;
+                sigma = sigmaValue;
 
                 before = DateTime.Now;
 
-                BoundingBoxSegFolder(dName, fileNames, originals, k, sigma);
+                RoTRenameFolder(dName, fileNames, originals, sigma);
 
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
 
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
 
                 after = DateTime.Now;
-                box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
+                box.Text += "sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
                 Application.DoEvents();
-            }
-            
-            for (int i = 0; i < originals.Length; i++)
-            {
-                originals[i].Dispose();
-            }
 
-            DateTime totalAfter = DateTime.Now;
-
-            box.Text += nl + "In total took " + (totalAfter - totalBefore).TotalSeconds + " seconds to complete";
-        }
-
-        private void BoundBoxSegmentationSweep()
-        {
-            DateTime totalBefore = DateTime.Now;
-            DateTime before, after;
-            string dName =
-                "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Parameter Sweeps\\Segmentation k and sigma - Bounding Boxes";
-            int[] kValues = { 25, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400 };
-            //            int[] kValues = { 150, 175, 200, 250, 300, 400 };
-            double[] sigmaValues = { 0.0, 0.4, 0.6, 0.8, 1.0, 1.4, 1.8, 2.5, 3.0, 4.0, 5.0 };
-
-            box.Text = "";
-            string nl = Environment.NewLine;
-
-            // Get the small images in memory
-            string[] fileNames = Directory.GetFiles(dName + "\\originals");
-            DirectBitmap[] originals = new DirectBitmap[fileNames.Length];
-
-            box.Text += "Segmentation k and sigma parameter sweep using Salient Bounding Boxes" + nl + nl +
-                        "Loading original images" + nl;
-            Application.DoEvents();
-            for (int i = 0; i < originals.Length; i++)
-            {
-                // Load image from file, and shrink it down
-                using (Bitmap selected = new Bitmap(fileNames[i]))
-                {
-                    originals[i] = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-                    using (Graphics gfx = Graphics.FromImage(originals[i].Bitmap))
-                    {
-                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0),
-                            240);
-                    }
-                }
-            }
-
-            box.Text += "Images loaded" + nl;
-            Application.DoEvents();
-
-            int count = 0, k;
-            double sigma;
-            foreach (int kValue in kValues)
-            {
-                foreach (double sigmaValue in sigmaValues)
-                {
-                    k = kValue;
-                    sigma = sigmaValue;
-
-                    before = DateTime.Now;
-
-                    BoundingBoxSegFolder(dName, fileNames, originals, k, sigma);
-
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
-
-                    Thread.Sleep(1000);
-
-                    after = DateTime.Now;
-                    box.Text += "k=" + k + ", sigma=" + sigma + ": " + (after - before).TotalSeconds + " seconds to complete" + nl;
-                    Application.DoEvents();
-
-                    count++;
-                }
+                count++;
             }
 
             for (int i = 0; i < originals.Length; i++)
@@ -537,45 +226,9 @@ namespace Part2Project
             DateTime totalAfter = DateTime.Now;
 
             box.Text += nl + "In total took " + (totalAfter - totalBefore).TotalSeconds + " seconds to complete";
-        }
-
-        private void BoundingBoxSegFolder(string dName, string[] filenames, DirectBitmap[] originals, int k,
-            double sigma)
-        {
-            Task[] tasks = new Task[originals.Length];
-
-            string dExt = "\\k" + k + "sigma" + sigma;
-            Directory.CreateDirectory(dName + dExt);
-
-            for (int i = 0; i < originals.Length; i++)
-            {
-                var i1 = i;
-                tasks[i1] = Task.Run(() =>
-                {
-                    using (Segmentation s = GraphBasedImageSegmentation.Segment(originals[i1], k, sigma))
-                    {
-                        using (DirectBitmap resultImage = FeatureSimplicity.GetBoundingBoxMap(originals[i1], s, sigma))
-                        {
-                            resultImage.Bitmap.Save(dName + dExt + "\\" + filenames[i1].Split('\\').Last());
-                        }
-                    }
-
-                });
-            }
-            Task.WaitAll(tasks);
-
-            foreach (Task task in tasks)
-            {
-                task.Dispose();
-            }
         }
 
         #endregion
-
-        private void btnChooseFolder_Click(object sender, EventArgs e)
-        {
-            DoSweep();
-        }
 
         private void btnResizeOriginals_Click(object sender, EventArgs e)
         {
@@ -602,14 +255,9 @@ namespace Part2Project
             }
         }
 
-        private void btnRoTRename_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            RoTRenameSegmentationSweepSelective();
-        }
-
-        private void btnSegBoundBox_Click(object sender, EventArgs e)
-        {
-            BoundBoxSegmentationSweepSelective();
+            RoTRenameSigmaSweep();
         }
     }
 }

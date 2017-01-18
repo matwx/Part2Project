@@ -28,23 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnChooseFolder = new System.Windows.Forms.Button();
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.box = new System.Windows.Forms.TextBox();
             this.btnResizeOriginals = new System.Windows.Forms.Button();
-            this.btnRoTRename = new System.Windows.Forms.Button();
-            this.btnSegBoundBox = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // btnChooseFolder
-            // 
-            this.btnChooseFolder.Location = new System.Drawing.Point(114, 13);
-            this.btnChooseFolder.Name = "btnChooseFolder";
-            this.btnChooseFolder.Size = new System.Drawing.Size(95, 46);
-            this.btnChooseFolder.TabIndex = 0;
-            this.btnChooseFolder.Text = "Segmenation k+sigma sweep";
-            this.btnChooseFolder.UseVisualStyleBackColor = true;
-            this.btnChooseFolder.Click += new System.EventHandler(this.btnChooseFolder_Click);
             // 
             // box
             // 
@@ -65,36 +53,24 @@
             this.btnResizeOriginals.UseVisualStyleBackColor = true;
             this.btnResizeOriginals.Click += new System.EventHandler(this.btnResizeOriginals_Click);
             // 
-            // btnRoTRename
+            // button1
             // 
-            this.btnRoTRename.Location = new System.Drawing.Point(214, 13);
-            this.btnRoTRename.Name = "btnRoTRename";
-            this.btnRoTRename.Size = new System.Drawing.Size(95, 46);
-            this.btnRoTRename.TabIndex = 3;
-            this.btnRoTRename.Text = "Seg k+sigma w/ RoT renaming";
-            this.btnRoTRename.UseVisualStyleBackColor = true;
-            this.btnRoTRename.Click += new System.EventHandler(this.btnRoTRename_Click);
-            // 
-            // btnSegBoundBox
-            // 
-            this.btnSegBoundBox.Location = new System.Drawing.Point(315, 13);
-            this.btnSegBoundBox.Name = "btnSegBoundBox";
-            this.btnSegBoundBox.Size = new System.Drawing.Size(95, 46);
-            this.btnSegBoundBox.TabIndex = 4;
-            this.btnSegBoundBox.Text = "Seg k+sigma w/ Bounding boxes";
-            this.btnSegBoundBox.UseVisualStyleBackColor = true;
-            this.btnSegBoundBox.Click += new System.EventHandler(this.btnSegBoundBox_Click);
+            this.button1.Location = new System.Drawing.Point(114, 13);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(95, 46);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "RoT sigma sweep";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(547, 335);
-            this.Controls.Add(this.btnSegBoundBox);
-            this.Controls.Add(this.btnRoTRename);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnResizeOriginals);
             this.Controls.Add(this.box);
-            this.Controls.Add(this.btnChooseFolder);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -105,12 +81,10 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnChooseFolder;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
         private System.Windows.Forms.TextBox box;
         private System.Windows.Forms.Button btnResizeOriginals;
-        private System.Windows.Forms.Button btnRoTRename;
-        private System.Windows.Forms.Button btnSegBoundBox;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -12,7 +12,7 @@ namespace Part2Project.Features
 {
     static class FeatureRuleOfThirds
     {
-        public static double ComputeFeature(DirectBitmap image, Segmentation s)
+        public static double ComputeFeature(DirectBitmap image, Segmentation s, double distanceSigma)
         {
             // Get saliency segmentation
             RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
@@ -21,13 +21,13 @@ namespace Part2Project.Features
 
             double factor = 0;
             double result = 0;
-            const double sigma = 0.17;
+            // const double sigma = 0.17;
             for (int i = 0; i < rots.NumSegments; i++)
             {
                 if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
                 {
-                    result += rots.GetSegmentsSaliency(i)/segmentSpreads[i]* 
-                              Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+                    result += rots.GetSegmentsSaliency(i)/segmentSpreads[i]*
+                              Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * distanceSigma));
                     factor += rots.GetSegmentsSaliency(i) / segmentSpreads[i];
                 }
                 

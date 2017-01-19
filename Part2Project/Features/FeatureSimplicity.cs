@@ -11,9 +11,9 @@ namespace Part2Project.Features
 {
     static class FeatureSimplicity
     {
-        const double alpha = 0.67;
+//        const double alpha = 0.67;
 
-        public static double ComputeFeature(DirectBitmap image, Segmentation s, double sigma)
+        public static double ComputeFeature(DirectBitmap image, Segmentation s, double sigma, double alpha)
         {
             SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
 
@@ -120,7 +120,7 @@ namespace Part2Project.Features
             return ((double)total) / ss.Width / ss.Height;
         }
 
-        public static DirectBitmap GetBoundingBoxMap(DirectBitmap image, Segmentation s, double sigma)
+        public static DirectBitmap GetBoundingBoxMap(DirectBitmap image, Segmentation s, double sigma, double alpha)
         {
             DirectBitmap result = new DirectBitmap(image.Width, image.Height);
 

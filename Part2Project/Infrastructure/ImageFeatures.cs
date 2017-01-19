@@ -60,7 +60,7 @@ namespace Part2Project.Infrastructure
                         const double sigma = 0.8;
                         Segmentation s = GraphBasedImageSegmentation.Segment(_image, k, sigma);
                         //result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(_image, s);
-                        result.Simplicity = FeatureSimplicity.ComputeFeature(_image, s, sigma);
+//                        result.Simplicity = FeatureSimplicity.ComputeFeature(_image, s, sigma);
                     }
                 }
 

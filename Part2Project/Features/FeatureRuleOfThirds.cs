@@ -12,6 +12,8 @@ namespace Part2Project.Features
 {
     static class FeatureRuleOfThirds
     {
+        private const double sigma = 0.17;
+
         public static double ComputeFeature(DirectBitmap image, Segmentation s, double segSigma)
         {
             // Get saliency segmentation
@@ -21,7 +23,6 @@ namespace Part2Project.Features
 
             double factor = 0;
             double result = 0;
-            const double sigma = 0.17;
             for (int i = 0; i < rots.NumSegments; i++)
             {
                 if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)

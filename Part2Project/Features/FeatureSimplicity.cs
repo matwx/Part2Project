@@ -11,7 +11,7 @@ namespace Part2Project.Features
 {
     static class FeatureSimplicity
     {
-        const double alpha = 0.67;
+        const double alpha = 0.79;
 
         public static double ComputeFeature(DirectBitmap image, Segmentation s, double sigma)
         {

@@ -55,8 +55,8 @@ namespace Part2Project.Infrastructure
                         result.Saturation = FeatureSaturation.ComputeFeature(image);
 
                         // Segmentation-Derived
-                        const int k = 150;
-                        const double sigma = 0.8;
+                        const int k = 125;
+                        const double sigma = 0.6;
                         Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
                         result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(image, s, sigma);
                         result.Simplicity = FeatureSimplicity.ComputeFeature(image, s, sigma);

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Part2Project.Features;
+using Part2Project.Infrastructure;
 
 namespace Part2Project
 {
@@ -48,6 +50,30 @@ namespace Part2Project
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            using (Image selected = Image.FromFile(openFileDialog1.FileName))
+            {
+//                DirectBitmap image = new DirectBitmap((int) ((double) selected.Width / (double) selected.Height * 512.0), 512);
+                DirectBitmap image = new DirectBitmap(512, 512);
+                using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                {
+                    int originalWidth = (int) ((double) selected.Width / (double) selected.Height * 512.0);
+//                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 512.0), 512);
+                    gfx.DrawImage(selected, 256 -originalWidth / 2, 0, originalWidth, 512);
+                }
+
+                label1.Text = FeatureBlurriness.ComputeFeature(image).ToString();
+                pictureBox1.Image = image.Bitmap;
+                pictureBox2.Image = FeatureBlurriness.Get2DFFT(image).Bitmap;
+            }
         }
     }
 }

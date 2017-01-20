@@ -44,11 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\FeatureBlurriness.cs" />
     <Compile Include="Features\FeatureBrightness.cs" />
     <Compile Include="Features\FeatureIntensityContrast.cs" />
     <Compile Include="Features\FeatureRuleOfThirds.cs" />
     <Compile Include="Features\FeatureSaturation.cs" />
     <Compile Include="Features\FeatureSimplicity.cs" />
+    <Compile Include="FFTLibrary\FFT.cs" />
     <Compile Include="ImageSegmentation\RuleOfThirdsSegmentation.cs" />
     <Compile Include="ImageSegmentation\Segmentation.cs" />
     <Compile Include="Infrastructure\DirectBitmap.cs" />
@@ -109,6 +111,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

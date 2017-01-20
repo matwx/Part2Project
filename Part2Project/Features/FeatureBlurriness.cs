@@ -43,8 +43,8 @@ namespace Part2Project.Features
             using (var fft = new FFT(image512X512))
             {
                 fft.ForwardFFT();
-                //fft.FFTShift();
-                fft.FFTPlot();//fft.FFTShifted);
+                fft.FFTShift();
+                fft.FFTPlot(fft.FFTShifted);
 
                 result = new DirectBitmap(fft.FourierPlot.Bitmap);
 

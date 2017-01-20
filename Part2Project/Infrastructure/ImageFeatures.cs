@@ -43,23 +43,33 @@ namespace Part2Project.Infrastructure
                 {
                     using (DirectBitmap image = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240))
                     {
-                        using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                        using (DirectBitmap image512X512 = new DirectBitmap(512, 512))
                         {
-                            gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                            // Create the required resized images
+                            using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                            {
+                                gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                            }
+                            using (Graphics gfx = Graphics.FromImage(image512X512.Bitmap))
+                            {
+                                int originalWidth = (int)((double)selected.Width / (double)selected.Height * 512.0);
+                                gfx.DrawImage(selected, 256 - originalWidth / 2, 0, originalWidth, 512);
+                            }
+
+                            // Then compute the features and store the results
+                            // Low-level
+                            result.Blurriness = FeatureBlurriness.ComputeFeature(image512X512);
+                            result.Brightness = FeatureBrightness.ComputeFeature(image);
+                            result.IntensityContrast = FeatureIntensityContrast.ComputeFeature(image);
+                            result.Saturation = FeatureSaturation.ComputeFeature(image);
+
+                            // Segmentation-Derived
+                            const int k = 125;
+                            const double sigma = 0.6;
+                            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+                            result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(image, s, sigma);
+                            result.Simplicity = FeatureSimplicity.ComputeFeature(image, s, sigma);
                         }
-
-                        // Then compute the features and store the results
-                        // Low-level
-                        result.Brightness = FeatureBrightness.ComputeFeature(image);
-                        result.IntensityContrast = FeatureIntensityContrast.ComputeFeature(image);
-                        result.Saturation = FeatureSaturation.ComputeFeature(image);
-
-                        // Segmentation-Derived
-                        const int k = 125;
-                        const double sigma = 0.6;
-                        Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
-                        result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(image, s, sigma);
-                        result.Simplicity = FeatureSimplicity.ComputeFeature(image, s, sigma);
                     }
                 }
 

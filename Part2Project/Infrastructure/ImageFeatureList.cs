@@ -15,8 +15,8 @@ namespace Part2Project.Infrastructure
         // 4. Rule Of Thirds
         // 5. Simplicity (Bounding box area)
 
-        public const int VersionNumber = 2;
-        public const int NumFeatures = 5;
+        public const int VersionNumber = 3;
+        public const int NumFeatures = 6;
         private bool[] _featuresSet;
         private double[] _features;
         public string ImageFilename { get; private set; }
@@ -139,6 +139,15 @@ namespace Part2Project.Infrastructure
             {
                 _features[4] = value;
                 _featuresSet[4] = true;
+            }
+        }
+        public double Blurriness
+        {
+            get { return _features[5]; }
+            set
+            {
+                _features[5] = value;
+                _featuresSet[5] = true;
             }
         }
 

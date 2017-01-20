@@ -14,9 +14,6 @@ namespace Part2Project.Features
     {
         public static double ComputeFeature(DirectBitmap image512X512)
         {
-            const double windowSize = 0.9;
-            double maxRadius = Math.Sqrt(2 * 256 * 256);
-            double totalWeight = 0.0, total = 0.0;
             double totalfreq = 0.0;
             int num = 0;
             using (var fft = new FFT(image512X512))
@@ -35,29 +32,6 @@ namespace Part2Project.Features
             }
 
             return totalfreq / num;
-        }
-
-        public static DirectBitmap Get2DFFT(DirectBitmap image512X512)
-        {
-            DirectBitmap result, result2 = new DirectBitmap(128, 128);
-            using (var fft = new FFT(image512X512))
-            {
-                fft.ForwardFFT();
-                //fft.FFTShift();
-                fft.FFTPlot();//fft.FFTShifted);
-
-                result = new DirectBitmap(fft.FourierPlot.Bitmap);
-
-//                for (int x = 26; x < 486; x++)
-//                {
-//                    for (int y = 26; y < 486; y++)
-//                    {
-//                        result.SetPixel(x, y, Color.Red);
-//                    }
-//                }
-            }
-
-            return result;
         }
     }
 }

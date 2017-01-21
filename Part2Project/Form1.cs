@@ -100,9 +100,11 @@ namespace Part2Project
 
             // Sort and save all of images in the right folder, named by the RoT value
             Dictionary<double, string> newNames = new Dictionary<double, string>();
+            Random rand = new Random();
             for (int i = 0; i < filenames.Length; i++)
             {
-                newNames.Add(resultsTask.Result[i], filenames[i]);
+                if (newNames.ContainsKey(resultsTask.Result[i])) newNames.Add(resultsTask.Result[i] + rand.NextDouble() / 100000, filenames[i]);
+                else newNames.Add(resultsTask.Result[i], filenames[i]);
             }
             List<double> keyList = new List<double>();
             foreach (double key in newNames.Keys)

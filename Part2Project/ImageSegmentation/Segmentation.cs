@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,6 +103,11 @@ namespace Part2Project.ImageSegmentation
         public int GetSegmentsSize(int i)
         {
             return _segmentSizes[i];
+        }
+
+        public CIELab GetSegmentsColour(int i)
+        {
+            return _segmentColours[i];
         }
 
         public int GetPixelsSegmentIndex(int x, int y)

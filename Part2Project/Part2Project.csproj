@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Features\FeatureBlurriness.cs" />
     <Compile Include="Features\FeatureBrightness.cs" />
+    <Compile Include="Features\FeatureColourContrast.cs" />
     <Compile Include="Features\FeatureIntensityContrast.cs" />
     <Compile Include="Features\FeatureRuleOfThirds.cs" />
     <Compile Include="Features\FeatureSaturation.cs" />

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Part2Project.Features;
+using Part2Project.ImageSegmentation;
 using Part2Project.Infrastructure;
 
 namespace Part2Project
@@ -50,6 +51,29 @@ namespace Part2Project
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            using (Image selected = Image.FromFile(openFileDialog1.FileName))
+            {
+                using (DirectBitmap image = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240))
+                {
+                    // Create the required resized images
+                    using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                    {
+                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                    }
+
+                    Segmentation s = GraphBasedImageSegmentation.Segment(image, 125, 0.6);
+                    button1.Text = FeatureColourContrast.ComputeFeature(image, s).ToString();
+                }
+            }
         }
     }
 }

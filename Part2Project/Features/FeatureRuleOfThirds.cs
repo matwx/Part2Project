@@ -14,10 +14,10 @@ namespace Part2Project.Features
     {
         private const double sigma = 0.17;
 
-        public static double ComputeFeature(DirectBitmap image, Segmentation s, double segSigma)
+        public static double ComputeFeature(SaliencySegmentation ss)
         {
             // Get saliency segmentation
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(ss);
             
             double[] segmentSpreads = GetRoTSpreads(rots);
 

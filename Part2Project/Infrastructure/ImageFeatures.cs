@@ -67,8 +67,16 @@ namespace Part2Project.Infrastructure
                             const int k = 125;
                             const double sigma = 0.6;
                             Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
-                            result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(image, s, sigma);
-                            result.Simplicity = FeatureSimplicity.ComputeFeature(image, s, sigma);
+                            SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
+                            bool[][] boundedBinarySaliencyMap = new bool[image.Width][];
+                            for (int x = 0; x < image.Width; x++)
+                            {
+                                boundedBinarySaliencyMap[x] = new bool[image.Height];
+                            }
+
+                            result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(ss);
+                            result.Simplicity = FeatureSimplicity.ComputeFeature(ss, boundedBinarySaliencyMap);
+                            FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap);
                         }
                     }
                 }

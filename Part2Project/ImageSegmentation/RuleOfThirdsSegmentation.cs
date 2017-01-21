@@ -7,8 +7,7 @@ namespace Part2Project.ImageSegmentation
     {
         private double[] _powerPointDistances;
 
-        public RuleOfThirdsSegmentation(Segmentation s, DirectBitmap image, double sigma)
-            : base(s, image, sigma)
+        public RuleOfThirdsSegmentation(SaliencySegmentation ss) : base(ss)
         {
             _powerPointDistances = new double[NumSegments];
 

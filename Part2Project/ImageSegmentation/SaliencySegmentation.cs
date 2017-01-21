@@ -68,6 +68,25 @@ namespace Part2Project.ImageSegmentation
             }
         }
 
+        public SaliencySegmentation(SaliencySegmentation ss): base(ss)
+        {
+            _segmentSaliencies = new double[NumSegments];
+            for (int i = 0; i < NumSegments; i++)
+            {
+                _segmentSaliencies[i] = ss._segmentSaliencies[i];
+            }
+
+            sMap = new double[Width][];
+            for (int x = 0; x < Width; x++)
+            {
+                sMap[x] = new double[Height];
+                for (int y = 0; y < Height; y++)
+                {
+                    sMap[x][y] = ss.sMap[x][y];
+                }
+            }
+        }
+
         public double GetSegmentsSaliency(int i)
         {
             return _segmentSaliencies[i];

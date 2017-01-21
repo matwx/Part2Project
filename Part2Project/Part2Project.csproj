@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\FeatureBackgroundDistraction.cs" />
     <Compile Include="Features\FeatureBlurriness.cs" />
     <Compile Include="Features\FeatureBrightness.cs" />
     <Compile Include="Features\FeatureIntensityContrast.cs" />

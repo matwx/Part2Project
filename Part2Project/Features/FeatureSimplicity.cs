@@ -13,10 +13,8 @@ namespace Part2Project.Features
     {
         const double alpha = 0.79;
 
-        public static double ComputeFeature(DirectBitmap image, Segmentation s, double sigma)
+        public static double ComputeFeature(SaliencySegmentation ss, bool[][] boundedBinarySaliencyMap)
         {
-            SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
-
             bool[] trueSegments = new bool[ss.NumSegments];
             double[] newSaliencies = new double[ss.NumSegments];
             int numTrueSegments = 0;
@@ -87,12 +85,6 @@ namespace Part2Project.Features
                         }
                     }
                 }
-            }
-
-            bool[][] boundedBinarySaliencyMap = new bool[ss.Width][];
-            for (int x = 0; x < ss.Width; x++)
-            {
-                boundedBinarySaliencyMap[x] = new bool[ss.Height];
             }
 
             foreach (int i in trueSegmentIndicies)

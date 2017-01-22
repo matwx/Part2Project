@@ -11,8 +11,8 @@ namespace Part2Project.Features
 {
     class FeatureRuleOfThirds : IFeature
     {
-        private const int k = 150;
-        private const double segSigma = 0.8;
+        private const int k = 125;
+        private const double segSigma = 0.6;
 
         public double ComputeFeature(Bitmap image)
         {

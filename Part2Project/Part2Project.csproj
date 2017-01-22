@@ -50,6 +50,7 @@
     <Compile Include="Features\FeatureIntensityContrast.cs" />
     <Compile Include="Features\FeatureRuleOfThirds.cs" />
     <Compile Include="Features\FeatureSaturation.cs" />
+    <Compile Include="Features\FeatureShapeConvexity.cs" />
     <Compile Include="Features\FeatureSimplicity.cs" />
     <Compile Include="FFTLibrary\FFT.cs" />
     <Compile Include="ImageSegmentation\RuleOfThirdsSegmentation.cs" />
@@ -58,6 +59,22 @@
     <Compile Include="Infrastructure\ImageFeatureList.cs" />
     <Compile Include="Infrastructure\ImageFeatures.cs" />
     <Compile Include="Infrastructure\ImageDirectoryFeatures.cs" />
+    <Compile Include="MIConvexHull\Constants.cs" />
+    <Compile Include="MIConvexHull\ConvexHull.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\Collections.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ConvexFace.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ConvexHullAlgorithm.Initialize.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ConvexHullAlgorithm.MainLoop.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\DataModel.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\MathHelper.cs" />
+    <Compile Include="MIConvexHull\ConvexHull\ObjectManager.cs" />
+    <Compile Include="MIConvexHull\IVertex.cs" />
+    <Compile Include="MIConvexHull\Triangulation.cs" />
+    <Compile Include="MIConvexHull\Triangulation\DelaunayTrianglationInternal.cs" />
+    <Compile Include="MIConvexHull\Triangulation\DelaunayTriangulation.cs" />
+    <Compile Include="MIConvexHull\Triangulation\TriangulationCell.cs" />
+    <Compile Include="MIConvexHull\Triangulation\VoronoiEdge.cs" />
+    <Compile Include="MIConvexHull\Triangulation\VoronoiMesh.cs" />
     <Compile Include="MyColor\MyColorSpaceHelper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

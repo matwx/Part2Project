@@ -22,36 +22,22 @@ namespace Part2Project.Features
 
         public static double ComputeFeature(SaliencySegmentation ss, DirectBitmap image = null)
         {
-            double[] newSaliencies = new double[ss.NumSegments];
             int numSufficientlySalientPixels = 0;
-
-            // Re-normalise the segment saliencies, excluding the smallest ones
-            double maxSal = 0;
-            for (int i = 0; i < ss.NumSegments; i++)
-            {
-                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
-                    maxSal = ss.GetSegmentsSaliency(i);
-            }
-            for (int i = 0; i < ss.NumSegments; i++)
-            {
-                newSaliencies[i] = ss.GetSegmentsSaliency(i) / maxSal;
-            }
 
             // Re-organise data into lists of points for each segment
             List<DefaultVertex>[] segments = new List<DefaultVertex>[ss.NumSegments];
             for (int i = 0; i < ss.NumSegments; i++)
             {
-                if (ss.GetSegmentsSize(i) >= 0.01 * ss.Width * ss.Height && newSaliencies[i] > salRequired)
+                if (ss.GetSegmentsSize(i) >= 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > salRequired)
                     segments[i] = new List<DefaultVertex>();
             }
             for (int x = 0; x < ss.Width; x++)
             {
                 for (int y = 0; y < ss.Height; y++)
                 {
-                    if (ss.GetPixelsSegmentSize(x, y) >= 0.01 * ss.Width * ss.Height && newSaliencies[ss.GetPixelsSegmentIndex(x, y)] > salRequired)
+                    if (ss.GetPixelsSegmentSize(x, y) >= 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(ss.GetPixelsSegmentIndex(x, y)) > salRequired)
                     {
-                        DefaultVertex v = new DefaultVertex();
-                        v.Position = new double[] {x, y};
+                        DefaultVertex v = new DefaultVertex {Position = new double[] {x, y}};
                         segments[ss.GetPixelsSegmentIndex(x, y)].Add(v);
                         numSufficientlySalientPixels++;
                     }
@@ -67,14 +53,13 @@ namespace Part2Project.Features
             int totalCHPoints = 0, numCHsegments = 0;
             for (int seg = 0; seg < ss.NumSegments; seg++)
             {
-                if (ss.GetSegmentsSize(seg) >= 0.01 * ss.Width * ss.Height && newSaliencies[seg] > salRequired)
+                if (ss.GetSegmentsSize(seg) >= 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(seg) > salRequired)
                 {
                     // Compute its convex hull
                     var ch = ConvexHull.Create(segments[seg]).Points.ToList();
 
                     // Set reference to centre of the CH, and sort the points by clockwise rotation
-                    reference = new DefaultVertex();
-                    reference.Position = new double[2];
+                    reference = new DefaultVertex {Position = new double[2]};
                     for (int j = 0; j < ch.Count; j++)
                     {
                         reference.Position[0] += ch.ElementAt(j).Position[0];

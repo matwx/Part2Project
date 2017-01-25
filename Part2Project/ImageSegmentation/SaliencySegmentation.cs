@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Kaliko.ImageLibrary;
 using Kaliko.ImageLibrary.ColorSpace;
 using Kaliko.ImageLibrary.Filters;
@@ -65,6 +66,18 @@ namespace Part2Project.ImageSegmentation
             for (int i = 0; i < NumSegments; i++)
             {
                 _segmentSaliencies[i] /= _segmentSizes[i];
+            }
+
+            // Renormalise the segment saliencies, to exclude segments smaller than 1% of the image area
+            maxS = 0;
+            for (int i = 0; i < NumSegments; i++)
+            {
+                if (_segmentSizes[i] > 0.01 * Width * Height && _segmentSaliencies[i] > maxS)
+                    maxS = _segmentSaliencies[i];
+            }
+            for (int i = 0; i < NumSegments; i++)
+            {
+                _segmentSaliencies[i] = Math.Min(1.0, _segmentSaliencies[i] / maxS);
             }
         }
 

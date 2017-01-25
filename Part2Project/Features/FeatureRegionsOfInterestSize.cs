@@ -16,25 +16,12 @@ namespace Part2Project.Features
         public static double ComputeFeature(SaliencySegmentation ss, bool[][] boundedBinarySaliencyMap)
         {
             bool[] trueSegments = new bool[ss.NumSegments];
-            double[] newSaliencies = new double[ss.NumSegments];
             int numTrueSegments = 0;
-
-            // Re-normalise the segment saliencies, excluding the smallest ones
-            double maxSal = 0;
-            for (int i = 0; i < ss.NumSegments; i++)
-            {
-                if (ss.GetSegmentsSize(i) > 0.01*ss.Width*ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
-                    maxSal = ss.GetSegmentsSaliency(i);
-            }
-            for (int i = 0; i < ss.NumSegments; i++)
-            {
-                newSaliencies[i] = ss.GetSegmentsSaliency(i)/maxSal;
-            }
 
             // Convert segment saliency map into a binary map, using a threshold, alpha
             for (int i = 0; i < ss.NumSegments; i++)
             {
-                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && newSaliencies[i] > alpha)
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > alpha)
                 {
                     trueSegments[i] = true;
                     numTrueSegments++;

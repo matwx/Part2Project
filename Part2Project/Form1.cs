@@ -57,7 +57,7 @@ namespace Part2Project
                     Segmentation s = GraphBasedImageSegmentation.Segment(originals[i1], k, sigma);
                     SaliencySegmentation ss = new SaliencySegmentation(s, originals[i1], sigma);
 
-                    double result = FeatureShapeConvexity.ComputeFeature(originals[i1], ss);
+                    double result = FeatureShapeConvexity.ComputeFeature(ss, originals[i1]);
                     return result;
                 });
             }
@@ -112,7 +112,7 @@ namespace Part2Project
                 const double sigma = 0.6;
                 Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
                 SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
-                button1.Text = FeatureShapeConvexity.ComputeFeature(image, ss).ToString();
+                button1.Text = FeatureShapeConvexity.ComputeFeature(ss, image).ToString();
 
                 pictureBox1.Image = image.Bitmap;
             }

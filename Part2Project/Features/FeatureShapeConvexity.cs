@@ -20,7 +20,7 @@ namespace Part2Project.Features
         public const double salRequired = 0.7;
         public const double convexityRequired = 0.7;
 
-        public static double ComputeFeature(DirectBitmap image, SaliencySegmentation ss)
+        public static double ComputeFeature(SaliencySegmentation ss, DirectBitmap image = null)
         {
             double[] newSaliencies = new double[ss.NumSegments];
             int numSufficientlySalientPixels = 0;
@@ -124,22 +124,24 @@ namespace Part2Project.Features
 
                     //***
                     // testing: draw convex hull over the image
-                    using (var gfx = Graphics.FromImage(image.Bitmap))
+                    if (image != null)
                     {
-                        Color c = Color.Red;
-                        if (chArea < 0.8 * ss.Height * ss.Width && (double)ss.GetSegmentsSize(seg) / chArea > convexityRequired) c = Color.Green;
-
-                        for (int i = 0; i < ch.Count - 1; i++)
+                        using (var gfx = Graphics.FromImage(image.Bitmap))
                         {
-                            gfx.DrawLine(new Pen(Color.FromArgb(200, c), 2f), (int)ch.ElementAt(i).Position[0], (int)ch.ElementAt(i).Position[1],
-                                (int)ch.ElementAt(i + 1).Position[0], (int)ch.ElementAt(i + 1).Position[1]);
-                        }
+                            Color c = Color.Red;
+                            if (chArea < 0.8 * ss.Height * ss.Width && (double)ss.GetSegmentsSize(seg) / chArea > convexityRequired) c = Color.Green;
 
-                        gfx.DrawLine(new Pen(Color.FromArgb(200, c), 2f), (int)ch.Last().Position[0], (int)ch.Last().Position[1],
-                            (int)ch.ElementAt(0).Position[0], (int)ch.ElementAt(0).Position[1]);
+                            for (int i = 0; i < ch.Count - 1; i++)
+                            {
+                                gfx.DrawLine(new Pen(Color.FromArgb(200, c), 2f), (int)ch.ElementAt(i).Position[0], (int)ch.ElementAt(i).Position[1],
+                                    (int)ch.ElementAt(i + 1).Position[0], (int)ch.ElementAt(i + 1).Position[1]);
+                            }
+
+                            gfx.DrawLine(new Pen(Color.FromArgb(200, c), 2f), (int)ch.Last().Position[0], (int)ch.Last().Position[1],
+                                (int)ch.ElementAt(0).Position[0], (int)ch.ElementAt(0).Position[1]);
+                        }
                     }
                     //***
-
                 }
             }
             
@@ -153,47 +155,6 @@ namespace Part2Project.Features
 
             return (double)totalSufficientlySalientConvexSegmentArea / numSufficientlySalientPixels * (1 - cPart);
         }
-
-        // From CLRS
-        #region Line Segment Intersection
-        private static bool LineSegmentsIntersect(DefaultVertex p1, DefaultVertex p2, DefaultVertex p3, DefaultVertex p4)
-        {
-            var d1 = Direction(p3, p4, p1);
-            var d2 = Direction(p3, p4, p2);
-            var d3 = Direction(p1, p2, p3);
-            var d4 = Direction(p1, p2, p4);
-
-            if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) return true;
-            if (d1 == 0 && OnSegment(p3, p4, p1)) return true;
-            if (d2 == 0 && OnSegment(p3, p4, p2)) return true;
-            if (d3 == 0 && OnSegment(p1, p2, p3)) return true;
-            if (d4 == 0 && OnSegment(p1, p2, p4)) return true;
-            
-            return false;
-        }
-        private static double Direction(DefaultVertex p1, DefaultVertex p2, DefaultVertex p3)
-        {
-            return VertexCrossMag(VertexSub(p3, p1), VertexSub(p2, p1));
-        }
-        private static bool OnSegment(DefaultVertex p1, DefaultVertex p2, DefaultVertex p3)
-        {
-            return (Math.Min(p1.Position[0], p2.Position[0]) <= p3.Position[0] &&
-                    p3.Position[0] <= Math.Max(p1.Position[0], p2.Position[0]) &&
-                    Math.Min(p1.Position[1], p2.Position[1]) <= p3.Position[1] &&
-                    p3.Position[1] <= Math.Max(p1.Position[1], p2.Position[1]));
-        }
-
-        private static DefaultVertex VertexSub(DefaultVertex p1, DefaultVertex p2)
-        {
-            DefaultVertex result = new DefaultVertex();
-            result.Position = new double[] {p1.Position[0] - p2.Position[0], p1.Position[1] - p2.Position[1]};
-            return result;
-        }
-        private static double VertexCrossMag(DefaultVertex p1, DefaultVertex p2)
-        {
-            return p1.Position[0] * p2.Position[1] - p2.Position[0] - p1.Position[1];
-        }
-        #endregion
 
         // http://stackoverflow.com/questions/6996942/c-sharp-sort-list-of-x-y-coordinates-clockwise
         private static DefaultVertex reference;

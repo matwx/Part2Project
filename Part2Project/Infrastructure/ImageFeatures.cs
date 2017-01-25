@@ -32,6 +32,7 @@ namespace Part2Project.Infrastructure
         public ImageFeatureList GetFeatures()
         {
             ImageFeatureList result = new ImageFeatureList(_filename);
+            SaliencySegmentation ss;
 
             string ext = _filename.Split('.').Last();
             byte[] makerNote = GetExifMakerNote(_filename);
@@ -43,13 +44,10 @@ namespace Part2Project.Infrastructure
                 {
                     using (DirectBitmap image = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240))
                     {
+                        // First compute blurriness
                         using (DirectBitmap image512X512 = new DirectBitmap(512, 512))
                         {
-                            // Create the required resized images
-                            using (Graphics gfx = Graphics.FromImage(image.Bitmap))
-                            {
-                                gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-                            }
+                            // Create the required resized image
                             using (Graphics gfx = Graphics.FromImage(image512X512.Bitmap))
                             {
                                 int originalWidth = (int)((double)selected.Width / (double)selected.Height * 512.0);
@@ -58,28 +56,38 @@ namespace Part2Project.Infrastructure
 
                             // Then compute the features and store the results
                             // Low-level
-                            result.Blurriness = FeatureBlurriness.ComputeFeature(image512X512);
-                            result.Brightness = FeatureBrightness.ComputeFeature(image);
-                            result.IntensityContrast = FeatureIntensityContrast.ComputeFeature(image);
-                            result.Saturation = FeatureSaturation.ComputeFeature(image);
-
-                            // Segmentation-Derived
-                            const int k = 125;
-                            const double sigma = 0.6;
-                            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
-                            SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
-                            bool[][] boundedBinarySaliencyMap = new bool[image.Width][];
-                            for (int x = 0; x < image.Width; x++)
-                            {
-                                boundedBinarySaliencyMap[x] = new bool[image.Height];
-                            }
-
-                            result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(ss);
-                            result.Simplicity = FeatureSimplicity.ComputeFeature(ss, boundedBinarySaliencyMap);
-                            FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap);
+                            result.Blurriness = FeatureBlurriness.ComputeFeature(image512X512); // *** FEATURE ***
                         }
+
+                        // Create the required resized image
+                        using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                        {
+                            gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                        }
+
+                        // Then compute the features and store the results
+                        // Low-level
+                        result.Brightness = FeatureBrightness.ComputeFeature(image); // *** FEATURE ***
+                        result.IntensityContrast = FeatureIntensityContrast.ComputeFeature(image); // *** FEATURE ***
+                        result.Saturation = FeatureSaturation.ComputeFeature(image); // *** FEATURE ***
+
+                        // Segmentation-Derived
+                        const int k = 125;
+                        const double sigma = 0.6;
+                        Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+                        ss = new SaliencySegmentation(s, image, sigma);
+                        bool[][] boundedBinarySaliencyMap = new bool[image.Width][];
+                        for (int x = 0; x < image.Width; x++)
+                        {
+                            boundedBinarySaliencyMap[x] = new bool[image.Height];
+                        }
+                        result.RegionsOfInterestSize = FeatureSimplicity.ComputeFeature(ss, boundedBinarySaliencyMap); // Updates map for f_BD // *** FEATURE ***
+                        result.BackgroundDistraction = FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap); // Uses map // *** FEATURE ***
                     }
                 }
+
+                result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(ss); // *** FEATURE ***
+                result.ShapeConvexity = FeatureShapeConvexity.ComputeFeature(ss); // *** FEATURE ***
 
                 // Save the new computed features in the MakerNote
                 SaveExifMakerNote(_filename, result.ToByteArray());

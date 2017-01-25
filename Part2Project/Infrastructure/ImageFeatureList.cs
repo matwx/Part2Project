@@ -13,10 +13,10 @@ namespace Part2Project.Infrastructure
         // 2. Intensity Contrast
         // 3. Saturation
         // 4. Rule Of Thirds
-        // 5. Simplicity (Bounding box area)
+        // 5. RegionsOfInterestSize (Bounding box area)
 
-        public const int VersionNumber = 3;
-        public const int NumFeatures = 6;
+        public const int VersionNumber = 4;
+        public const int NumFeatures = 8;
         private bool[] _featuresSet;
         private double[] _features;
         public string ImageFilename { get; private set; }
@@ -132,7 +132,7 @@ namespace Part2Project.Infrastructure
                 _featuresSet[3] = true;
             }
         }
-        public double Simplicity
+        public double RegionsOfInterestSize
         {
             get { return _features[4]; }
             set
@@ -148,6 +148,24 @@ namespace Part2Project.Infrastructure
             {
                 _features[5] = value;
                 _featuresSet[5] = true;
+            }
+        }
+        public double BackgroundDistraction
+        {
+            get { return _features[6]; }
+            set
+            {
+                _features[6] = value;
+                _featuresSet[6] = true;
+            }
+        }
+        public double ShapeConvexity
+        {
+            get { return _features[7]; }
+            set
+            {
+                _features[7] = value;
+                _featuresSet[7] = true;
             }
         }
 

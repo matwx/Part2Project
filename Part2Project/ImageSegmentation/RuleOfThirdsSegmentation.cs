@@ -4,14 +4,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Part2Project.Infrastructure;
 
 namespace Part2Project.ImageSegmentation
-{
+{  
     class RuleOfThirdsSegmentation : SaliencySegmentation
     {
         private double[] _powerPointDistances;
 
-        public RuleOfThirdsSegmentation(Segmentation s, Bitmap image, double sigma) : base(s, image, sigma)
+        public RuleOfThirdsSegmentation(Segmentation s, DirectBitmap image, double sigma) : base(s, image, sigma)
         {
             _powerPointDistances = new double[NumSegments];
 

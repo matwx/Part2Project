@@ -6,18 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Part2Project.ImageSegmentation;
+using Part2Project.Infrastructure;
 
 namespace Part2Project.Features
 {
-    class FeatureRuleOfThirds : IFeature
+    class FeatureRuleOfThirds
     {
         private const int k = 125;
         private const double segSigma = 0.6;
 
-        public double ComputeFeature(Bitmap image)
+        public double ComputeFeature(DirectBitmap image)
         {
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, segSigma);
             RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             double[] segmentSpreads = GetRoTSpreads(rots);
@@ -55,12 +56,12 @@ namespace Part2Project.Features
             return result;
         }
 
-        public Bitmap GetRoTHeatMap(Bitmap image)
+        public Bitmap GetRoTHeatMap(DirectBitmap image)
         {
-            Bitmap result = new Bitmap(image);
+            Bitmap result = new Bitmap(image.Bitmap);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, segSigma);
             RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             double[] segmentSpreads = GetRoTSpreads(rots);
@@ -89,12 +90,12 @@ namespace Part2Project.Features
             return result;
         }
 
-        public Bitmap GetRoTSpreadMap(Bitmap image)
+        public Bitmap GetRoTSpreadMap(DirectBitmap image)
         {
-            Bitmap result = new Bitmap(image);
+            Bitmap result = new Bitmap(image.Bitmap);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, segSigma);
             RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             // Get max x and y values for each segment
@@ -149,12 +150,12 @@ namespace Part2Project.Features
             return result;
         }
 
-        public Bitmap GetRoTDistanceMap(Bitmap image)
+        public Bitmap GetRoTDistanceMap(DirectBitmap image)
         {
-            Bitmap result = new Bitmap(image);
+            Bitmap result = new Bitmap(image.Bitmap);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, segSigma);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, segSigma);
             RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
 
             double[] segmentDists = new double[rots.NumSegments];

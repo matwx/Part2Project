@@ -12,12 +12,13 @@ using System.Windows.Forms;
 using Kaliko.ImageLibrary.ColorSpace;
 using Part2Project.Features;
 using Part2Project.ImageSegmentation;
+using Part2Project.Infrastructure;
 
 namespace Part2Project
 {
     public partial class Form1 : Form
     {
-        private Bitmap bmp;
+        private DirectBitmap bmp;
         public Form1()
         {
             InitializeComponent();
@@ -32,11 +33,11 @@ namespace Part2Project
         {
             // Resize the image so that it's height fits in the viewer
             Image selected = Image.FromFile(dlgChooseImage.FileName);
-            bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
-            Graphics gfx = Graphics.FromImage(bmp);
+            bmp = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+            Graphics gfx = Graphics.FromImage(bmp.Bitmap);
 
             gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
-            viewer.Image = bmp;
+            viewer.Image = bmp.Bitmap;
 
             // Image loaded
             viewer2.Image = null;
@@ -63,9 +64,9 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, 150, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp.Bitmap, 125, 0.6);
 
-            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.8);
+            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.6);
 
             viewer2.Image = ss.GetSaliencyMap();
             DrawThirdLines();
@@ -75,9 +76,9 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, 150, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp.Bitmap, 125, 0.6);
 
-            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.8);
+            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.6);
 
             viewer2.Image = ss.GetSegmentSaliencyMap();
             DrawThirdLines();
@@ -88,7 +89,7 @@ namespace Part2Project
             double value = new FeatureRuleOfThirds().ComputeFeature(bmp);
             btnROT.Text = value.ToString(CultureInfo.InvariantCulture);
 
-            viewer2.Image = new Bitmap(bmp);
+            viewer2.Image = new Bitmap(bmp.Bitmap);
             DrawThirdLines();
         }
 
@@ -112,8 +113,8 @@ namespace Part2Project
             {
                 using (Image selected = Image.FromFile(filename))
                 {
-                    bmp = new Bitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
-                    Graphics gfx = Graphics.FromImage(bmp);
+                    bmp = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
+                    Graphics gfx = Graphics.FromImage(bmp.Bitmap);
 
                     gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
 

@@ -18,11 +18,12 @@ namespace Part2Project.Features
         //https://www.researchgate.net/profile/Jia_Li87/publication/221304720_Studying_Aesthetics_in_Photographic_Images_Using_a_Computational_Approach/links/55a71b9b08ae51639c5762ed.pdf
         //https://designengrlab.github.io/MIConvexHull/
         public const double salRequired = 0.7;
-        public const double convexityRequired = 0.8;
+        public const double convexityRequired = 0.7;
 
         public static double ComputeFeature(DirectBitmap image, SaliencySegmentation ss)
         {
             double[] newSaliencies = new double[ss.NumSegments];
+            int numSufficientlySalientPixels = 0;
 
             // Re-normalise the segment saliencies, excluding the smallest ones
             double maxSal = 0;
@@ -52,16 +53,18 @@ namespace Part2Project.Features
                         DefaultVertex v = new DefaultVertex();
                         v.Position = new double[] {x, y};
                         segments[ss.GetPixelsSegmentIndex(x, y)].Add(v);
+                        numSufficientlySalientPixels++;
                     }
                 }
             }
 
-//            // For each segment larger than 1% of image,
+//            // For each segment larger than 1% of image that is sufficiently salient,
 //            //  - Compute its convex hull
 //            //  - Compute the proportion of segment pixels in its convex hull
-//            //  - Compute proportion of image that is taken up by >80% convex segments
+//            //  - Compute proportion of sufficiently salient pixels that are taken up by >80% convex segments
 //
-            int totalConvexSegmentArea = 0;
+            int totalSufficientlySalientConvexSegmentArea = 0;
+            int totalCHPoints = 0, numCHsegments = 0;
             for (int seg = 0; seg < ss.NumSegments; seg++)
             {
                 if (ss.GetSegmentsSize(seg) >= 0.01 * ss.Width * ss.Height && newSaliencies[seg] > salRequired)
@@ -109,8 +112,15 @@ namespace Part2Project.Features
                         }
                     }
 
-                    if (chArea < 0.8 * ss.Height * ss.Width && (double)ss.GetSegmentsSize(seg) / chArea > convexityRequired)
-                        totalConvexSegmentArea += ss.GetSegmentsSize(seg);
+                    // Also make sure that our convex hull isn't basically the whole image?
+                    if (chArea < 0.8 * ss.Height * ss.Width &&
+                        (double) ss.GetSegmentsSize(seg) / chArea > convexityRequired)
+                    {
+                        totalSufficientlySalientConvexSegmentArea += ss.GetSegmentsSize(seg);
+                        totalCHPoints += ch.Count;
+                        numCHsegments++;
+                    }
+                        
 
                     //***
                     // testing: draw convex hull over the image
@@ -132,8 +142,16 @@ namespace Part2Project.Features
 
                 }
             }
+            
+            double cPart = 0.0;
+            const double alpha = 0.1109530472;
+            double averageCHPoints = (double) totalCHPoints / numCHsegments;
+            if (totalSufficientlySalientConvexSegmentArea > 0)
+            {
+                cPart = Math.Exp((3.0 - averageCHPoints) * alpha);
+            }
 
-            return (double) totalConvexSegmentArea / ss.Width / ss.Height;
+            return (double)totalSufficientlySalientConvexSegmentArea / numSufficientlySalientPixels * (1 - cPart);
         }
 
         // From CLRS

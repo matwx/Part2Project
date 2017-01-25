@@ -81,7 +81,7 @@ namespace Part2Project.Infrastructure
                         {
                             boundedBinarySaliencyMap[x] = new bool[image.Height];
                         }
-                        result.RegionsOfInterestSize = FeatureSimplicity.ComputeFeature(ss, boundedBinarySaliencyMap); // Updates map for f_BD // *** FEATURE ***
+                        result.RegionsOfInterestSize = FeatureRegionsOfInterestSize.ComputeFeature(ss, boundedBinarySaliencyMap); // Updates map for f_BD // *** FEATURE ***
                         result.BackgroundDistraction = FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap); // Uses map // *** FEATURE ***
                     }
                 }

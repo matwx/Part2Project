@@ -9,7 +9,7 @@ using Part2Project.Infrastructure;
 
 namespace Part2Project.Features
 {
-    static class FeatureSimplicity
+    static class FeatureRegionsOfInterestSize
     {
         const double alpha = 0.79;
 

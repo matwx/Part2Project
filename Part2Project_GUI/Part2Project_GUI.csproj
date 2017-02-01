@@ -67,6 +67,71 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Features\FeatureBackgroundDistraction.cs" />
+    <Compile Include="Model\Features\FeatureBlurriness.cs" />
+    <Compile Include="Model\Features\FeatureBrightness.cs" />
+    <Compile Include="Model\Features\FeatureIntensityContrast.cs" />
+    <Compile Include="Model\Features\FeatureRegionsOfInterestSize.cs" />
+    <Compile Include="Model\Features\FeatureRuleOfThirds.cs" />
+    <Compile Include="Model\Features\FeatureSaturation.cs" />
+    <Compile Include="Model\Features\FeatureShapeConvexity.cs" />
+    <Compile Include="Model\FFTLibrary\FFT.cs" />
+    <Compile Include="Model\GraphBasedDataStructures\GraphBasedDisjointSet.cs" />
+    <Compile Include="Model\GraphBasedDataStructures\GraphEdge.cs" />
+    <Compile Include="Model\GraphBasedDataStructures\GraphNode.cs" />
+    <Compile Include="Model\ImageSegmentation\GraphBasedImageSegmentation.cs" />
+    <Compile Include="Model\ImageSegmentation\RuleOfThirdsSegmentation.cs" />
+    <Compile Include="Model\ImageSegmentation\SaliencySegmentation.cs" />
+    <Compile Include="Model\ImageSegmentation\Segmentation.cs" />
+    <Compile Include="Model\Infrastructure\DirectBitmap.cs" />
+    <Compile Include="Model\Infrastructure\ImageDirectoryFeatures.cs" />
+    <Compile Include="Model\Infrastructure\ImageFeatureList.cs" />
+    <Compile Include="Model\Infrastructure\ImageFeatures.cs" />
+    <Compile Include="Model\MIConvexHull\Constants.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull\Collections.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull\ConvexFace.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull\ConvexHullAlgorithm.Initialize.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull\ConvexHullAlgorithm.MainLoop.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull\DataModel.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull\MathHelper.cs" />
+    <Compile Include="Model\MIConvexHull\ConvexHull\ObjectManager.cs" />
+    <Compile Include="Model\MIConvexHull\IVertex.cs" />
+    <Compile Include="Model\MIConvexHull\Triangulation.cs" />
+    <Compile Include="Model\MIConvexHull\Triangulation\DelaunayTrianglationInternal.cs" />
+    <Compile Include="Model\MIConvexHull\Triangulation\DelaunayTriangulation.cs" />
+    <Compile Include="Model\MIConvexHull\Triangulation\TriangulationCell.cs" />
+    <Compile Include="Model\MIConvexHull\Triangulation\VoronoiEdge.cs" />
+    <Compile Include="Model\MIConvexHull\Triangulation\VoronoiMesh.cs" />
+    <Compile Include="Model\MyColor\MyColorSpaceHelper.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorHandler.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\CIELab.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\CIEXYZ.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\CMYK.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\ColorSpaceHelper.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\HSB.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\HSL.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\RGB.cs" />
+    <Compile Include="Model\NetImageLibrary\ColorSpace\YUV.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\BrightnessFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\ChromaKeyFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\ContrastFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\ConvolveFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\DesaturationFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\GaussianBlurFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\IFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\InvertFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\Kernel.cs" />
+    <Compile Include="Model\NetImageLibrary\Filters\UnsharpMaskFilter.cs" />
+    <Compile Include="Model\NetImageLibrary\ImageOutput.cs" />
+    <Compile Include="Model\NetImageLibrary\KalikoImage.cs" />
+    <Compile Include="Model\NetImageLibrary\Scaling\CropScaling.cs" />
+    <Compile Include="Model\NetImageLibrary\Scaling\FitScaling.cs" />
+    <Compile Include="Model\NetImageLibrary\Scaling\PadScaling.cs" />
+    <Compile Include="Model\NetImageLibrary\Scaling\ScalingBase.cs" />
+    <Compile Include="Model\NetImageLibrary\TextField.cs" />
+    <Compile Include="Model\NetImageLibrary\TextShadow.cs" />
+    <Compile Include="Model\NetImageLibrary\ThumbnailMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,6 +157,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Model\MIConvexHull\MIConvexHull.csproj" />
+    <Resource Include="Model\NetImageLibrary\License.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -142,6 +142,17 @@ namespace Part2Project.ImageSegmentation
             {
                 return deltaE(ColorSpaceHelper.RGBtoLab(c1), ColorSpaceHelper.RGBtoLab(c2));
             }
+            else if (edgeWeightType.Equals("NotZero"))
+            {
+                CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
+                CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
+
+                double dE = deltaE(lab1, lab2);
+
+                Random rand = new Random();
+
+                return (dE == 0.0) ? rand.NextDouble() * 30 : dE;
+            }
             else
             {
                 // Default to intensity

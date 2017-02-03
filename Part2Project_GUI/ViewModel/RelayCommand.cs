@@ -8,8 +8,7 @@ namespace Part2Project_GUI.ViewModel
         readonly Action<object> _execute;
         readonly Predicate<object> _canExecute;
         
-        public RelayCommand(Action<object> execute) : this(execute, null) { }
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
+        public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");

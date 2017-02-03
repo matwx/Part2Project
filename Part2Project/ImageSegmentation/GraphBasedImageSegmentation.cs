@@ -151,7 +151,7 @@ namespace Part2Project.ImageSegmentation
 
                 Random rand = new Random();
 
-                return (dE == 0.0) ? rand.NextDouble() * 30 : dE;
+                return (Math.Abs(dE) < 1) ? (rand.NextDouble() * 4 + 1) : dE;
             }
             else
             {

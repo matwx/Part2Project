@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -12,11 +13,12 @@ namespace Part2Project_GUI.ViewModel
 {
     class MainWindowViewModel : ObservableObject
     {
-
+        private ScoredBitmapImage[] _scoredImages;
+        
         #region Properties
 
         private ObservableCollection<BitmapImage> _images;
-        public IEnumerable<BitmapImage> Images
+        public IEnumerable<BitmapImage> Images // This is the sorted set of thumbnail images to view.
         {
             get { return _images; }
             set
@@ -26,18 +28,118 @@ namespace Part2Project_GUI.ViewModel
             }
         }
 
+        private double _wBrightness;
+        public double BrightnessWeight
+        {
+            get { return _wBrightness; }
+            set
+            {
+                _wBrightness = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("BrightnessWeight");
+            }
+        }
+        private double _wIntensityContrast;
+        public double IntensityContrastWeight
+        {
+            get { return _wIntensityContrast; }
+            set
+            {
+                _wIntensityContrast = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("IntensityContrastWeight");
+            }
+        }
+        private double _wSaturation;
+        public double SaturationWeight
+        {
+            get { return _wSaturation; }
+            set
+            {
+                _wSaturation = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("SaturationWeight");
+            }
+        }
+        private double _wBlurriness;
+        public double BlurrinessWeight
+        {
+            get { return _wBlurriness; }
+            set
+            {
+                _wBlurriness = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("BlurrinessWeight");
+            }
+        }
+        private double _wRegionsOfInterestSize;
+        public double RegionsOfInterestSizeWeight
+        {
+            get { return _wRegionsOfInterestSize; }
+            set
+            {
+                _wRegionsOfInterestSize = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("RegionsOfInterestSizeWeight");
+            }
+        }
+        private double _wRuleOfThirds;
+        public double RuleOfThirdsWeight
+        {
+            get { return _wRuleOfThirds; }
+            set
+            {
+                _wRuleOfThirds = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("RuleOfThirdsWeight");
+            }
+        }
+        private double _wShapeConvexity;
+        public double ShapeConvexityWeight
+        {
+            get { return _wShapeConvexity; }
+            set
+            {
+                _wShapeConvexity = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("ShapeConvexityWeight");
+            }
+        }
+        private double _wBackgroundDistraction;
+        public double BackgroundDistractionWeight
+        {
+            get { return _wBackgroundDistraction; }
+            set
+            {
+                _wBackgroundDistraction = value;
+                UpdateImageScores();
+                SortViewableImagesFromScoredImages();
+                OnPropertyChanged("BackgroundDistractionWeight");
+            }
+        }
+
         #endregion
 
         public event EventHandler RequestClose;
 
         #region Commands
 
-        private RelayCommand _closeCommand; 
+        private RelayCommand _closeCommand;
         public RelayCommand CloseCommand
         {
             get
             {
-                if (_closeCommand == null) { _closeCommand = new RelayCommand(x => RequestClose(this, EventArgs.Empty)); }
+                if (_closeCommand == null)
+                {
+                    _closeCommand = new RelayCommand(x => RequestClose(this, EventArgs.Empty));
+                }
                 return _closeCommand;
             }
         }
@@ -47,13 +149,16 @@ namespace Part2Project_GUI.ViewModel
         {
             get
             {
-                if (_testCommand == null) { _testCommand = new RelayCommand(x => TestCommandFunction()); }
+                if (_testCommand == null)
+                {
+                    _testCommand = new RelayCommand(x => TestCommandFunction());
+                }
                 return _testCommand;
             }
         }
         private void TestCommandFunction()
         {
-            
+//            BlurrinessWeight = -1;
         }
 
         private RelayCommand _selectFolderCommand;
@@ -61,36 +166,95 @@ namespace Part2Project_GUI.ViewModel
         {
             get
             {
-                if (_selectFolderCommand == null) { _selectFolderCommand = new RelayCommand(x => SelectFolder()); }
+                if (_selectFolderCommand == null)
+                {
+                    _selectFolderCommand = new RelayCommand(x => SelectFolder());
+                }
                 return _selectFolderCommand;
             }
         }
         private void SelectFolder()
         {
+            // We need to let the user select a folder and, if they do, load all of the images form that
+            // folder. We then need to set up our internal list of images bound with their feature values.
+            // Finally, we need to update our ViewModel of images to be displayed after sorting the list.
+
             using (FolderBrowserDialog dlgFolder = new FolderBrowserDialog())
             {
                 // Let the user choose a folder to sort
                 dlgFolder.ShowDialog();
                 if (dlgFolder.SelectedPath != "")
                 {
-                    // Initialise feature manager
+                    // Initialise feature manager and extract all features
                     ImageDirectoryFeatures featureManager = new ImageDirectoryFeatures(dlgFolder.SelectedPath);
+                    var allFeatures = featureManager.GetDirectoryFeatures();
 
                     // Load in images to display for the selected folder
-                    var loadedImages = new ObservableCollection<BitmapImage>();
                     var filenames = featureManager.ImageFilenames;
-                    foreach (var filename in filenames)
+                    _scoredImages = new ScoredBitmapImage[filenames.Count];
+                    for (int i = 0; i < filenames.Count; i++)
                     {
-                        loadedImages.Add(new BitmapImage(new Uri(filename)));
+                        // Load thumbnail to view
+                        using (Bitmap inBitmap = new Bitmap(filenames[i]))
+                        {
+                            using (
+                                DirectBitmap image =
+                                    new DirectBitmap(
+                                        (int)((double)inBitmap.Width / (double)inBitmap.Height * 240.0), 240))
+                            {
+                                using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                                {
+                                    gfx.DrawImage(inBitmap, 0, 0,
+                                        (int)((double)inBitmap.Width / (double)inBitmap.Height * 240.0), 240);
+                                }
+
+                                _scoredImages[i] = new ScoredBitmapImage(DirectBitmapToBitmapImage(image), allFeatures[i]);
+                            }
+                        }
                     }
 
-                    Images = loadedImages;
+                    UpdateImageScores();
+                    SortViewableImagesFromScoredImages();
                 }
             }
         }
 
         #endregion
-        
+
+        private void SortViewableImagesFromScoredImages()
+        {
+            if (_scoredImages == null) return;
+
+            ObservableCollection<BitmapImage> newImages = new ObservableCollection<BitmapImage>();
+
+            List<ScoredBitmapImage> sortedImages = _scoredImages.ToList();
+            sortedImages.Sort();
+            sortedImages.Reverse();
+            foreach (ScoredBitmapImage scoredImage in sortedImages)
+            {
+                newImages.Add(scoredImage.Image);
+            }
+
+            Images = newImages;
+        }
+
+        private void UpdateImageScores()
+        {
+            if (_scoredImages == null) return;
+            foreach (var image in _scoredImages)
+            {
+                image.Score = 0.0;
+                image.Score += _wBrightness * image.Features.Brightness;
+                image.Score += _wSaturation * image.Features.Saturation;
+                image.Score += _wIntensityContrast * image.Features.IntensityContrast;
+                image.Score += _wBlurriness * image.Features.Blurriness;
+                image.Score += _wRegionsOfInterestSize * image.Features.RegionsOfInterestSize;
+                image.Score += _wRuleOfThirds * image.Features.RuleOfThirds;
+                image.Score += _wShapeConvexity * image.Features.ShapeConvexity;
+                image.Score += _wBackgroundDistraction * image.Features.BackgroundDistraction;
+            }
+        }
+
         private BitmapImage DirectBitmapToBitmapImage(DirectBitmap dBMP)
         {
             MemoryStream ms = new MemoryStream();
@@ -100,8 +264,27 @@ namespace Part2Project_GUI.ViewModel
             bi.BeginInit();
             bi.StreamSource = ms;
             bi.EndInit();
-        
+
             return bi;
+        }
+    }
+
+    public class ScoredBitmapImage : IComparable
+    {
+        public BitmapImage Image { get; private set; }
+        public ImageFeatureList Features { get; private set; }
+        public double Score { get; set; }
+
+        public ScoredBitmapImage(BitmapImage image, ImageFeatureList features, double score = 0.0)
+        {
+            Image = image;
+            Features = features;
+            Score = score;
+        }
+
+        public int CompareTo(object obj)
+        {
+            return Score.CompareTo(((ScoredBitmapImage) obj).Score);
         }
     }
 }

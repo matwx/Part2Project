@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Part2Project.Infrastructure
 {
-    class ImageFeatureList
+    public class ImageFeatureList
     {
         // Feature order:
         // 1. Brightness

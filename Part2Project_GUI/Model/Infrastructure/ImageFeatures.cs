@@ -89,8 +89,8 @@ namespace Part2Project.Infrastructure
                 result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(ss); // *** FEATURE ***
                 result.ShapeConvexity = FeatureShapeConvexity.ComputeFeature(ss); // *** FEATURE ***
 
-                // Save the new computed features in the MakerNote
-                SaveExifMakerNote(_filename, result.ToByteArray());
+                // Save the new computed features in the MakerNote, if it's a jpeg
+                if (ext.Equals("jpg") || ext.Equals("jpeg"))  SaveExifMakerNote(_filename, result.ToByteArray());
             }
 
             return result;
@@ -113,7 +113,7 @@ namespace Part2Project.Infrastructure
 
                     image.SetPropertyItem(pi);
 
-                    image.Save(filename);
+                    image.Save(filename, ImageFormat.Jpeg);
                 }
             }
         }

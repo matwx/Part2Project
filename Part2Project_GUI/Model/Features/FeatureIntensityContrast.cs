@@ -36,7 +36,7 @@ namespace Part2Project.Features
             }
             total = total / I_average / image.Width / image.Height;
 
-            return total;
+            return total / 1.3; // Fudge value to get mostly within [0,1]
         }
     }
 }

@@ -48,7 +48,9 @@ namespace Part2Project.Features
                 if (H[i] >= 0.01 * hmax) result++;
             }
 
-            return result / 4096;
+            if ((int) result == 4096) return 0; // This is when the RoI is the whole image
+
+            return result / 4096 / 0.11; // With a fudge factor
         }
     }
 }

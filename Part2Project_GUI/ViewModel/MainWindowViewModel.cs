@@ -6,13 +6,20 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Part2Project.Infrastructure;
+using Brushes = System.Drawing.Brushes;
+using Color = System.Drawing.Color;
 
 namespace Part2Project_GUI.ViewModel
 {
+    
+
     class MainWindowViewModel : ObservableObject
     {
+        private const bool DISPLAY_FEATURES = true;
+
         private ScoredBitmapImage[] _scoredImages;
         
         #region Properties
@@ -175,7 +182,7 @@ namespace Part2Project_GUI.ViewModel
         }
         private void SelectFolder()
         {
-            // We need to let the user select a folder and, if they do, load all of the images form that
+            // We need to let the user select a folder and, if they do, load all of the images from that
             // folder. We then need to set up our internal list of images bound with their feature values.
             // Finally, we need to update our ViewModel of images to be displayed after sorting the list.
 
@@ -206,6 +213,25 @@ namespace Part2Project_GUI.ViewModel
                                 {
                                     gfx.DrawImage(inBitmap, 0, 0,
                                         (int)((double)inBitmap.Width / (double)inBitmap.Height * 240.0), 240);
+
+                                    if (DISPLAY_FEATURES)
+                                    {
+                                        // Draw feature values over the bitmap
+                                        gfx.FillRectangle(new SolidBrush(Color.FromArgb(120, 0, 0, 0)), 0, 0, 320, 240);
+                                        float height =
+                                            gfx.MeasureString(
+                                                "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz",
+                                                SystemFonts.DefaultFont).Height;
+                                        int count = 0;
+                                        gfx.DrawString("Bright: " + Math.Round(allFeatures[i].Brightness, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count); count++;
+                                        gfx.DrawString("Constrast: " + Math.Round(allFeatures[i].IntensityContrast, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count); count++;
+                                        gfx.DrawString("Blurry: " + Math.Round(allFeatures[i].Blurriness, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count); count++;
+                                        gfx.DrawString("Sat: " + Math.Round(allFeatures[i].Saturation, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count); count++;
+                                        gfx.DrawString("RoISize: " + Math.Round(allFeatures[i].RegionsOfInterestSize, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count); count++;
+                                        gfx.DrawString("RoT: " + Math.Round(allFeatures[i].RuleOfThirds, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count); count++;
+                                        gfx.DrawString("Convex: " + Math.Round(allFeatures[i].ShapeConvexity, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count); count++;
+                                        gfx.DrawString("BackDistract: " + Math.Round(allFeatures[i].BackgroundDistraction, 5), SystemFonts.DefaultFont, Brushes.White, 5, 5 + (height + 2) * count);
+                                    }
                                 }
 
                                 _scoredImages[i] = new ScoredBitmapImage(DirectBitmapToBitmapImage(image), allFeatures[i]);

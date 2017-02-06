@@ -31,7 +31,7 @@ namespace Part2Project.Features
                 }
             }
 
-            return totalfreq / num;
+            return totalfreq / num * 8.5; // 8.5 is a sort of fudge factor to get the feature mostly within [0,1]
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Part2Project.Infrastructure
         // 4. Rule Of Thirds
         // 5. RegionsOfInterestSize (Bounding box area)
 
-        public const int VersionNumber = 4;
+        public const int VersionNumber = 5;
         public const int NumFeatures = 8;
         private bool[] _featuresSet;
         private double[] _features;

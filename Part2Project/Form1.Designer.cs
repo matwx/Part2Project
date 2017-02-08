@@ -32,6 +32,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.viewer = new System.Windows.Forms.PictureBox();
+            this.viewer2 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -59,16 +63,36 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk_1);
             // 
+            // viewer
+            // 
+            this.viewer.Location = new System.Drawing.Point(12, 105);
+            this.viewer.Name = "viewer";
+            this.viewer.Size = new System.Drawing.Size(320, 240);
+            this.viewer.TabIndex = 2;
+            this.viewer.TabStop = false;
+            // 
+            // viewer2
+            // 
+            this.viewer2.Location = new System.Drawing.Point(362, 105);
+            this.viewer2.Name = "viewer2";
+            this.viewer2.Size = new System.Drawing.Size(320, 240);
+            this.viewer2.TabIndex = 3;
+            this.viewer2.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(694, 409);
+            this.Controls.Add(this.viewer2);
+            this.Controls.Add(this.viewer);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.viewer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -79,6 +103,8 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.PictureBox viewer;
+        private System.Windows.Forms.PictureBox viewer2;
 
     }
 }

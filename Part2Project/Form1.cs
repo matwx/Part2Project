@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -134,27 +135,31 @@ namespace Part2Project
         {
             using (Image selected = Image.FromFile(openFileDialog1.FileName))
             {
-                using (DirectBitmap image = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240))
+                DirectBitmap image = new DirectBitmap(
+                    (int) ((double) selected.Width / (double) selected.Height * 240.0), 240);
+                // Create the required resized images
+                using (Graphics gfx = Graphics.FromImage(image.Bitmap))
                 {
-                    // Create the required resized images
-                    using (Graphics gfx = Graphics.FromImage(image.Bitmap))
-                    {
-                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
-                    }
-
-                    const int k = 125;
-                    const double sigma = 0.6;
-                    Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
-                    SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
-                    bool[][] boundedBinarySaliencyMap = new bool[image.Width][];
-                    for (int x = 0; x < image.Width; x++)
-                    {
-                        boundedBinarySaliencyMap[x] = new bool[image.Height];
-                    }
-
-                    FeatureSimplicity.ComputeFeature(ss, boundedBinarySaliencyMap);
-                    button1.Text = FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap).ToString();
+                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
                 }
+
+                const int k = 125;
+                const double sigma = 0.6;
+                Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+                SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
+                bool[][] boundedBinarySaliencyMap = new bool[image.Width][];
+                for (int x = 0; x < image.Width; x++)
+                {
+                    boundedBinarySaliencyMap[x] = new bool[image.Height];
+                }
+
+                FeatureSimplicity.ComputeFeature(ss, boundedBinarySaliencyMap);
+                button1.Text = FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap).ToString();
+
+                viewer.Image = image.Bitmap;
+                viewer2.Image =
+                    FeatureBackgroundDistraction.GetQuantisedBackground(image, boundedBinarySaliencyMap).Bitmap;
+                FeatureBackgroundDistraction.GetHistogram(image, boundedBinarySaliencyMap).Bitmap.Save("hist.png", ImageFormat.Png);
             }
         }
 

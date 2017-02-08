@@ -10,12 +10,12 @@ namespace Part2Project.Features
 {
     class FeatureSimplicity : IFeature
     {
-        const double alpha = 0.67;
+        const double alpha = 0.79;
 
         public double ComputeFeature(Bitmap image)
         {
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150.0, 0.8);
-            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.6);
+            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.6);
 
             bool[] trueSegments = new bool[ss.NumSegments];
             double[] newSaliencies = new double[ss.NumSegments];
@@ -124,8 +124,8 @@ namespace Part2Project.Features
         {
             Bitmap result = new Bitmap(image);
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150.0, 0.8);
-            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.6);
+            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.6);
 
             bool[] trueSegments = new bool[ss.NumSegments];
             double[] newSaliencies = new double[ss.NumSegments];

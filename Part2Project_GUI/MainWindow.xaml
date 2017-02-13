@@ -26,7 +26,15 @@
                 </ListView.ItemsPanel>
             </ListView>
             <StackPanel Orientation="Vertical" Margin="10">
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Brightness</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">The average intensity of the image. A higher value will describe brighter images, as opposed to darker ones.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Dark" Foreground="#FF6C6C6C"/>
@@ -38,7 +46,15 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="0" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Contrast</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">The average Intensity (Weber) Constrast of the image. This describes how big the difference between light and dark is. An image with low contrast looks foggy or washed out.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Low" Foreground="#FF6C6C6C"/>
@@ -50,7 +66,15 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="1" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Saturation</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">The average saturation of the image. This is a measure of how vibrant the colours are. A low saturation image will contain lots of grey.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Colourless" Foreground="#FF6C6C6C"/>
@@ -62,7 +86,15 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="2" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Blurriness</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">A measure of how blurry the image is. This includes motion blur, and blurring due to depth-of-field effects.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Blurry" Foreground="#FF6C6C6C"/>
@@ -74,7 +106,15 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="3" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Subject(s) Size</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">The proportion of the image taken up by subjects, or regions of interest.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Small" Foreground="#FF6C6C6C"/>
@@ -86,7 +126,15 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="4" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Rule of Thirds</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">A measure of how strongly the image adheres to the "Rule of Thirds". This is a rule-of-thumb that says the subjects of an image should be placed a third in from the corner of the image.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Weak" Foreground="#FF6C6C6C"/>
@@ -98,7 +146,15 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="5" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Shape Convexity</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">A measure of how "convex" the subjects of the image are, as well as how curved their edges are. "Convex" is the opposed of "jagged". A perfect example of a convex, curved shape is a circle.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Not Convex" Foreground="#FF6C6C6C"/>
@@ -110,7 +166,15 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="6" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                    <StackPanel.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold">Background Distraction</TextBlock>
+                                <TextBlock TextWrapping="Wrap" MaxWidth="400">A measure of how distracting the background (i.e. everything but the subjects) is.</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </StackPanel.ToolTip>
                     <StackPanel Orientation="Vertical">
                         <DockPanel Width="340" VerticalAlignment="Top" Height="16">
                             <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Simple" Foreground="#FF6C6C6C"/>

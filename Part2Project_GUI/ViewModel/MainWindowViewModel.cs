@@ -14,8 +14,6 @@ using Color = System.Drawing.Color;
 
 namespace Part2Project_GUI.ViewModel
 {
-    
-
     class MainWindowViewModel : ObservableObject
     {
         private const bool DISPLAY_FEATURES = true;
@@ -245,6 +243,101 @@ namespace Part2Project_GUI.ViewModel
             }
         }
 
+        private RelayCommand _resetWeightCommand;
+        public RelayCommand ResetWeightCommand
+        {
+            get
+            {
+                if (_resetWeightCommand == null)
+                {
+                    _resetWeightCommand = new RelayCommand(ResetWeight, IsWeightZero);
+                }
+                return _resetWeightCommand;
+            }
+        }
+        private bool IsWeightZero(Object weightNumber)
+        {
+            if (weightNumber is string)
+            {
+                try
+                {
+                    weightNumber = int.Parse((string)weightNumber);
+                }
+                catch (FormatException e)
+                {
+                    throw new Exception("IsWeightZero was called with a non-integer parameter.");
+                }
+                
+            }
+            else throw new Exception("IsWeightZero was called with an invalid parameter.");
+
+            switch ((int) weightNumber)
+            {
+                case 0:
+                    return BrightnessWeight != 0;
+                case 1:
+                    return IntensityContrastWeight != 0;
+                case 2:
+                    return SaturationWeight != 0;
+                case 3:
+                    return BlurrinessWeight != 0;
+                case 4:
+                    return RegionsOfInterestSizeWeight != 0;
+                case 5:
+                    return RuleOfThirdsWeight != 0;
+                case 6:
+                    return ShapeConvexityWeight != 0;
+                case 7:
+                    return BackgroundDistractionWeight != 0;
+            }
+
+            return false;
+        }
+        private void ResetWeight(Object weightNumber)
+        {
+            if (weightNumber is string)
+            {
+                try
+                {
+                    weightNumber = int.Parse((string)weightNumber);
+                }
+                catch (FormatException e)
+                {
+                    throw new Exception("IsWeightZero was called with a non-integer parameter.");
+                }
+
+            }
+            else throw new Exception("IsWeightZero was called with an invalid parameter.");
+
+            switch ((int) weightNumber)
+            {
+                case 0:
+                    BrightnessWeight = 0;
+                    return;
+                case 1:
+                    IntensityContrastWeight = 0;
+                    return;
+                case 2:
+                    SaturationWeight = 0;
+                    return;
+                case 3:
+                    BlurrinessWeight = 0;
+                    return;
+                case 4:
+                    RegionsOfInterestSizeWeight = 0;
+                    return;
+                case 5:
+                    RuleOfThirdsWeight = 0;
+                    return;
+                case 6:
+                    ShapeConvexityWeight = 0;
+                    return;
+                case 7:
+                    BackgroundDistractionWeight = 0;
+                    return;
+            }
+        }
+
         #endregion
 
         private void SortViewableImagesFromScoredImages()
@@ -263,7 +356,6 @@ namespace Part2Project_GUI.ViewModel
 
             Images = newImages;
         }
-
         private void UpdateImageScores()
         {
             if (_scoredImages == null) return;

@@ -1,11 +1,8 @@
-﻿<Window x:Class="Part2Project_GUI.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="566" Width="1380.333">
-    <Window.InputBindings>
-        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"></KeyBinding>
-        <KeyBinding Key="T" Command="{Binding TestCommand}"></KeyBinding>
-    </Window.InputBindings>
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Part2Project_GUI.MainWindow"
+        Title="MainWindow" Height="566" Width="1500">
     <Window.Resources>
         <DataTemplate x:Key="ItemTemplate">
             <WrapPanel>
@@ -13,6 +10,10 @@
             </WrapPanel>
         </DataTemplate>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+        <KeyBinding Key="T" Command="{Binding TestCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Button Command="{Binding SelectFolderCommand}" Content="Select Folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Command="{Binding TestCommand}" Content="Test" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
@@ -24,31 +25,103 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
-            <Grid>
-                <Slider Value="{Binding BrightnessWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding BrightnessWeight, StringFormat='Brightness: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,3,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
+            <StackPanel Orientation="Vertical" Margin="10">
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Dark" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="Bright" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding BrightnessWeight, StringFormat=Brightness: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding BrightnessWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="0" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
 
-                <Slider Value="{Binding IntensityContrastWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding IntensityContrastWeight, StringFormat='IntensityContrast: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,50,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Low" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="High" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding IntensityContrastWeight, StringFormat=Contrast: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding IntensityContrastWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="1" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
 
-                <Slider Value="{Binding SaturationWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,114,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding SaturationWeight, StringFormat='Saturation: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,98,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Colourless" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="Colourful" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding SaturationWeight, StringFormat=Saturation: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding SaturationWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="2" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
 
-                <Slider Value="{Binding BlurrinessWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding BlurrinessWeight, StringFormat='Blurriness: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,145,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Blurry" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="Sharp" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding BlurrinessWeight, StringFormat=Blurriness: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding BlurrinessWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="3" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
 
-                <Slider Value="{Binding RegionsOfInterestSizeWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,209,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding RegionsOfInterestSizeWeight, StringFormat='RegionsOfInterestSize: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,193,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Small" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="Large" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding RegionsOfInterestSizeWeight, StringFormat=Subject(s) Size: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding RegionsOfInterestSizeWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="4" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
 
-                <Slider Value="{Binding RuleOfThirdsWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,256,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding RuleOfThirdsWeight, StringFormat='RuleOfThirds: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,240,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Weak" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="Strong" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding RuleOfThirdsWeight, StringFormat=Rule of Thirds: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding RuleOfThirdsWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="5" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
 
-                <Slider Value="{Binding ShapeConvexityWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,304,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding ShapeConvexityWeight, StringFormat='ShapeConvexity: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,288,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Not Convex" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="Convex" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding ShapeConvexityWeight, StringFormat=Convexity: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding ShapeConvexityWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="6" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
 
-                <Slider Value="{Binding BackgroundDistractionWeight}" TickFrequency="1" TickPlacement="BottomRight" Minimum="-1" Maximum="1" HorizontalAlignment="Left" Margin="10,351,0,0" VerticalAlignment="Top" Height="27" Width="332"/>
-                <TextBlock Text="{Binding BackgroundDistractionWeight, StringFormat='BackgroundDistraction: {0}'}" HorizontalAlignment="Left" TextAlignment="Center" Margin="10,335,0,0" Width="332" TextWrapping="Wrap" VerticalAlignment="Top" Height="16"/>
-            </Grid>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel Width="340" VerticalAlignment="Top" Height="16">
+                            <TextBlock DockPanel.Dock="Left"  HorizontalAlignment="Center" Text="Simple" Foreground="#FF6C6C6C"/>
+                            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Center" Text="Distracting" Foreground="#FF6C6C6C"/>
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding BackgroundDistractionWeight, StringFormat=Background Distraction: \{0:#0.00\}}"/>
+                        </DockPanel>
+                        <Slider Value="{Binding BackgroundDistractionWeight}" TickFrequency="1" Minimum="-1" Maximum="1" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="350"/>
+                    </StackPanel>
+                    <Button Command="{Binding ResetWeightCommand}" CommandParameter="7" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
+                </StackPanel>
+            </StackPanel>
         </DockPanel>
     </Grid>
 </Window>

@@ -5,17 +5,22 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Part2Project.Infrastructure;
 using Brushes = System.Drawing.Brushes;
 using Color = System.Drawing.Color;
+using SystemFonts = System.Drawing.SystemFonts;
 
 namespace Part2Project_GUI.ViewModel
 {
     class MainWindowViewModel : ObservableObject
     {
+        //TODO: Put folder loading and feature extraction into a background worker
+
         private const bool DISPLAY_FEATURES = true;
 
         private ScoredBitmapImage[] _scoredImages;
@@ -130,7 +135,67 @@ namespace Part2Project_GUI.ViewModel
             }
         }
 
+
+        private WindowState _windowState = WindowState.Normal;
+        public WindowState WindowState
+        {
+            get { return _windowState; }
+            set
+            {
+                _windowState = value;
+                SetPicListWidthForWindowSize();
+                OnPropertyChanged("WindowState");
+            }
+        }
+        private int _windowWidth;
+        public int WindowWidth
+        {
+            get { return _windowWidth; }
+            set
+            {
+                _windowWidth = value;
+                SetPicListWidthForWindowSize();
+                OnPropertyChanged("WindowWidth");
+            }
+        }
+        private int _picListWidth;
+        public int PicListWidth
+        {
+            get { return _picListWidth; }
+            set
+            {
+                _picListWidth = value;
+                OnPropertyChanged("PicListWidth");
+            }
+        }
+        private void SetPicListWidthForWindowSize()
+        {
+            int spaceLeftForPics = 0;
+            if (_windowState == WindowState.Maximized)
+            {
+                var interopHelper = new WindowInteropHelper(System.Windows.Application.Current.MainWindow);
+                var activeScreen = Screen.FromHandle(interopHelper.Handle);
+                spaceLeftForPics = activeScreen.Bounds.Width - 475;
+            }
+            else
+            {
+                spaceLeftForPics = _windowWidth - 475;
+            }
+
+            if (spaceLeftForPics < 320) PicListWidth = 1;
+            else PicListWidth = spaceLeftForPics / 320;
+        }
+
         #endregion
+
+        public MainWindowViewModel()
+        {
+
+//            var interopHelper = new WindowInteropHelper(System.Windows.Application.Current.MainWindow);
+//            var activeScreen = Screen.FromHandle(interopHelper.Handle);
+//            int spaceLeftForPics = activeScreen.Bounds.Width - 500;
+//            PicListWidth = spaceLeftForPics / 320;
+        }
 
         public event EventHandler RequestClose;
 
@@ -340,6 +405,7 @@ namespace Part2Project_GUI.ViewModel
 
         #endregion
 
+        
         private void SortViewableImagesFromScoredImages()
         {
             if (_scoredImages == null) return;

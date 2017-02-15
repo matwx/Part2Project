@@ -25,7 +25,7 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
-            <StackPanel Orientation="Vertical" Margin="10">
+            <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Center" DockPanel.Dock="Right">
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
                     <StackPanel.ToolTip>
                         <ToolTip>

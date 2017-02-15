@@ -182,8 +182,8 @@ namespace Part2Project_GUI.ViewModel
                 spaceLeftForPics = _windowWidth - 475;
             }
 
-            if (spaceLeftForPics < 320) PicListWidth = 1;
-            else PicListWidth = spaceLeftForPics / 320;
+            if (spaceLeftForPics < 330) PicListWidth = 1;
+            else PicListWidth = spaceLeftForPics / 330;
         }
 
         #endregion

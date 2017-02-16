@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Part2Project_GUI.View.StartScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:part2ProjectGui="clr-namespace:Part2Project_GUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="290" d:DesignWidth="311">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ItemTemplate">
+            <WrapPanel>
+                <Image Width="320" Height="240" Source="{Binding}" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="LowQuality"/>
+            </WrapPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <Button Command="{Binding SelectFolderCommand}" Content="Select Folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <DockPanel Margin="0, 44, 0, 0">
+            <ListView DockPanel.Dock="Left" ItemsSource="{Binding Images}" ItemTemplate="{StaticResource ItemTemplate}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+            <Grid></Grid>
+        </DockPanel>
+    </Grid>
+</UserControl>

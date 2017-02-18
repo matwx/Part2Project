@@ -28,40 +28,26 @@ namespace Part2Project_GUI.ViewModel
 
         #endregion
 
-        public MainWindowViewModel()
+        public MainWindowViewModel() : base(null, null)
         {
-            ViewModel = new StartScreenViewModel(this);
+            // Start screen is the root View, so hasn't got a parent viewmodel
+            ViewModel = new StartScreenViewModel(this, null);
         }
 
         #region Commands
 
-        public event EventHandler RequestClose;
-
-        private RelayCommand _closeCommand;
-        public RelayCommand CloseCommand
-        {
-            get
-            {
-                if (_closeCommand == null)
-                {
-                    _closeCommand = new RelayCommand(x => RequestClose(this, EventArgs.Empty));
-                }
-                return _closeCommand;
-            }
-        }
-
-        private RelayCommand _displayFourImageSelectorCommand;
-        public RelayCommand DisplayFourImageSelectorCommand
-        {
-            get
-            {
-                if (_displayFourImageSelectorCommand == null)
-                {
-                    _displayFourImageSelectorCommand = new RelayCommand(x => ViewModel = new FourImageSelectorViewModel(), x => !(ViewModel is FourImageSelectorViewModel));
-                }
-                return _displayFourImageSelectorCommand;
-            }
-        }
+//        private RelayCommand _displayFourImageSelectorCommand;
+//        public RelayCommand DisplayFourImageSelectorCommand
+//        {
+//            get
+//            {
+//                if (_displayFourImageSelectorCommand == null)
+//                {
+//                    _displayFourImageSelectorCommand = new RelayCommand(x => ViewModel = new FourImageSelectorViewModel(), x => !(ViewModel is FourImageSelectorViewModel));
+//                }
+//                return _displayFourImageSelectorCommand;
+//            }
+//        }
 
         #endregion
     }

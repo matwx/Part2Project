@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\ImageSorting.cs" />
     <Compile Include="ViewModel\StartScreenViewModel.cs" />
     <Compile Include="View\FourImageSelector.xaml.cs">
       <DependentUpon>FourImageSelector.xaml</DependentUpon>

@@ -23,10 +23,15 @@ namespace Part2Project_GUI.ViewModel
         private const bool DISPLAY_FEATURES = true;
 
         private ScoredBitmapImage[] _scoredImages;
-        
+
         #region Properties
 
         private ObservableCollection<BitmapImage> _images;
+
+        public OldTestViewModel(MainWindowViewModel window, BaseViewModel parent) : base(window, parent)
+        {
+        }
+
         public IEnumerable<BitmapImage> Images // This is the sorted set of thumbnail images to view.
         {
             get { return _images; }

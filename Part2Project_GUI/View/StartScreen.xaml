@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:part2ProjectGui="clr-namespace:Part2Project_GUI"
              mc:Ignorable="d" 
-             d:DesignHeight="290" d:DesignWidth="311">
+             d:DesignHeight="290" d:DesignWidth="411">
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate">
             <WrapPanel>
@@ -15,6 +15,8 @@
     </UserControl.Resources>
     <Grid>
         <Button Command="{Binding SelectFolderCommand}" Content="Select Folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Command="{Binding BeginCommand}" Content="Begin Test" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Command="{Binding CloseCommand}" Content="Back" HorizontalAlignment="Left" Margin="345,10,0,0" VerticalAlignment="Top" Width="56"/>
         <DockPanel Margin="0, 44, 0, 0">
             <ListView DockPanel.Dock="Left" ItemsSource="{Binding Images}" ItemTemplate="{StaticResource ItemTemplate}">
                 <ListView.ItemsPanel>
@@ -23,7 +25,9 @@
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
-            <Grid></Grid>
+            <Grid>
+                <!--                <Button Command="{Binding DataContext.DisplayFourImageSelectorCommand, RelativeSource={RelativeSource AncestorType={x:Type part2ProjectGui:MainWindow}}, Mode=OneWay}" Content="fourImage" HorizontalAlignment="Left" Margin="170,10,0,0" VerticalAlignment="Top" Width="75"/>-->
+            </Grid>
         </DockPanel>
     </Grid>
 </UserControl>

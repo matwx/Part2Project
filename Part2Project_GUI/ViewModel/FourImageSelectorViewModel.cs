@@ -11,6 +11,7 @@ namespace Part2Project_GUI.ViewModel
     {
         private ImageSorting _imageSorting;
         private int _round = 0; // The number of rounds completed
+        private int _imageIndex1, _imageIndex2, _imageIndex3, _imageIndex4;
 
         #region Properties
 
@@ -92,6 +93,7 @@ namespace Part2Project_GUI.ViewModel
             else throw new Exception("ChooseImage was called with an invalid parameter.");
 
             // Do something with our chosen image
+            CloseCommand.Execute(0);
         }
         private bool CanChooseImage(Object input)
         {
@@ -124,11 +126,36 @@ namespace Part2Project_GUI.ViewModel
         public FourImageSelectorViewModel(MainWindowViewModel w, BaseViewModel p, ImageSorting iS) : base(w, p)
         {
             _imageSorting = iS;
+
+            UpdateImages();
         }
 
         private void UpdateImages()
         {
-            
+            Random rand = new Random();
+
+            // Select the four images. Make sure that they're not the same
+            _imageIndex1 = rand.Next(0, _imageSorting.ScoredImages.Length);
+            _imageIndex2 = rand.Next(0, _imageSorting.ScoredImages.Length);
+            while (_imageIndex2 == _imageIndex1)
+            {
+                _imageIndex2 = rand.Next(0, _imageSorting.ScoredImages.Length);
+            }
+            _imageIndex3 = rand.Next(0, _imageSorting.ScoredImages.Length);
+            while (_imageIndex3 == _imageIndex2 || _imageIndex3 == _imageIndex1)
+            {
+                _imageIndex3 = rand.Next(0, _imageSorting.ScoredImages.Length);
+            }
+            _imageIndex4 = rand.Next(0, _imageSorting.ScoredImages.Length);
+            while (_imageIndex4 == _imageIndex3 || _imageIndex4 == _imageIndex2 || _imageIndex4 == _imageIndex1)
+            {
+                _imageIndex4 = rand.Next(0, _imageSorting.ScoredImages.Length);
+            }
+
+            Image1 = _imageSorting.ScoredImages[_imageIndex1].Image;
+            Image2 = _imageSorting.ScoredImages[_imageIndex2].Image;
+            Image3 = _imageSorting.ScoredImages[_imageIndex3].Image;
+            Image4 = _imageSorting.ScoredImages[_imageIndex4].Image;
         }
     }
 }

@@ -19,14 +19,14 @@ namespace Part2Project_GUI.ViewModel
 
         public ScoredBitmapImage[] ScoredImages { get; private set; }
 
-        public double _wBrightness,
-            _wIntensityContrast,
-            _wSaturation,
-            _wBlurriness,
-            _wRegionsOfInterestSize,
-            _wRuleOfThirds,
-            _wShapeConvexity,
-            _wBackgroundDistraction;
+        public double WBrightness,
+            WIntensityContrast,
+            WSaturation,
+            WBlurriness,
+            WRegionsOfInterestSize,
+            WRuleOfThirds,
+            WShapeConvexity,
+            WBackgroundDistraction;
 
         public void SelectFolder()
         {
@@ -117,14 +117,14 @@ namespace Part2Project_GUI.ViewModel
             foreach (var image in ScoredImages)
             {
                 image.Score = 0.0;
-                image.Score += _wBrightness * image.Features.Brightness;
-                image.Score += _wSaturation * image.Features.Saturation;
-                image.Score += _wIntensityContrast * image.Features.IntensityContrast;
-                image.Score += _wBlurriness * image.Features.Blurriness;
-                image.Score += _wRegionsOfInterestSize * image.Features.RegionsOfInterestSize;
-                image.Score += _wRuleOfThirds * image.Features.RuleOfThirds;
-                image.Score += _wShapeConvexity * image.Features.ShapeConvexity;
-                image.Score += _wBackgroundDistraction * image.Features.BackgroundDistraction;
+                image.Score += WBrightness * image.Features.Brightness;
+                image.Score += WSaturation * image.Features.Saturation;
+                image.Score += WIntensityContrast * image.Features.IntensityContrast;
+                image.Score += WBlurriness * image.Features.Blurriness;
+                image.Score += WRegionsOfInterestSize * image.Features.RegionsOfInterestSize;
+                image.Score += WRuleOfThirds * image.Features.RuleOfThirds;
+                image.Score += WShapeConvexity * image.Features.ShapeConvexity;
+                image.Score += WBackgroundDistraction * image.Features.BackgroundDistraction;
             }
         }
 

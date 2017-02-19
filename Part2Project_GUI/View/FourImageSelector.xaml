@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="510" d:DesignWidth="640">
+             d:DesignHeight="550" Width="Auto">
     <DockPanel>
         <Grid DockPanel.Dock="Top">
             <Button Content="Back (close this page)" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="0, 5, 10, 5" VerticalAlignment="Center" Width="127" Height="20"/>
         </Grid>
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -46,6 +47,7 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
+            <ListBox Grid.RowSpan="2" Grid.Row="0" Grid.Column="2" ItemsSource="{Binding CurrentInferences}" Width="Auto"/>
         </Grid>
     </DockPanel>
 </UserControl>

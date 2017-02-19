@@ -17,7 +17,7 @@ namespace Part2Project_GUI.ViewModel
     {
         private const bool DISPLAY_FEATURES = true;
 
-        private ScoredBitmapImage[] _scoredImages;
+        public ScoredBitmapImage[] ScoredImages { get; private set; }
 
         public double _wBrightness,
             _wIntensityContrast,
@@ -46,7 +46,7 @@ namespace Part2Project_GUI.ViewModel
 
                     // Load in images to display for the selected folder
                     var filenames = featureManager.ImageFilenames;
-                    _scoredImages = new ScoredBitmapImage[filenames.Count];
+                    ScoredImages = new ScoredBitmapImage[filenames.Count];
                     for (int i = 0; i < filenames.Count; i++)
                     {
                         // Load thumbnail to view
@@ -82,7 +82,7 @@ namespace Part2Project_GUI.ViewModel
                                     }
                                 }
 
-                                _scoredImages[i] = new ScoredBitmapImage(DirectBitmapToBitmapImage(image), allFeatures[i]);
+                                ScoredImages[i] = new ScoredBitmapImage(DirectBitmapToBitmapImage(image), allFeatures[i]);
                             }
                         }
                     }
@@ -95,13 +95,13 @@ namespace Part2Project_GUI.ViewModel
 
         public ObservableCollection<BitmapImage> SortViewableImagesFromScoredImages()
         {
-            if (_scoredImages == null) return null;
+            if (ScoredImages == null) return null;
 
             UpdateImageScores();
 
             ObservableCollection<BitmapImage> newImages = new ObservableCollection<BitmapImage>();
 
-            List<ScoredBitmapImage> sortedImages = _scoredImages.ToList();
+            List<ScoredBitmapImage> sortedImages = ScoredImages.ToList();
             sortedImages.Sort();
             sortedImages.Reverse();
             foreach (ScoredBitmapImage scoredImage in sortedImages)
@@ -113,8 +113,8 @@ namespace Part2Project_GUI.ViewModel
         }
         private void UpdateImageScores()
         {
-            if (_scoredImages == null) return;
-            foreach (var image in _scoredImages)
+            if (ScoredImages == null) return;
+            foreach (var image in ScoredImages)
             {
                 image.Score = 0.0;
                 image.Score += _wBrightness * image.Features.Brightness;

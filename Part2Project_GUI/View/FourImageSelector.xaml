@@ -18,10 +18,34 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Grid.Column="0" Width="320" Height="240" Source="{Binding Image1}" RenderOptions.BitmapScalingMode="LowQuality"/>
-            <Image Grid.Row="0" Grid.Column="1" Width="320" Height="240" Source="{Binding Image2}" RenderOptions.BitmapScalingMode="LowQuality"/>
-            <Image Grid.Row="1" Grid.Column="0" Width="320" Height="240" Source="{Binding Image3}" RenderOptions.BitmapScalingMode="LowQuality"/>
-            <Image Grid.Row="1" Grid.Column="1" Width="320" Height="240" Source="{Binding Image4}" RenderOptions.BitmapScalingMode="LowQuality"/>
+            <Button Grid.Row="0" Grid.Column="0" Width="320" Height="240" Command="{Binding ChooseImageCommand}" CommandParameter="1">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="{Binding Image1}" RenderOptions.BitmapScalingMode="LowQuality"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="1" Width="320" Height="240" Command="{Binding ChooseImageCommand}" CommandParameter="2">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="{Binding Image2}" RenderOptions.BitmapScalingMode="LowQuality"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="0" Width="320" Height="240" Command="{Binding ChooseImageCommand}" CommandParameter="3">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="{Binding Image3}" RenderOptions.BitmapScalingMode="LowQuality"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1" Width="320" Height="240" Command="{Binding ChooseImageCommand}" CommandParameter="4">
+                <Button.Template>
+                    <ControlTemplate>
+                        <Image Source="{Binding Image4}" RenderOptions.BitmapScalingMode="LowQuality"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
     </DockPanel>
 </UserControl>

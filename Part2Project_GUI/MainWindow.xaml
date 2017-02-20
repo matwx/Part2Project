@@ -21,7 +21,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="{Binding QuestionText}"/>
-                            <TextBox Text="{Binding AnswerText}" Grid.Column="1"/>
+                            <TextBox Text="{Binding AnswerText, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

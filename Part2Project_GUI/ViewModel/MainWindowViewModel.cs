@@ -25,6 +25,7 @@ namespace Part2Project_GUI.ViewModel
         public Question(string qText)
         {
             QuestionText = qText;
+            AnswerText = "";
         }
     }
 
@@ -36,10 +37,7 @@ namespace Part2Project_GUI.ViewModel
         private ObservableCollection<Question> _questions;
         public ObservableCollection<Question> QuestionsToAnswer
         {
-            get
-            {
-                return _questions;
-            }
+            get { return _questions; }
             set
             {
                 _questions = value;
@@ -114,8 +112,18 @@ namespace Part2Project_GUI.ViewModel
         }
         private void StartCommandFunction()
         {
-            AnswersVisibility = Visibility.Visible;
-            _startTime = DateTime.Now;
+            // First, the user needs to select a folder for the output
+            using (FolderBrowserDialog dlgFolder = new FolderBrowserDialog())
+            {
+                // Let the user choose a folder to sort
+                dlgFolder.ShowDialog();
+                if (!dlgFolder.SelectedPath.Equals(""))
+                {
+                    _saveFolderName = dlgFolder.SelectedPath;
+                    AnswersVisibility = Visibility.Visible;
+                    _startTime = DateTime.Now;
+                }
+            }
         }
 
         private RelayCommand _stopCommand;
@@ -125,7 +133,7 @@ namespace Part2Project_GUI.ViewModel
             {
                 if (_stopCommand == null)
                 {
-                    _stopCommand = new RelayCommand(x => StopCommandFunction(), x => AnswersVisibility == Visibility.Visible);
+                    _stopCommand = new RelayCommand(x => StopCommandFunction(), x => IsStopCommandEnabled());
                 }
                 return _stopCommand;
             }
@@ -135,7 +143,31 @@ namespace Part2Project_GUI.ViewModel
             // Record time taken
             TimeSpan timeTaken = (DateTime.Now - _startTime);
 
-            // Save answers and 
+            // Save answers and time in a text file
+            string nl = Environment.NewLine;
+            string output = timeTaken.TotalMilliseconds + nl;
+            foreach (var question in QuestionsToAnswer)
+            {
+                output += question.AnswerText + nl;
+            }
+
+            File.WriteAllText(_saveFolderName + "\\Image_Sorting_Results.txt", output);
+
+            // Then terminate
+            CloseCommand.Execute(0);
+        }
+        private bool IsStopCommandEnabled()
+        {
+            if (QuestionsToAnswer == null) return false;
+
+            bool result = true;
+
+            foreach (var question in QuestionsToAnswer)
+            {
+                result = result && (!question.AnswerText.Equals(""));
+            }
+
+            return result;
         }
         
         #endregion

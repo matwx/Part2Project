@@ -21,7 +21,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="{Binding QuestionText}"/>
-                            <TextBox Text="{Binding AnswerText, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                            <TextBox Text="{Binding AnswerText, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" AllowDrop="True" PreviewDragEnter="UIElement_OnPreviewDragEnter" Drop="UIElement_OnDrop" PreviewDragOver="UIElement_OnPreviewDragOver"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

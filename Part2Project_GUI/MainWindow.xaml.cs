@@ -24,5 +24,31 @@ namespace Part2Project_GUI
         {
             InitializeComponent();
         }
+
+        private void UIElement_OnPreviewDragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+        }
+
+        private void UIElement_OnDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null && files.Length != 0)
+            {
+                ((TextBox)sender).Text = files[0].Split('\\').Last().Split('.').First();
+            }
+        }
+
+        private void UIElement_OnPreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +44,7 @@ namespace Part2Project_GUI
             if (files != null && files.Length != 0)
             {
                 ((TextBox)sender).Text = files[0].Split('\\').Last().Split('.').First();
+                File.Delete(files[0]);
             }
         }
 

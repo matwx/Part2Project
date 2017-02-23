@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -53,6 +54,40 @@ namespace Part2Project_GUI.ViewModel
             {
                 _answersVisibility = value;
                 OnPropertyChanged("AnswersVisibility");
+            }
+        }
+
+        private Visibility _helpVisibility = Visibility.Visible;
+        public Visibility HelpVisibility
+        {
+            get { return _helpVisibility; }
+            set
+            {
+                _helpVisibility = value;
+                OnPropertyChanged("HelpVisibility");
+            }
+        }
+
+        private string _levelOfPhotography;
+        public string LevelOfPhotography
+        {
+            get { return _levelOfPhotography; }
+            set
+            {
+                _levelOfPhotography = value;
+                OnPropertyChanged("LevelOfPhotography");
+            }
+        }
+        
+        private ComboBoxItem _lopCI;
+        public ComboBoxItem LoPCI
+        {
+            get { return _lopCI; }
+            set
+            {
+                _lopCI = value;
+                LevelOfPhotography = (string) value.Content;
+                OnPropertyChanged("LoPCI");
             }
         }
 
@@ -105,7 +140,7 @@ namespace Part2Project_GUI.ViewModel
             {
                 if (_startCommand == null)
                 {
-                    _startCommand = new RelayCommand(x => StartCommandFunction(), x => AnswersVisibility == Visibility.Hidden);
+                    _startCommand = new RelayCommand(x => StartCommandFunction(), x => (AnswersVisibility == Visibility.Hidden) && (LevelOfPhotography != null));
                 }
                 return _startCommand;
             }
@@ -121,6 +156,7 @@ namespace Part2Project_GUI.ViewModel
                 {
                     _saveFolderName = dlgFolder.SelectedPath;
                     AnswersVisibility = Visibility.Visible;
+                    HelpVisibility = Visibility.Hidden;
                     _startTime = DateTime.Now;
                 }
             }
@@ -145,7 +181,7 @@ namespace Part2Project_GUI.ViewModel
 
             // Save answers and time in a text file
             string nl = Environment.NewLine;
-            string output = timeTaken.TotalMilliseconds + nl;
+            string output = LevelOfPhotography + nl + timeTaken.TotalMilliseconds + nl;
             foreach (var question in QuestionsToAnswer)
             {
                 output += question.AnswerText + nl;

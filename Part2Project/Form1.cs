@@ -75,8 +75,8 @@ namespace Part2Project
 
         private void btnSegSal_Click(object sender, EventArgs e)
         {
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, 150.0, 0.8);
-            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, 125.0, 0.6);
+            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.6);
 
             viewer2.Image = ss.GetSegmentSaliencyMap();
         }

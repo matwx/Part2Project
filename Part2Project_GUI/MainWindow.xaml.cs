@@ -45,6 +45,7 @@ namespace Part2Project_GUI
             {
                 ((TextBox)sender).Text = files[0].Split('\\').Last().Split('.').First();
                 File.Delete(files[0]);
+                ((TextBox) sender).Focus();
             }
         }
 

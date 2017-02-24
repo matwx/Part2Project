@@ -28,7 +28,7 @@
             </StackPanel>
             
             <DockPanel Visibility="{Binding AnswersVisibility}">
-                <TextBlock DockPanel.Dock="Top" Text="Drag and drop images from the folder into the boxes." Margin="10, 10, 0, 10"/>
+                <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Text="Drag and drop images from the folder (using Windows Explorer) into the boxes." Margin="10, 10, 0, 10"/>
                 <ScrollViewer Margin="10, 0, 0, 0" Padding="0, 0, 10, 0">
                     <ItemsControl ItemsSource="{Binding QuestionsToAnswer}">
                         <ItemsControl.ItemTemplate>

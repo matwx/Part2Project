@@ -13,8 +13,7 @@
         <Grid>
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10, 0, 10, 0" Visibility="{Binding HelpVisibility}">
                 <TextBlock TextWrapping="Wrap">Before starting, please make a copy of the image folder.</TextBlock>
-                <TextBlock TextWrapping="Wrap" Margin="0, 10">Then, press "Start", and choose a folder for your results file to be saved into (e.g. your Desktop).</TextBlock>
-                <Border BorderThickness="1" BorderBrush="#FF616161" Padding="10, 5">
+                <Border BorderThickness="1" BorderBrush="#FF616161" Padding="10, 5" Margin="0, 10">
                     <StackPanel>
                         <TextBlock TextWrapping="Wrap">Please select your level of photography experience</TextBlock>
                         <ComboBox SelectedItem="{Binding LoPCI}">
@@ -25,7 +24,8 @@
                         </ComboBox>
                     </StackPanel>
                 </Border>
-            </StackPanel>
+                <TextBlock TextWrapping="Wrap">Then, press "Start", and choose a folder for your results file to be saved into (e.g. your Desktop).</TextBlock>
+                </StackPanel>
             
             <DockPanel Visibility="{Binding AnswersVisibility}">
                 <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Text="Drag and drop images from the folder (using Windows Explorer) into the boxes." Margin="10, 10, 0, 10"/>

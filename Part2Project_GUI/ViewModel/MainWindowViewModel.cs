@@ -25,6 +25,7 @@ namespace Part2Project_GUI.ViewModel
 
         private ScoredBitmapImage[] _scoredImages;
 
+        private string _selectedFolder = "";
         private DateTime _startTime;
 
         #region Properties
@@ -208,7 +209,7 @@ namespace Part2Project_GUI.ViewModel
                 OnPropertyChanged("InstructionsVisibility");
             }
         }
-        private Visibility _slidersVisibility = Visibility.Hidden;
+        private Visibility _slidersVisibility = Visibility.Collapsed;
         public Visibility SlidersVisibility
         {
             get { return _slidersVisibility; }
@@ -330,6 +331,8 @@ namespace Part2Project_GUI.ViewModel
 
                     UpdateImageScores();
                     SortViewableImagesFromScoredImages();
+
+                    _selectedFolder = dlgFolder.SelectedPath;
                     return true;
                 }
             }
@@ -438,10 +441,7 @@ namespace Part2Project_GUI.ViewModel
             {
                 if (_startCommand == null)
                 {
-                    _startCommand = new RelayCommand(StartCommandFunction, x =>
-                    {
-                        return SlidersVisibility == Visibility.Hidden;
-                    });
+                    _startCommand = new RelayCommand(StartCommandFunction, x => SlidersVisibility == Visibility.Collapsed);
                 }
                 return _startCommand;
             }
@@ -452,7 +452,7 @@ namespace Part2Project_GUI.ViewModel
             {
                 // Hide the instructions, and show the sliders
                 SlidersVisibility = Visibility.Visible;
-                InstructionsVisibility = Visibility.Hidden;
+                InstructionsVisibility = Visibility.Collapsed;
 
                 // Start the timer
                 _startTime = DateTime.Now;
@@ -466,21 +466,49 @@ namespace Part2Project_GUI.ViewModel
             {
                 if (_stopCommand == null)
                 {
-                    _stopCommand = new RelayCommand(x => StopCommandFunction(), x =>
-                    {
-                        return SlidersVisibility == Visibility.Visible;
-                    });
+                    _stopCommand = new RelayCommand(x => StopCommandFunction(), x => SlidersVisibility == Visibility.Visible);
                 }
                 return _stopCommand;
             }
         }
-
         private void StopCommandFunction()
         {
             // Stop the timer
             var timeTaken = DateTime.Now - _startTime;
 
+            // Save answers and time in a text file
+            string nl = Environment.NewLine;
 
+            // Were segmentation features enabled
+            string output = "Segmentation ";
+            output += ((SegFeaturesVisibility == Visibility.Visible) ? "Enabled" : "Disabled") + nl;
+
+            // Time taken to finish sorting
+            output += timeTaken.TotalMilliseconds + nl;
+
+            // Sorted order of images
+            List<ScoredBitmapImage> sortedImages = _scoredImages.ToList();
+            sortedImages.Sort();
+            sortedImages.Reverse();
+            foreach (var sortedImage in sortedImages)
+            {
+                output += sortedImage.Features.ImageFilename.Split('\\').Last().Split('.').First() + nl;
+            }
+
+            // Feature weights chosen
+            output += BrightnessWeight + nl;
+            output += IntensityContrastWeight + nl;
+            output += SaturationWeight + nl;
+            output += BlurrinessWeight + nl;
+            output += RegionsOfInterestSizeWeight + nl;
+            output += RuleOfThirdsWeight + nl;
+            output += ShapeConvexityWeight + nl;
+            output += BackgroundDistractionWeight;
+
+            File.WriteAllText(_selectedFolder + "\\Stage2_Part2_Results.txt", output);
+
+            // Then terminate
+            CloseCommand.Execute(0);
         }
 
         #endregion

@@ -32,7 +32,7 @@
                 </Grid>
                 
                 <Grid Visibility="{Binding InstructionsVisibility}">
-<!--                    <TextBlock>Hello there</TextBlock>-->
+                    <TextBlock>Hello there</TextBlock>
                 </Grid>
                 
                 <StackPanel Visibility="{Binding SlidersVisibility}">

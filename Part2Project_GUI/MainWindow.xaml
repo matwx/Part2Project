@@ -26,6 +26,10 @@
                 </ListView.ItemsPanel>
             </ListView>
             <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Center" DockPanel.Dock="Right">
+                <StackPanel Orientation="Horizontal">
+                    
+                </StackPanel>
+                
                 <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
                     <StackPanel.ToolTip>
                         <ToolTip>
@@ -106,7 +110,7 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="3" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                <StackPanel Visibility="{Binding SegFeaturesVisibility}" Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
                     <StackPanel.ToolTip>
                         <ToolTip>
                             <StackPanel>
@@ -126,7 +130,7 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="4" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                <StackPanel Visibility="{Binding SegFeaturesVisibility}" Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
                     <StackPanel.ToolTip>
                         <ToolTip>
                             <StackPanel>
@@ -146,7 +150,7 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="5" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                <StackPanel Visibility="{Binding SegFeaturesVisibility}" Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
                     <StackPanel.ToolTip>
                         <ToolTip>
                             <StackPanel>
@@ -166,7 +170,7 @@
                     <Button Command="{Binding ResetWeightCommand}" CommandParameter="6" Content="Reset" HorizontalAlignment="Left" Margin="10, 0, 0, 0" VerticalAlignment="Center" Width="35" Height="35"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
+                <StackPanel Visibility="{Binding SegFeaturesVisibility}" Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">
                     <StackPanel.ToolTip>
                         <ToolTip>
                             <StackPanel>

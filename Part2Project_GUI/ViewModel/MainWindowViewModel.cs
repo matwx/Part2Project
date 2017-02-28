@@ -134,8 +134,7 @@ namespace Part2Project_GUI.ViewModel
                 OnPropertyChanged("BackgroundDistractionWeight");
             }
         }
-
-
+        
         private WindowState _windowState = WindowState.Normal;
         public WindowState WindowState
         {
@@ -186,15 +185,22 @@ namespace Part2Project_GUI.ViewModel
             else PicListWidth = spaceLeftForPics / 330;
         }
 
+        private Visibility _segFeaturesVisibility = Visibility.Hidden;
+        public Visibility SegFeaturesVisibility
+        {
+            get { return _segFeaturesVisibility; }
+            set
+            {
+                _segFeaturesVisibility = value;
+                OnPropertyChanged("SegFeaturesVisibility");
+            }
+        }
+
         #endregion
 
         public MainWindowViewModel()
         {
 
-//            var interopHelper = new WindowInteropHelper(System.Windows.Application.Current.MainWindow);
-//            var activeScreen = Screen.FromHandle(interopHelper.Handle);
-//            int spaceLeftForPics = activeScreen.Bounds.Width - 500;
-//            PicListWidth = spaceLeftForPics / 320;
         }
 
         public event EventHandler RequestClose;

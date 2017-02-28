@@ -21,10 +21,12 @@ namespace Part2Project_GUI.ViewModel
     {
         //TODO: Put folder loading and feature extraction into a background worker
 
-        private const bool DISPLAY_FEATURES = true;
+        private const bool DISPLAY_FEATURES = false;
 
         private ScoredBitmapImage[] _scoredImages;
-        
+
+        private DateTime _startTime;
+
         #region Properties
 
         private ObservableCollection<BitmapImage> _images;
@@ -185,7 +187,7 @@ namespace Part2Project_GUI.ViewModel
             else PicListWidth = spaceLeftForPics / 330;
         }
 
-        private Visibility _segFeaturesVisibility = Visibility.Hidden;
+        private Visibility _segFeaturesVisibility = Visibility.Visible;
         public Visibility SegFeaturesVisibility
         {
             get { return _segFeaturesVisibility; }
@@ -193,6 +195,27 @@ namespace Part2Project_GUI.ViewModel
             {
                 _segFeaturesVisibility = value;
                 OnPropertyChanged("SegFeaturesVisibility");
+            }
+        }
+
+        private Visibility _instructionsVisibility = Visibility.Visible;
+        public Visibility InstructionsVisibility
+        {
+            get { return _instructionsVisibility; }
+            set
+            {
+                _instructionsVisibility = value;
+                OnPropertyChanged("InstructionsVisibility");
+            }
+        }
+        private Visibility _slidersVisibility = Visibility.Hidden;
+        public Visibility SlidersVisibility
+        {
+            get { return _slidersVisibility; }
+            set
+            {
+                _slidersVisibility = value;
+                OnPropertyChanged("SlidersVisibility");
             }
         }
 
@@ -232,10 +255,7 @@ namespace Part2Project_GUI.ViewModel
                 return _testCommand;
             }
         }
-        private void TestCommandFunction()
-        {
-//            BlurrinessWeight = -1;
-        }
+        private void TestCommandFunction(){}
 
         private RelayCommand _selectFolderCommand;
         public RelayCommand SelectFolderCommand
@@ -249,7 +269,7 @@ namespace Part2Project_GUI.ViewModel
                 return _selectFolderCommand;
             }
         }
-        private void SelectFolder()
+        private bool SelectFolder()
         {
             // We need to let the user select a folder and, if they do, load all of the images from that
             // folder. We then need to set up our internal list of images bound with their feature values.
@@ -310,8 +330,10 @@ namespace Part2Project_GUI.ViewModel
 
                     UpdateImageScores();
                     SortViewableImagesFromScoredImages();
+                    return true;
                 }
             }
+            return false;
         }
 
         private RelayCommand _resetWeightCommand;
@@ -407,6 +429,58 @@ namespace Part2Project_GUI.ViewModel
                     BackgroundDistractionWeight = 0;
                     return;
             }
+        }
+
+        private RelayCommand _startCommand;
+        public RelayCommand StartCommand
+        {
+            get
+            {
+                if (_startCommand == null)
+                {
+                    _startCommand = new RelayCommand(StartCommandFunction, x =>
+                    {
+                        return SlidersVisibility == Visibility.Hidden;
+                    });
+                }
+                return _startCommand;
+            }
+        }
+        private void StartCommandFunction(Object x)
+        {
+            if (SelectFolder())
+            {
+                // Hide the instructions, and show the sliders
+                SlidersVisibility = Visibility.Visible;
+                InstructionsVisibility = Visibility.Hidden;
+
+                // Start the timer
+                _startTime = DateTime.Now;
+            }
+        }
+
+        private RelayCommand _stopCommand;
+        public RelayCommand StopCommand
+        {
+            get
+            {
+                if (_stopCommand == null)
+                {
+                    _stopCommand = new RelayCommand(x => StopCommandFunction(), x =>
+                    {
+                        return SlidersVisibility == Visibility.Visible;
+                    });
+                }
+                return _stopCommand;
+            }
+        }
+
+        private void StopCommandFunction()
+        {
+            // Stop the timer
+            var timeTaken = DateTime.Now - _startTime;
+
+
         }
 
         #endregion

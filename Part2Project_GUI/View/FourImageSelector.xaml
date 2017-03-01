@@ -7,9 +7,6 @@
              Width="Auto">
     <StackPanel>
         <Grid>
-            <Button Content="Back (close this page)" Command="{Binding CloseCommand}" HorizontalAlignment="Left" Margin="0, 5, 10, 5" VerticalAlignment="Center" Width="127" Height="20"/>
-        </Grid>
-        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>

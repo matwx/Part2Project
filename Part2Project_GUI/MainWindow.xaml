@@ -31,9 +31,10 @@
                     </StackPanel>
                 </Grid>
                 
-                <Grid Visibility="{Binding InstructionsVisibility}">
+                <StackPanel Visibility="{Binding InstructionsVisibility}">
                     <TextBlock TextWrapping="Wrap" Width="300">Add a check to startup that sees if the user has completed Intuitive stage (part 1). If they haven't, tell them to!</TextBlock>
-                </Grid>
+                    <TextBlock TextWrapping="Wrap" Width="300">advise them to maximise window, and say what start button folder chooser is for (image folder)</TextBlock>
+                </StackPanel>
                 
                 <StackPanel Visibility="{Binding SlidersVisibility}">
                     <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10" ToolTipService.ShowDuration="20000">

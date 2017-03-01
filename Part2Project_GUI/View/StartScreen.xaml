@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:part2ProjectGui="clr-namespace:Part2Project_GUI"
-             mc:Ignorable="d" 
-             d:DesignHeight="290" d:DesignWidth="411">
+             mc:Ignorable="d" d:DesignHeight="307" d:DesignWidth="499" >
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate">
             <WrapPanel>
@@ -14,20 +13,23 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
-        <Button Command="{Binding SelectFolderCommand}" Content="Select Folder" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Command="{Binding BeginCommand}" Content="Begin Test" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Command="{Binding CloseCommand}" Content="Back" HorizontalAlignment="Left" Margin="345,10,0,0" VerticalAlignment="Top" Width="56"/>
-        <DockPanel Margin="0, 44, 0, 0">
-            <ListView DockPanel.Dock="Left" ItemsSource="{Binding Images}" ItemTemplate="{StaticResource ItemTemplate}">
+        <StackPanel Orientation="Horizontal">
+            <ListView ItemsSource="{Binding Images}" ItemTemplate="{StaticResource ItemTemplate}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2"/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
-            <Grid>
-                <!--                <Button Command="{Binding DataContext.DisplayFourImageSelectorCommand, RelativeSource={RelativeSource AncestorType={x:Type part2ProjectGui:MainWindow}}, Mode=OneWay}" Content="fourImage" HorizontalAlignment="Left" Margin="170,10,0,0" VerticalAlignment="Top" Width="75"/>-->
+
+            <Grid Visibility="Collapsed">
+
             </Grid>
-        </DockPanel>
+            
+            <StackPanel>
+                <Button Command="{Binding StartCommand}" Content="Start" Width="150" Height="70" Background="#FF5AC76E" FontSize="40" Margin="20, 20, 20, 10"/>
+                <Button Command="{Binding StopCommand}" Content="Stop" Width="150" Height="70" Background="#FFC75A5A" FontSize="40" Margin="20, 10, 20, 20"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

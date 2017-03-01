@@ -82,11 +82,12 @@ namespace Part2Project_GUI.ViewModel
             return 0;
         }
 
-        public void SelectFolder()
+        public string SelectFolder()
         {
             // We need to let the user select a folder and, if they do, load all of the images from that
             // folder. We then need to set up our internal list of images bound with their feature values.
             // Finally, we need to update our ViewModel of images to be displayed after sorting the list.
+            string result = "";
 
             using (FolderBrowserDialog dlgFolder = new FolderBrowserDialog())
             {
@@ -143,8 +144,11 @@ namespace Part2Project_GUI.ViewModel
 
                     UpdateImageScores();
                     SortViewableImagesFromScoredImages();
+
+                    result = dlgFolder.SelectedPath;
                 }
             }
+            return result;
         }
 
         public ObservableCollection<BitmapImage> SortViewableImagesFromScoredImages()

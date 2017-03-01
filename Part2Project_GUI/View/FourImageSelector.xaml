@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              Width="Auto">
-    <StackPanel>
-        <Grid>
+    <StackPanel VerticalAlignment="Center">
+        <Grid HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -44,10 +44,13 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
-            <ListBox Grid.RowSpan="2" Grid.Row="0" Grid.Column="2" ItemsSource="{Binding CurrentInferences}" Width="Auto"/>
+            <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                <TextBlock DockPanel.Dock="Left" TextWrapping="Wrap" Width="300" VerticalAlignment="Center" FontSize="15" Margin="20, 10, 0, 10">
+                    Select your favourite image from the four above. If you can't decide on your favourite (or you think they are all bad!) then click "Skip".
+                </TextBlock>
+                <Button Command="{Binding SkipCommand}" Content="Skip" Width="150" Height="70" Background="#FF3E99E4" FontSize="40" Margin="20"/>
+            </DockPanel>
         </Grid>
-        <Grid>
-            <Button Content="Skip (can't choose)" Command="{Binding SkipCommand}" HorizontalAlignment="Left" Margin="0, 5, 10, 5" VerticalAlignment="Center" Width="127" Height="20"/>
-        </Grid>
+        
     </StackPanel>
 </UserControl>

@@ -13,6 +13,8 @@ namespace Part2Project_GUI.ViewModel
 {
     class MainWindowViewModel : BaseViewModel
     {
+        public bool SEG_FEATURES_ENABLED = true;
+
         #region Properties
 
         private BaseViewModel _viewModel;

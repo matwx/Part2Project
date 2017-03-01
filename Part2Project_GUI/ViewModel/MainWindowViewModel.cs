@@ -450,6 +450,13 @@ namespace Part2Project_GUI.ViewModel
         {
             if (SelectFolder())
             {
+                if (!File.Exists(_selectedFolder + "\\Image_Sorting_Stage2_Results.txt"))
+                {
+                    System.Windows.MessageBox.Show(
+                        "Error. Please use the other evaluation program (Assisted_Sorting_Part_1.exe) before this one.",
+                        "fdfsdf");
+                    CloseCommand.Execute(0);
+                }
                 // Hide the instructions, and show the sliders
                 SlidersVisibility = Visibility.Visible;
                 InstructionsVisibility = Visibility.Collapsed;

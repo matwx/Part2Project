@@ -32,8 +32,8 @@
                 </Grid>
                 
                 <StackPanel Visibility="{Binding InstructionsVisibility}">
-                    <TextBlock TextWrapping="Wrap" Width="300">Add a check to startup that sees if the user has completed Intuitive stage (part 1). If they haven't, tell them to!</TextBlock>
-                    <TextBlock TextWrapping="Wrap" Width="300">advise them to maximise window, and say what start button folder chooser is for (image folder)</TextBlock>
+                    <TextBlock TextWrapping="Wrap" Width="300" FontSize="15">Add a check to startup that sees if the user has completed Intuitive stage (part 1). If they haven't, tell them to!</TextBlock>
+                    <TextBlock TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,5,0,0">advise them to maximise window, and say what start button folder chooser is for (image folder)</TextBlock>
                 </StackPanel>
                 
                 <StackPanel Visibility="{Binding SlidersVisibility}">

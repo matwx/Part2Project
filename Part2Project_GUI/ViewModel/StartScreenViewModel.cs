@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Part2Project.Infrastructure;
@@ -45,6 +46,29 @@ namespace Part2Project_GUI.ViewModel
             }
         }
 
+        private string _happiness;
+        public string Happiness
+        {
+            get { return _happiness; }
+            set
+            {
+                _happiness = value;
+                OnPropertyChanged("Happiness");
+            }
+        }
+
+        private ComboBoxItem _hapCI;
+        public ComboBoxItem HapCI
+        {
+            get { return _hapCI; }
+            set
+            {
+                _hapCI = value;
+                Happiness = (string)value.Content;
+                OnPropertyChanged("HapCI");
+            }
+        }
+
         #endregion
 
         public StartScreenViewModel(MainWindowViewModel w, BaseViewModel p) : base(w, p)
@@ -53,32 +77,6 @@ namespace Part2Project_GUI.ViewModel
         }
 
         #region Commands
-
-        private RelayCommand _beginCommand;
-        public RelayCommand BeginCommand
-        {
-            get
-            {
-                if (_beginCommand == null)
-                {
-                    _beginCommand = new RelayCommand(
-                        x =>
-                        {
-                            // Create a new viewmodel for the next page, and tell it I'm it's parent
-                            var newVM = new FourImageSelectorViewModel(_window, this, _imageSorting);
-                            // We want to sort the viewable images when it's done selecting parameters
-                            newVM.RequestClose += delegate
-                            {
-                                Images = _imageSorting.SortViewableImagesFromScoredImages();
-                            };
-                            // then load the view
-                            _window.ViewModel = newVM;
-                        }, 
-                        x => Images != null);
-                }
-                return _beginCommand;
-            }
-        }
 
         private RelayCommand _startCommand;
         public RelayCommand StartCommand
@@ -124,7 +122,7 @@ namespace Part2Project_GUI.ViewModel
             {
                 if (_stopCommand == null)
                 {
-                    _stopCommand = new RelayCommand(x => StopCommandFunction(), x => Images != null);
+                    _stopCommand = new RelayCommand(x => StopCommandFunction(), x => Happiness != null);
                 }
                 return _stopCommand;
             }
@@ -136,10 +134,15 @@ namespace Part2Project_GUI.ViewModel
 
             // Save answers and time in a text file
             string nl = Environment.NewLine;
-            string output = LevelOfPhotography + nl + timeTaken.TotalMilliseconds + nl;
-            foreach (var question in QuestionsToAnswer)
+            string output = "Segmentation " + (_window.SEG_FEATURES_ENABLED ? "Enabled" : "Disabled") + nl;
+            output += Happiness + nl + timeTaken.TotalMilliseconds + nl;
+
+            var sortedImages = _imageSorting.ScoredImages.ToList();
+            sortedImages.Sort();
+            sortedImages.Reverse();
+            for (int i = 0; i < sortedImages.Count; i++)
             {
-                output += question.AnswerText + nl;
+                output += sortedImages[i].Features.ImageFilename.Split('\\').Last().Split('.').First() + nl;
             }
 
             File.WriteAllText(_saveFolderName + "\\Image_Sorting_Results.txt", output);

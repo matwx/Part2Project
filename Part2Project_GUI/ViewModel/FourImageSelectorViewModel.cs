@@ -11,7 +11,7 @@ namespace Part2Project_GUI.ViewModel
     class FourImageSelectorViewModel : BaseViewModel
     {
         private ImageSorting _imageSorting;
-        private int _roundNum = 0; // The current round number
+        public int _roundNum = 0; // The current round number
         private int[] _imageIndices = new int[4]; // The indicies into _imageSorting.ScoredImages that are currently being shown
         private double[] _xBar, _S_n, _a, _b, _mu, _aAll, _bAll, _muAll, _SAll;
         private List<int> _indicesSeen;

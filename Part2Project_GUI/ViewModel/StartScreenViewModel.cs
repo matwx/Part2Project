@@ -20,6 +20,7 @@ namespace Part2Project_GUI.ViewModel
     {
         private string _saveFolderName;
         private DateTime _startTime, _endTime;
+        private int _numRoundsRequired;
 
         #region Properties
 
@@ -115,8 +116,9 @@ namespace Part2Project_GUI.ViewModel
                     // We want to sort the viewable images when it's done selecting parameters
                     newVM.RequestClose += delegate
                     {
-                        Images = _imageSorting.SortViewableImagesFromScoredImages();
                         _endTime = DateTime.Now;
+                        Images = _imageSorting.SortViewableImagesFromScoredImages();
+                        _numRoundsRequired = newVM._roundNum;
                     };
                     // then load the view
                     _window.ViewModel = newVM;
@@ -166,6 +168,9 @@ namespace Part2Project_GUI.ViewModel
             output += _imageSorting.WRuleOfThirds + nl;
             output += _imageSorting.WShapeConvexity + nl;
             output += _imageSorting.WBackgroundDistraction + nl;
+
+            // Number of screens required for convergence of all features
+            output += _numRoundsRequired + nl;
 
             File.WriteAllText(_saveFolderName + "\\Image_Sorting_Stage2_Results.txt", output);
 

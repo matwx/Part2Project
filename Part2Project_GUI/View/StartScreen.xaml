@@ -22,8 +22,14 @@
         </ListView>
 
         <StackPanel Margin="20, 0">
-            <TextBlock Visibility="{Binding InstructionsVisibility}" TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,20,0,0">
-                Hello there
+            <TextBlock Visibility="{Binding InstructionsVisibility}" TextWrapping="Wrap" Width="400" FontSize="15" Margin="0,20,0,0">
+                This program will show you a series of screens, each with 4 images. At each screen, choose your favourite of the four images. Eventually, you'll get back to this screen and the image set will be sorted based on your choices.
+            </TextBlock>
+            <TextBlock Visibility="{Binding InstructionsVisibility}" TextWrapping="Wrap" Width="400" FontSize="15" Margin="0,10,0,0">
+                Before starting, make sure that you have extracted the set of images, so that all 40 of them are in the same folder (with no extra files).
+            </TextBlock>
+            <TextBlock Visibility="{Binding InstructionsVisibility}" TextWrapping="Wrap" Width="400" FontSize="15" Margin="0,10,0,0">
+                Then, press "Start", and select the folder that the images are in.
             </TextBlock>
             <Button Command="{Binding StartCommand}" Content="Start" Width="150" Height="70" Background="#FF5AC76E" FontSize="40" Margin="20, 20, 20, 10"/>
             <Button Command="{Binding StopCommand}" Content="Done" Width="150" Height="70" Background="#FFC75A5A" FontSize="40" Margin="20, 10, 20, 20"/>

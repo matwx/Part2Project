@@ -46,6 +46,17 @@ namespace Part2Project_GUI.ViewModel
             }
         }
 
+        private Visibility _instructionVisibility = Visibility.Visible;
+        public Visibility InstructionsVisibility
+        {
+            get { return _instructionVisibility; }
+            set
+            {
+                _instructionVisibility = value;
+                OnPropertyChanged("InstructionsVisibility");
+            }
+        }
+
         private string _happiness;
         public string Happiness
         {
@@ -96,6 +107,7 @@ namespace Part2Project_GUI.ViewModel
             if (!(_saveFolderName = _imageSorting.SelectFolder()).Equals(""))
             {
                 QuestionVisibility = Visibility.Visible;
+                InstructionsVisibility = Visibility.Collapsed;
                 if ((Images = _imageSorting.SortViewableImagesFromScoredImages()) != null)
                 {
                     // Create a new viewmodel for the next page, and tell it I'm it's parent
@@ -145,7 +157,17 @@ namespace Part2Project_GUI.ViewModel
                 output += sortedImages[i].Features.ImageFilename.Split('\\').Last().Split('.').First() + nl;
             }
 
-            File.WriteAllText(_saveFolderName + "\\Image_Sorting_Results.txt", output);
+            // Feature weights chosen
+            output += _imageSorting.WBrightness + nl;
+            output += _imageSorting.WIntensityContrast + nl;
+            output += _imageSorting.WSaturation + nl;
+            output += _imageSorting.WBlurriness + nl;
+            output += _imageSorting.WRegionsOfInterestSize + nl;
+            output += _imageSorting.WRuleOfThirds + nl;
+            output += _imageSorting.WShapeConvexity + nl;
+            output += _imageSorting.WBackgroundDistraction + nl;
+
+            File.WriteAllText(_saveFolderName + "\\Image_Sorting_Stage2_Results.txt", output);
 
             // Then terminate
             CloseCommand.Execute(0);

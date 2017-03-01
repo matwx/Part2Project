@@ -33,22 +33,5 @@ namespace Part2Project_GUI.ViewModel
             // Start screen is the root View, so hasn't got a parent viewmodel
             ViewModel = new StartScreenViewModel(this, null);
         }
-
-        #region Commands
-
-//        private RelayCommand _displayFourImageSelectorCommand;
-//        public RelayCommand DisplayFourImageSelectorCommand
-//        {
-//            get
-//            {
-//                if (_displayFourImageSelectorCommand == null)
-//                {
-//                    _displayFourImageSelectorCommand = new RelayCommand(x => ViewModel = new FourImageSelectorViewModel(), x => !(ViewModel is FourImageSelectorViewModel));
-//                }
-//                return _displayFourImageSelectorCommand;
-//            }
-//        }
-
-        #endregion
     }
 }

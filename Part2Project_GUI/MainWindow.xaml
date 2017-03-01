@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Part2Project_GUI.MainWindow"
         Title="MainWindow" WindowStartupLocation="CenterScreen" Width="800" MinWidth="800"  Height="470" MinHeight="470" WindowState="{Binding WindowState, Mode=TwoWay}">
     <Window.InputBindings>
-        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+<!--        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>-->
     </Window.InputBindings>
     <ContentControl Content="{Binding ViewModel}" />
 </Window>

@@ -15,7 +15,7 @@ namespace Part2Project_GUI.ViewModel
 {
     class ImageSorting
     {
-        private const bool DISPLAY_FEATURES = true;
+        private const bool DISPLAY_FEATURES = false;
 
         public ScoredBitmapImage[] ScoredImages { get; private set; }
 
@@ -27,6 +27,60 @@ namespace Part2Project_GUI.ViewModel
             WRuleOfThirds,
             WShapeConvexity,
             WBackgroundDistraction;
+
+        public void SetWeightByIndex(int i, double value)
+        {
+            switch (i)
+            {
+                case 0:
+                    WBrightness = value;
+                    break;
+                case 1:
+                    WIntensityContrast = value;
+                    break;
+                case 2:
+                    WSaturation = value;
+                    break;
+                case 3:
+                    WBlurriness = value;
+                    break;
+                case 4:
+                    WRegionsOfInterestSize = value;
+                    break;
+                case 5:
+                    WRuleOfThirds = value;
+                    break;
+                case 6:
+                    WShapeConvexity = value;
+                    break;
+                case 7:
+                    WBackgroundDistraction = value;
+                    break;
+            }
+        }
+        public double GetWeightByIndex(int i)
+        {
+            switch (i)
+            {
+                case 0:
+                    return WBrightness;
+                case 1:
+                    return WIntensityContrast;
+                case 2:
+                    return WSaturation;
+                case 3:
+                    return WBlurriness;
+                case 4:
+                    return WRegionsOfInterestSize;
+                case 5:
+                    return WRuleOfThirds;
+                case 6:
+                    return WShapeConvexity;
+                case 7:
+                    return WBackgroundDistraction;
+            }
+            return 0;
+        }
 
         public void SelectFolder()
         {

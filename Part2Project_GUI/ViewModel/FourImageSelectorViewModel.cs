@@ -11,9 +11,11 @@ namespace Part2Project_GUI.ViewModel
     class FourImageSelectorViewModel : BaseViewModel
     {
         private ImageSorting _imageSorting;
-        private int _roundNum = 1; // The current round number
+        private int _roundNum = 0; // The current round number
         private int[] _imageIndices = new int[4]; // The indicies into _imageSorting.ScoredImages that are currently being shown
-        private double[] _featureMeans, _featureIncrementalVariances, _mins, _maxes;
+        private double[] _xBar, _S_n, _a, _b, _mu, _aAll, _bAll, _muAll, _SAll;
+        private List<int> _indicesSeen;
+        private double _totalImagesSeen = 0.0;
 
         private const int 
             FEATURE_BRIGHTNESS = 0,
@@ -114,50 +116,59 @@ namespace Part2Project_GUI.ViewModel
 
             }
             else throw new Exception("ChooseImage was called with an invalid parameter.");
-
+            
             // Update feature means and variances based on chosen image
-            double[] oldMeans = (double[]) _featureMeans.Clone();
+            double[] oldMeans = (double[]) _xBar.Clone();
             int imageIndex = _imageIndices[imageNumber - 1];
 
-            double chosenBrightness = _imageSorting.ScoredImages[imageIndex].Features.Brightness;
-            _featureMeans[FEATURE_BRIGHTNESS] = oldMeans[FEATURE_BRIGHTNESS] + (1.0 / _roundNum) * (chosenBrightness - oldMeans[FEATURE_BRIGHTNESS]);
-            _featureIncrementalVariances[FEATURE_BRIGHTNESS] += (chosenBrightness - oldMeans[FEATURE_BRIGHTNESS]) * (chosenBrightness - _featureMeans[FEATURE_BRIGHTNESS]);
+//            if (_indicesSeen.Contains(imageIndex))
+//            {
+//                UpdateImages();
+//                UpdateInferences();
+//            }
+//            else
+//            {
+                _roundNum++;
+                _indicesSeen.Add(imageIndex);
 
-            double chosenConstrast = _imageSorting.ScoredImages[imageIndex].Features.IntensityContrast;
-            _featureMeans[FEATURE_INTENSITY_CONTRAST] = oldMeans[FEATURE_INTENSITY_CONTRAST] + (1.0 / _roundNum) * (chosenConstrast - oldMeans[FEATURE_INTENSITY_CONTRAST]);
-            _featureIncrementalVariances[FEATURE_INTENSITY_CONTRAST] += (chosenConstrast - oldMeans[FEATURE_INTENSITY_CONTRAST]) * (chosenConstrast - _featureMeans[FEATURE_INTENSITY_CONTRAST]);
+                double chosenBrightness = _imageSorting.ScoredImages[imageIndex].Features.Brightness;
+                _xBar[FEATURE_BRIGHTNESS] = oldMeans[FEATURE_BRIGHTNESS] + (1.0 / _roundNum) * (chosenBrightness - oldMeans[FEATURE_BRIGHTNESS]);
+                _S_n[FEATURE_BRIGHTNESS] += (chosenBrightness - oldMeans[FEATURE_BRIGHTNESS]) * (chosenBrightness - _xBar[FEATURE_BRIGHTNESS]);
 
-            double chosenSaturation = _imageSorting.ScoredImages[imageIndex].Features.Saturation;
-            _featureMeans[FEATURE_SATURATION] = oldMeans[FEATURE_SATURATION] + (1.0 / _roundNum) * (chosenSaturation - oldMeans[FEATURE_SATURATION]);
-            _featureIncrementalVariances[FEATURE_SATURATION] += (chosenSaturation - oldMeans[FEATURE_SATURATION]) * (chosenSaturation - _featureMeans[FEATURE_SATURATION]);
+                double chosenConstrast = _imageSorting.ScoredImages[imageIndex].Features.IntensityContrast;
+                _xBar[FEATURE_INTENSITY_CONTRAST] = oldMeans[FEATURE_INTENSITY_CONTRAST] + (1.0 / _roundNum) * (chosenConstrast - oldMeans[FEATURE_INTENSITY_CONTRAST]);
+                _S_n[FEATURE_INTENSITY_CONTRAST] += (chosenConstrast - oldMeans[FEATURE_INTENSITY_CONTRAST]) * (chosenConstrast - _xBar[FEATURE_INTENSITY_CONTRAST]);
 
-            double chosenBlurriness = _imageSorting.ScoredImages[imageIndex].Features.Blurriness;
-            _featureMeans[FEATURE_BLURRINESS] = oldMeans[FEATURE_BLURRINESS] + (1.0 / _roundNum) * (chosenBlurriness - oldMeans[FEATURE_BLURRINESS]);
-            _featureIncrementalVariances[FEATURE_BLURRINESS] += (chosenBlurriness - oldMeans[FEATURE_BLURRINESS]) * (chosenBlurriness - _featureMeans[FEATURE_BLURRINESS]);
+                double chosenSaturation = _imageSorting.ScoredImages[imageIndex].Features.Saturation;
+                _xBar[FEATURE_SATURATION] = oldMeans[FEATURE_SATURATION] + (1.0 / _roundNum) * (chosenSaturation - oldMeans[FEATURE_SATURATION]);
+                _S_n[FEATURE_SATURATION] += (chosenSaturation - oldMeans[FEATURE_SATURATION]) * (chosenSaturation - _xBar[FEATURE_SATURATION]);
 
-            double chosenRoiSize = _imageSorting.ScoredImages[imageIndex].Features.RegionsOfInterestSize;
-            _featureMeans[FEATURE_ROI_SIZE] = oldMeans[FEATURE_ROI_SIZE] + (1.0 / _roundNum) * (chosenRoiSize - oldMeans[FEATURE_ROI_SIZE]);
-            _featureIncrementalVariances[FEATURE_ROI_SIZE] += (chosenRoiSize - oldMeans[FEATURE_ROI_SIZE]) * (chosenRoiSize - _featureMeans[FEATURE_ROI_SIZE]);
+                double chosenBlurriness = _imageSorting.ScoredImages[imageIndex].Features.Blurriness;
+                _xBar[FEATURE_BLURRINESS] = oldMeans[FEATURE_BLURRINESS] + (1.0 / _roundNum) * (chosenBlurriness - oldMeans[FEATURE_BLURRINESS]);
+                _S_n[FEATURE_BLURRINESS] += (chosenBlurriness - oldMeans[FEATURE_BLURRINESS]) * (chosenBlurriness - _xBar[FEATURE_BLURRINESS]);
 
-            double chosenROT = _imageSorting.ScoredImages[imageIndex].Features.RuleOfThirds;
-            _featureMeans[FEATURE_RULE_OF_THIRDS] = oldMeans[FEATURE_RULE_OF_THIRDS] + (1.0 / _roundNum) * (chosenROT - oldMeans[FEATURE_RULE_OF_THIRDS]);
-            _featureIncrementalVariances[FEATURE_RULE_OF_THIRDS] += (chosenROT - oldMeans[FEATURE_RULE_OF_THIRDS]) * (chosenROT - _featureMeans[FEATURE_RULE_OF_THIRDS]);
+                double chosenRoiSize = _imageSorting.ScoredImages[imageIndex].Features.RegionsOfInterestSize;
+                _xBar[FEATURE_ROI_SIZE] = oldMeans[FEATURE_ROI_SIZE] + (1.0 / _roundNum) * (chosenRoiSize - oldMeans[FEATURE_ROI_SIZE]);
+                _S_n[FEATURE_ROI_SIZE] += (chosenRoiSize - oldMeans[FEATURE_ROI_SIZE]) * (chosenRoiSize - _xBar[FEATURE_ROI_SIZE]);
 
-            double chosenConvexity = _imageSorting.ScoredImages[imageIndex].Features.ShapeConvexity;
-            _featureMeans[FEATURE_SHAPE_CONVEXITY] = oldMeans[FEATURE_SHAPE_CONVEXITY] + (1.0 / _roundNum) * (chosenConvexity - oldMeans[FEATURE_SHAPE_CONVEXITY]);
-            _featureIncrementalVariances[FEATURE_SHAPE_CONVEXITY] += (chosenConvexity - oldMeans[FEATURE_SHAPE_CONVEXITY]) * (chosenConvexity - _featureMeans[FEATURE_SHAPE_CONVEXITY]);
+                double chosenROT = _imageSorting.ScoredImages[imageIndex].Features.RuleOfThirds;
+                _xBar[FEATURE_RULE_OF_THIRDS] = oldMeans[FEATURE_RULE_OF_THIRDS] + (1.0 / _roundNum) * (chosenROT - oldMeans[FEATURE_RULE_OF_THIRDS]);
+                _S_n[FEATURE_RULE_OF_THIRDS] += (chosenROT - oldMeans[FEATURE_RULE_OF_THIRDS]) * (chosenROT - _xBar[FEATURE_RULE_OF_THIRDS]);
 
-            double chosenDistract = _imageSorting.ScoredImages[imageIndex].Features.BackgroundDistraction;
-            _featureMeans[FEATURE_BACKGROUND_DISTRACTION] = oldMeans[FEATURE_BACKGROUND_DISTRACTION] + (1.0 / _roundNum) * (chosenDistract - oldMeans[FEATURE_BACKGROUND_DISTRACTION]);
-            _featureIncrementalVariances[FEATURE_BACKGROUND_DISTRACTION] += (chosenDistract - oldMeans[FEATURE_BACKGROUND_DISTRACTION]) * (chosenDistract - _featureMeans[FEATURE_BACKGROUND_DISTRACTION]);
+                double chosenConvexity = _imageSorting.ScoredImages[imageIndex].Features.ShapeConvexity;
+                _xBar[FEATURE_SHAPE_CONVEXITY] = oldMeans[FEATURE_SHAPE_CONVEXITY] + (1.0 / _roundNum) * (chosenConvexity - oldMeans[FEATURE_SHAPE_CONVEXITY]);
+                _S_n[FEATURE_SHAPE_CONVEXITY] += (chosenConvexity - oldMeans[FEATURE_SHAPE_CONVEXITY]) * (chosenConvexity - _xBar[FEATURE_SHAPE_CONVEXITY]);
 
-            // Display a new set of images
-            UpdateImages();
+                double chosenDistract = _imageSorting.ScoredImages[imageIndex].Features.BackgroundDistraction;
+                _xBar[FEATURE_BACKGROUND_DISTRACTION] = oldMeans[FEATURE_BACKGROUND_DISTRACTION] + (1.0 / _roundNum) * (chosenDistract - oldMeans[FEATURE_BACKGROUND_DISTRACTION]);
+                _S_n[FEATURE_BACKGROUND_DISTRACTION] += (chosenDistract - oldMeans[FEATURE_BACKGROUND_DISTRACTION]) * (chosenDistract - _xBar[FEATURE_BACKGROUND_DISTRACTION]);
 
-            // Display our updated weight predictions
-            UpdateInferences();
+                // Display a new set of images
+                UpdateImages();
 
-            _roundNum++;
+                // Display our updated weight predictions
+                UpdateInferences();
+//            }
         }
         private bool CanChooseImage(Object input)
         {
@@ -185,6 +196,19 @@ namespace Part2Project_GUI.ViewModel
             return (_imagesToChooseFrom[imageNumber - 1] != null);
         }
 
+        private RelayCommand _skipCommand;
+        public RelayCommand SkipCommand
+        {
+            get
+            {
+                if (_skipCommand == null)
+                {
+                    _skipCommand = new RelayCommand(x => UpdateImages(), x => CanChooseImage("1"));
+                }
+                return _skipCommand;
+            }
+        }
+
         #endregion
 
         public FourImageSelectorViewModel(MainWindowViewModel w, BaseViewModel p, ImageSorting iS) : base(w, p)
@@ -192,24 +216,98 @@ namespace Part2Project_GUI.ViewModel
             _imageSorting = iS;
 
             // Initialise means and variances
-            _featureMeans = new double[8];
-            _featureIncrementalVariances = new double[8];
+            _xBar = new double[8];
+            _S_n = new double[8];
             for (int i = 0; i < 8; i++)
             {
-                _featureMeans[i] = 0;
-                _featureIncrementalVariances[i] = 0;
+                _xBar[i] = 0;
+                _S_n[i] = 0;
             }
 
-            // Initialise boundaries
-            _mins = new double[8];
-            _maxes = new double[8];
+            // Initialise boundaries and seen means
+            _a = new double[8];
+            _b = new double[8];
+            _mu = new double[8];
             for (int i = 0; i < 8; i++)
             {
-                _mins[i] = 1;
-                _maxes[i] = 0;
+                _a[i] = 1;
+                _b[i] = 0;
+                _mu[i] = 0;
             }
+
+            // Initialise seen indices
+            _indicesSeen = new List<int>();
+
+            ComputeAllFolderMinsMaxesMus();
 
             UpdateImages();
+        }
+
+        private void ComputeAllFolderMinsMaxesMus()
+        {
+            _aAll = new double[8];
+            _bAll = new double[8];
+            _muAll = new double[8];
+            _SAll = new double[8];
+
+            for (int i = 0; i < _imageSorting.ScoredImages.Length; i++)
+            {
+                var Brightness = _imageSorting.ScoredImages[i].Features.Brightness;
+                var oldmu = _muAll[FEATURE_BRIGHTNESS];
+                _bAll[FEATURE_BRIGHTNESS] = Math.Max(_bAll[FEATURE_BRIGHTNESS], Brightness);
+                _aAll[FEATURE_BRIGHTNESS] = Math.Min(_aAll[FEATURE_BRIGHTNESS], Brightness);
+                _muAll[FEATURE_BRIGHTNESS] = oldmu + (1.0 / (i + 1)) * (Brightness - oldmu);
+                _SAll[FEATURE_BRIGHTNESS] += (Brightness - oldmu) * (Brightness - _muAll[FEATURE_BRIGHTNESS]);
+
+                var IntensityContrast = _imageSorting.ScoredImages[i].Features.IntensityContrast;
+                oldmu = _muAll[FEATURE_INTENSITY_CONTRAST];
+                _bAll[FEATURE_INTENSITY_CONTRAST] = Math.Max(_bAll[FEATURE_INTENSITY_CONTRAST], IntensityContrast);
+                _aAll[FEATURE_INTENSITY_CONTRAST] = Math.Min(_aAll[FEATURE_INTENSITY_CONTRAST], IntensityContrast);
+                _muAll[FEATURE_INTENSITY_CONTRAST] = _muAll[FEATURE_INTENSITY_CONTRAST] + (1.0 / (i + 1)) * (IntensityContrast - _muAll[FEATURE_INTENSITY_CONTRAST]);
+                _SAll[FEATURE_INTENSITY_CONTRAST] += (IntensityContrast - oldmu) * (IntensityContrast - _muAll[FEATURE_INTENSITY_CONTRAST]);
+
+                var Saturation = _imageSorting.ScoredImages[i].Features.Saturation;
+                oldmu = _muAll[FEATURE_SATURATION];
+                _bAll[FEATURE_SATURATION] = Math.Max(_bAll[FEATURE_SATURATION], Saturation);
+                _aAll[FEATURE_SATURATION] = Math.Min(_aAll[FEATURE_SATURATION], Saturation);
+                _muAll[FEATURE_SATURATION] = _muAll[FEATURE_SATURATION] + (1.0 / (i + 1)) * (Saturation - _muAll[FEATURE_SATURATION]);
+                _SAll[FEATURE_SATURATION] += (Saturation - oldmu) * (Saturation - _muAll[FEATURE_SATURATION]);
+
+                var Blurriness = _imageSorting.ScoredImages[i].Features.Blurriness;
+                oldmu = _muAll[FEATURE_BLURRINESS];
+                _bAll[FEATURE_BLURRINESS] = Math.Max(_bAll[FEATURE_BLURRINESS], Blurriness);
+                _aAll[FEATURE_BLURRINESS] = Math.Min(_aAll[FEATURE_BLURRINESS], Blurriness);
+                _muAll[FEATURE_BLURRINESS] = _muAll[FEATURE_BLURRINESS] + (1.0 / (i + 1)) * (Blurriness - _muAll[FEATURE_BLURRINESS]);
+                _SAll[FEATURE_BLURRINESS] += (Blurriness - oldmu) * (Blurriness - _muAll[FEATURE_BLURRINESS]);
+
+                var RegionsOfInterestSize = _imageSorting.ScoredImages[i].Features.RegionsOfInterestSize;
+                oldmu = _muAll[FEATURE_ROI_SIZE];
+                _bAll[FEATURE_ROI_SIZE] = Math.Max(_bAll[FEATURE_ROI_SIZE], RegionsOfInterestSize);
+                _aAll[FEATURE_ROI_SIZE] = Math.Min(_aAll[FEATURE_ROI_SIZE], RegionsOfInterestSize);
+                _muAll[FEATURE_ROI_SIZE] = _muAll[FEATURE_ROI_SIZE] + (1.0 / (i + 1)) * (RegionsOfInterestSize - _muAll[FEATURE_ROI_SIZE]);
+                _SAll[FEATURE_ROI_SIZE] += (RegionsOfInterestSize - oldmu) * (RegionsOfInterestSize - _muAll[FEATURE_ROI_SIZE]);
+
+                var RuleOfThirds = _imageSorting.ScoredImages[i].Features.RuleOfThirds;
+                oldmu = _muAll[FEATURE_RULE_OF_THIRDS];
+                _bAll[FEATURE_RULE_OF_THIRDS] = Math.Max(_bAll[FEATURE_RULE_OF_THIRDS], RuleOfThirds);
+                _aAll[FEATURE_RULE_OF_THIRDS] = Math.Min(_aAll[FEATURE_RULE_OF_THIRDS], RuleOfThirds);
+                _muAll[FEATURE_RULE_OF_THIRDS] = _muAll[FEATURE_RULE_OF_THIRDS] + (1.0 / (i + 1)) * (RuleOfThirds - _muAll[FEATURE_RULE_OF_THIRDS]);
+                _SAll[FEATURE_RULE_OF_THIRDS] += (RuleOfThirds - oldmu) * (RuleOfThirds - _muAll[FEATURE_RULE_OF_THIRDS]);
+                
+                var ShapeConvexity = _imageSorting.ScoredImages[i].Features.ShapeConvexity;
+                oldmu = _muAll[FEATURE_SHAPE_CONVEXITY];
+                _bAll[FEATURE_SHAPE_CONVEXITY] = Math.Max(_bAll[FEATURE_SHAPE_CONVEXITY], ShapeConvexity);
+                _aAll[FEATURE_SHAPE_CONVEXITY] = Math.Min(_aAll[FEATURE_SHAPE_CONVEXITY], ShapeConvexity);
+                _muAll[FEATURE_SHAPE_CONVEXITY] = _muAll[FEATURE_SHAPE_CONVEXITY] + (1.0 / (i + 1)) * (ShapeConvexity - _muAll[FEATURE_SHAPE_CONVEXITY]);
+                _SAll[FEATURE_SHAPE_CONVEXITY] += (ShapeConvexity - oldmu) * (ShapeConvexity - _muAll[FEATURE_SHAPE_CONVEXITY]);
+
+                var BackgroundDistraction = _imageSorting.ScoredImages[i].Features.BackgroundDistraction;
+                oldmu = _muAll[FEATURE_BACKGROUND_DISTRACTION];
+                _bAll[FEATURE_BACKGROUND_DISTRACTION] = Math.Max(_bAll[FEATURE_BACKGROUND_DISTRACTION], BackgroundDistraction);
+                _aAll[FEATURE_BACKGROUND_DISTRACTION] = Math.Min(_aAll[FEATURE_BACKGROUND_DISTRACTION], BackgroundDistraction);
+                _muAll[FEATURE_BACKGROUND_DISTRACTION] = _muAll[FEATURE_BACKGROUND_DISTRACTION] + (1.0 / (i + 1)) * (BackgroundDistraction - _muAll[FEATURE_BACKGROUND_DISTRACTION]);
+                _SAll[FEATURE_BACKGROUND_DISTRACTION] += (BackgroundDistraction - oldmu) * (BackgroundDistraction - _muAll[FEATURE_BACKGROUND_DISTRACTION]);
+            }
         }
 
         private void UpdateImages()
@@ -218,47 +316,24 @@ namespace Part2Project_GUI.ViewModel
 
             // Select the four images. Make sure that they're not the same
             _imageIndices[0] = rand.Next(0, _imageSorting.ScoredImages.Length);
+            while (_indicesSeen.Contains(_imageIndices[0]))
+            {
+                _imageIndices[0] = rand.Next(0, _imageSorting.ScoredImages.Length);
+            }
             _imageIndices[1] = rand.Next(0, _imageSorting.ScoredImages.Length);
-            while (_imageIndices[1] == _imageIndices[0])
+            while (_imageIndices[1] == _imageIndices[0] || _indicesSeen.Contains(_imageIndices[1]))
             {
                 _imageIndices[1] = rand.Next(0, _imageSorting.ScoredImages.Length);
             }
             _imageIndices[2] = rand.Next(0, _imageSorting.ScoredImages.Length);
-            while (_imageIndices[2] == _imageIndices[1] || _imageIndices[2] == _imageIndices[0])
+            while (_imageIndices[2] == _imageIndices[1] || _imageIndices[2] == _imageIndices[0] || _indicesSeen.Contains(_imageIndices[2]))
             {
                 _imageIndices[2] = rand.Next(0, _imageSorting.ScoredImages.Length);
             }
             _imageIndices[3] = rand.Next(0, _imageSorting.ScoredImages.Length);
-            while (_imageIndices[3] == _imageIndices[2] || _imageIndices[3] == _imageIndices[1] || _imageIndices[3] == _imageIndices[0])
+            while (_imageIndices[3] == _imageIndices[2] || _imageIndices[3] == _imageIndices[1] || _imageIndices[3] == _imageIndices[0] || _indicesSeen.Contains(_imageIndices[3]))
             {
                 _imageIndices[3] = rand.Next(0, _imageSorting.ScoredImages.Length);
-            }
-
-            for (int i = 0; i < 4; i++)
-            {
-                _maxes[FEATURE_BRIGHTNESS] = Math.Max(_maxes[FEATURE_BRIGHTNESS], _imageSorting.ScoredImages[_imageIndices[i]].Features.Brightness);
-                _mins[FEATURE_BRIGHTNESS] = Math.Min(_mins[FEATURE_BRIGHTNESS], _imageSorting.ScoredImages[_imageIndices[i]].Features.Brightness);
-
-                _maxes[FEATURE_INTENSITY_CONTRAST] = Math.Max(_maxes[FEATURE_INTENSITY_CONTRAST], _imageSorting.ScoredImages[_imageIndices[i]].Features.IntensityContrast);
-                _mins[FEATURE_INTENSITY_CONTRAST] = Math.Min(_mins[FEATURE_INTENSITY_CONTRAST], _imageSorting.ScoredImages[_imageIndices[i]].Features.IntensityContrast);
-
-                _maxes[FEATURE_SATURATION] = Math.Max(_maxes[FEATURE_SATURATION], _imageSorting.ScoredImages[_imageIndices[i]].Features.Saturation);
-                _mins[FEATURE_SATURATION] = Math.Min(_mins[FEATURE_SATURATION], _imageSorting.ScoredImages[_imageIndices[i]].Features.Saturation);
-
-                _maxes[FEATURE_BLURRINESS] = Math.Max(_maxes[FEATURE_BLURRINESS], _imageSorting.ScoredImages[_imageIndices[i]].Features.Blurriness);
-                _mins[FEATURE_BLURRINESS] = Math.Min(_mins[FEATURE_BLURRINESS], _imageSorting.ScoredImages[_imageIndices[i]].Features.Blurriness);
-
-                _maxes[FEATURE_ROI_SIZE] = Math.Max(_maxes[FEATURE_ROI_SIZE], _imageSorting.ScoredImages[_imageIndices[i]].Features.RegionsOfInterestSize);
-                _mins[FEATURE_ROI_SIZE] = Math.Min(_mins[FEATURE_ROI_SIZE], _imageSorting.ScoredImages[_imageIndices[i]].Features.RegionsOfInterestSize);
-
-                _maxes[FEATURE_RULE_OF_THIRDS] = Math.Max(_maxes[FEATURE_RULE_OF_THIRDS], _imageSorting.ScoredImages[_imageIndices[i]].Features.RuleOfThirds);
-                _mins[FEATURE_RULE_OF_THIRDS] = Math.Min(_mins[FEATURE_RULE_OF_THIRDS], _imageSorting.ScoredImages[_imageIndices[i]].Features.RuleOfThirds);
-
-                _maxes[FEATURE_SHAPE_CONVEXITY] = Math.Max(_maxes[FEATURE_SHAPE_CONVEXITY], _imageSorting.ScoredImages[_imageIndices[i]].Features.ShapeConvexity);
-                _mins[FEATURE_SHAPE_CONVEXITY] = Math.Min(_mins[FEATURE_SHAPE_CONVEXITY], _imageSorting.ScoredImages[_imageIndices[i]].Features.ShapeConvexity);
-
-                _maxes[FEATURE_BACKGROUND_DISTRACTION] = Math.Max(_maxes[FEATURE_BACKGROUND_DISTRACTION], _imageSorting.ScoredImages[_imageIndices[i]].Features.BackgroundDistraction);
-                _mins[FEATURE_BACKGROUND_DISTRACTION] = Math.Min(_mins[FEATURE_BACKGROUND_DISTRACTION], _imageSorting.ScoredImages[_imageIndices[i]].Features.BackgroundDistraction);
             }
 
             Image1 = _imageSorting.ScoredImages[_imageIndices[0]].Image;
@@ -270,25 +345,69 @@ namespace Part2Project_GUI.ViewModel
         private void UpdateInferences()
         {
             var newInferences = new ObservableCollection<string>();
-
-            _imageSorting.WBrightness = 2.0 * (_featureMeans[FEATURE_BRIGHTNESS] - _mins[FEATURE_BRIGHTNESS]) / (_maxes[FEATURE_BRIGHTNESS] - _mins[FEATURE_BRIGHTNESS]) - 1;
-            _imageSorting.WIntensityContrast = 2.0 * (_featureMeans[FEATURE_INTENSITY_CONTRAST] - _mins[FEATURE_INTENSITY_CONTRAST]) / (_maxes[FEATURE_INTENSITY_CONTRAST] - _mins[FEATURE_INTENSITY_CONTRAST]) - 1;
-            _imageSorting.WSaturation = 2.0 * (_featureMeans[FEATURE_SATURATION] - _mins[FEATURE_SATURATION]) / (_maxes[FEATURE_SATURATION] - _mins[FEATURE_SATURATION]) - 1;
-            _imageSorting.WBlurriness = 2.0 * (_featureMeans[FEATURE_BLURRINESS] - _mins[FEATURE_BLURRINESS]) / (_maxes[FEATURE_BLURRINESS] - _mins[FEATURE_BLURRINESS]) - 1;
-            _imageSorting.WRegionsOfInterestSize = 2.0 * (_featureMeans[FEATURE_ROI_SIZE] - _mins[FEATURE_ROI_SIZE]) / (_maxes[FEATURE_ROI_SIZE] - _mins[FEATURE_ROI_SIZE]) - 1;
-            _imageSorting.WRuleOfThirds = 2.0 * (_featureMeans[FEATURE_RULE_OF_THIRDS] - _mins[FEATURE_RULE_OF_THIRDS]) / (_maxes[FEATURE_RULE_OF_THIRDS] - _mins[FEATURE_RULE_OF_THIRDS]) - 1;
-            _imageSorting.WShapeConvexity = 2.0 * (_featureMeans[FEATURE_SHAPE_CONVEXITY] - _mins[FEATURE_SHAPE_CONVEXITY]) / (_maxes[FEATURE_SHAPE_CONVEXITY] - _mins[FEATURE_SHAPE_CONVEXITY]) - 1;
-            _imageSorting.WBackgroundDistraction = 2.0 * (_featureMeans[FEATURE_BACKGROUND_DISTRACTION] - _mins[FEATURE_BACKGROUND_DISTRACTION]) / (_maxes[FEATURE_BACKGROUND_DISTRACTION] - _mins[FEATURE_BACKGROUND_DISTRACTION]) - 1;
-
+            
             newInferences.Add("Current Feature Weight Predictions");
-            newInferences.Add("Brightness: " + _imageSorting.WBrightness + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_BRIGHTNESS] / _roundNum));
-            newInferences.Add("Contrast: " + _imageSorting.WIntensityContrast + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_INTENSITY_CONTRAST] / _roundNum));
-            newInferences.Add("Saturation: " + _imageSorting.WSaturation + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_SATURATION] / _roundNum));
-            newInferences.Add("Blurriness: " + _imageSorting.WBlurriness + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_BLURRINESS] / _roundNum));
-            newInferences.Add("ROI Size: " + _imageSorting.WRegionsOfInterestSize + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_ROI_SIZE] / _roundNum));
-            newInferences.Add("Rule of Thirds: " + _imageSorting.WRuleOfThirds + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_RULE_OF_THIRDS] / _roundNum));
-            newInferences.Add("Shape Convexity: " + _imageSorting.WShapeConvexity + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_SHAPE_CONVEXITY] / _roundNum));
-            newInferences.Add("Background Distraction: " + _imageSorting.WBackgroundDistraction + " +/- " + Math.Sqrt(_featureIncrementalVariances[FEATURE_BACKGROUND_DISTRACTION] / _roundNum));
+
+            newInferences.Add("");
+            newInferences.Add("Best Images seen: " + _indicesSeen.Count);
+
+            newInferences.Add("");
+            newInferences.Add("mu dist between min and max (precomputed min,max,mu)");
+            string[] names = {"Brightness", "Contrast", "Saturation", "Blurriness", "RoI Size", "RoT", "Convexity", "Distraction"};
+            int numConverged = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                if (_xBar[i] <= _muAll[i])
+                {
+                    _imageSorting.SetWeightByIndex(i, (_xBar[i] - _muAll[i]) / (_muAll[i] - _aAll[i]));
+                    var confIntWidth = 2.0 * 1.96 * Math.Sqrt(_S_n[i] / _roundNum) / (_muAll[i] - _aAll[i]) / Math.Sqrt(_roundNum);
+                    var thresh = Math.Sqrt(_SAll[i] / _imageSorting.ScoredImages.Length) / (_muAll[i] - _aAll[i]);
+                    if (confIntWidth < thresh)
+                    {
+                        numConverged++;
+                        newInferences.Add("Converged for " + names[i]);
+                    }
+                }
+                else
+                {
+                    _imageSorting.SetWeightByIndex(i, (_xBar[i] - _muAll[i]) / (_bAll[i] - _muAll[i]));
+                    var confIntWidth = 2.0 * 1.96 * Math.Sqrt(_S_n[i] / _roundNum) / (_bAll[i] - _muAll[i]) / Math.Sqrt(_roundNum);
+                    var thresh = Math.Sqrt(_SAll[i] / _imageSorting.ScoredImages.Length) / (_bAll[i] - _muAll[i]);
+                    if (confIntWidth < thresh)
+                    {
+                        numConverged++;
+                        newInferences.Add("Converged for " + names[i]);
+                    }
+                }
+            }
+
+//            double maxWeight = 0;
+//            for (int i = 0; i < 8; i++)
+//            {
+//                maxWeight = Math.Max(maxWeight, Math.Abs(_imageSorting.GetWeightByIndex(i)));
+//            }
+//            for (int i = 0; i < 8; i++)
+//            {
+//                _imageSorting.SetWeightByIndex(i, _imageSorting.GetWeightByIndex(i) / maxWeight);
+//            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (_xBar[i] <= _muAll[i])
+                {
+                    newInferences.Add(names[i] + ": " + _imageSorting.GetWeightByIndex(i) + " +/- " + Math.Sqrt(_S_n[i] / _roundNum) / (_muAll[i] - _aAll[i]));
+                }
+                else
+                {
+                    newInferences.Add(names[i] + ": " + _imageSorting.GetWeightByIndex(i) + " +/- " + Math.Sqrt(_S_n[i] / _roundNum) / (_bAll[i] - _muAll[i]));
+                }
+            }
+
+            if (numConverged >= 0)
+            {
+                newInferences.Add("");
+                newInferences.Add("Converged for " + numConverged + " features.");
+            }
 
             CurrentInferences = newInferences;
         }

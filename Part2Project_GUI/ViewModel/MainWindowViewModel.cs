@@ -200,6 +200,17 @@ namespace Part2Project_GUI.ViewModel
             }
         }
 
+        private string _numSliders = "8";
+        public string NumSliders
+        {
+            get { return _numSliders; }
+            set
+            {
+                _numSliders = value;
+                OnPropertyChanged("NumSliders");
+            }
+        }
+
         private Visibility _instructionsVisibility = Visibility.Visible;
         public Visibility InstructionsVisibility
         {

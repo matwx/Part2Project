@@ -563,7 +563,7 @@ namespace Part2Project_GUI.ViewModel
             {
                 if (_doneCommand == null)
                 {
-                    _doneCommand = new RelayCommand(x => DoneCommandFunction());
+                    _doneCommand = new RelayCommand(x => DoneCommandFunction(), x => (Happiness != null && PreferredMethod != null));
                 }
                 return _doneCommand;
             }

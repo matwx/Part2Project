@@ -512,7 +512,7 @@ namespace Part2Project_GUI.ViewModel
             output += ShapeConvexityWeight + nl;
             output += BackgroundDistractionWeight;
 
-            File.WriteAllText(_selectedFolder + "\\Stage2_Part2_Results.txt", output);
+            File.AppendAllText(_selectedFolder + "\\Image_Sorting_Stage2_Results.txt", output);
 
             // Then terminate
             CloseCommand.Execute(0);

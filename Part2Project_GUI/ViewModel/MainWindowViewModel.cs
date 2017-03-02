@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -26,7 +27,7 @@ namespace Part2Project_GUI.ViewModel
         private ScoredBitmapImage[] _scoredImages;
 
         private string _selectedFolder = "";
-        private DateTime _startTime;
+        private DateTime _startTime, _endTime;
 
         #region Properties
 
@@ -217,6 +218,73 @@ namespace Part2Project_GUI.ViewModel
             {
                 _slidersVisibility = value;
                 OnPropertyChanged("SlidersVisibility");
+            }
+        }
+
+        private Visibility _sortingVisibility = Visibility.Visible;
+        public Visibility SortingVisibility
+        {
+            get { return _sortingVisibility; }
+            set
+            {
+                _sortingVisibility = value;
+                OnPropertyChanged("SortingVisibility");
+            }
+        }
+        private Visibility _questionsVisibility = Visibility.Collapsed;
+        public Visibility QuestionsVisibility
+        {
+            get { return _questionsVisibility; }
+            set
+            {
+                _questionsVisibility = value;
+                OnPropertyChanged("QuestionsVisibility");
+            }
+        }
+
+        private string _happiness;
+        public string Happiness
+        {
+            get { return _happiness; }
+            set
+            {
+                _happiness = value;
+                OnPropertyChanged("Happiness");
+            }
+        }
+
+        private ComboBoxItem _hapCI;
+        public ComboBoxItem HapCI
+        {
+            get { return _hapCI; }
+            set
+            {
+                _hapCI = value;
+                Happiness = (string)value.Content;
+                OnPropertyChanged("HapCI");
+            }
+        }
+
+        private string _preferredMethod;
+        public string PreferredMethod
+        {
+            get { return _preferredMethod; }
+            set
+            {
+                _preferredMethod = value;
+                OnPropertyChanged("PreferredMethod");
+            }
+        }
+
+        private ComboBoxItem _prefCI;
+        public ComboBoxItem PrefCI
+        {
+            get { return _prefCI; }
+            set
+            {
+                _prefCI = value;
+                PreferredMethod = (string)value.Content;
+                OnPropertyChanged("PrefCI");
             }
         }
 
@@ -481,6 +549,27 @@ namespace Part2Project_GUI.ViewModel
         private void StopCommandFunction()
         {
             // Stop the timer
+            _endTime = DateTime.Now;
+            
+            // Show the questions
+            SortingVisibility = Visibility.Collapsed;
+            QuestionsVisibility = Visibility.Visible;
+        }
+
+        private RelayCommand _doneCommand;
+        public RelayCommand DoneCommand
+        {
+            get
+            {
+                if (_doneCommand == null)
+                {
+                    _doneCommand = new RelayCommand(x => DoneCommandFunction());
+                }
+                return _doneCommand;
+            }
+        }
+        private void DoneCommandFunction()
+        {
             var timeTaken = DateTime.Now - _startTime;
 
             // Save answers and time in a text file
@@ -510,7 +599,10 @@ namespace Part2Project_GUI.ViewModel
             output += RegionsOfInterestSizeWeight + nl;
             output += RuleOfThirdsWeight + nl;
             output += ShapeConvexityWeight + nl;
-            output += BackgroundDistractionWeight;
+            output += BackgroundDistractionWeight + nl;
+
+            // Question answers
+            output += Happiness + nl + PreferredMethod;
 
             File.AppendAllText(_selectedFolder + "\\Image_Sorting_Stage2_Results.txt", output);
 

@@ -84,6 +84,7 @@ namespace Part2Project
                 {
                     for (int k = y - 1; k <= y + 1; k++)
                     {
+                        if (ss.GetPixelsSegmentSize(j, k) > 0.01 * ss.Width * ss.Height)
                         result = Math.Max(result, ss.GetSegmentsSaliency(ss.GetPixelsSegmentIndex(j, k)));
                     }
                 }
@@ -213,14 +214,16 @@ namespace Part2Project
 
         private void btnEdge1_Click(object sender, EventArgs e)
         {
+            // Compute Edge maps
             DirectBitmap naiveEdges = Edge1();
             DirectBitmap salEdges = Edge2();
-            DirectBitmap naiveEdges_B, salEdges_B;
+            DirectBitmap naiveEdges_B, salEdges_B, trueEdges_B;
 
             viewer2.Image = naiveEdges.Bitmap;
             viewer3.Image = salEdges.Bitmap;
 
-            float blurSigma = 1.2f;
+            // Blur them
+            float blurSigma = 4f;
             using (KalikoImage kImage = new KalikoImage(naiveEdges.Bitmap))
             {
                 kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
@@ -234,6 +237,66 @@ namespace Part2Project
 
             viewer5.Image = naiveEdges_B.Bitmap;
             viewer6.Image = salEdges_B.Bitmap;
+
+            // Then normalise true edge map
+            DirectBitmap trueEdges = new DirectBitmap((Bitmap) viewer4.Image);
+            int max = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int) ((double) trueEdges.GetPixel(x, y).R / (double) max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            viewer7.Image = trueEdges.Bitmap;
+
+            // Then blur truth edge map
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            viewer8.Image = trueEdges_B.Bitmap;
+
+            // Then compute Correlations
+            // First, naive images
+            double naiveResult = 0.0, totalNaiveValues = 0.0, totalTrueValues = 0.0, totalSalValues = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    totalNaiveValues += Math.Pow(naiveEdges_B.GetPixel(x, y).R / 255.0, 2);
+                    totalSalValues += Math.Pow(salEdges_B.GetPixel(x, y).R / 255.0, 2);
+                    totalTrueValues += Math.Pow(trueEdges_B.GetPixel(x, y).R / 255.0, 2);
+                    naiveResult += Math.Pow((naiveEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            naiveResult /= (totalNaiveValues + totalTrueValues);
+            naiveResult = (1 - naiveResult) * 100.0;
+            blurredNaive.Text = naiveResult + "%";
+
+            // Second, saliency images
+            double salResult = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    salResult += Math.Pow((salEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            salResult /= (totalSalValues + totalTrueValues);
+            salResult = (1 - salResult) * 100.0;
+            blurredSaliency.Text = salResult + "%";
         }
 
         private void dlgEdges_FileOk(object sender, System.ComponentModel.CancelEventArgs e)

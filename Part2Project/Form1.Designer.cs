@@ -46,14 +46,22 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.viewer8 = new System.Windows.Forms.PictureBox();
+            this.viewer7 = new System.Windows.Forms.PictureBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.blurredNaive = new System.Windows.Forms.Label();
+            this.blurredSaliency = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer7)).BeginInit();
             this.SuspendLayout();
             // 
             // viewer1
@@ -97,7 +105,7 @@
             // 
             // btnEdge
             // 
-            this.btnEdge.Location = new System.Drawing.Point(93, 12);
+            this.btnEdge.Location = new System.Drawing.Point(174, 12);
             this.btnEdge.Name = "btnEdge";
             this.btnEdge.Size = new System.Drawing.Size(75, 39);
             this.btnEdge.TabIndex = 4;
@@ -107,7 +115,7 @@
             // 
             // btnSelectRealEdges
             // 
-            this.btnSelectRealEdges.Location = new System.Drawing.Point(174, 12);
+            this.btnSelectRealEdges.Location = new System.Drawing.Point(93, 12);
             this.btnSelectRealEdges.Name = "btnSelectRealEdges";
             this.btnSelectRealEdges.Size = new System.Drawing.Size(77, 39);
             this.btnSelectRealEdges.TabIndex = 5;
@@ -201,28 +209,95 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(433, 837);
+            this.label7.Location = new System.Drawing.Point(770, 837);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(123, 13);
+            this.label7.Size = new System.Drawing.Size(98, 13);
             this.label7.TabIndex = 16;
-            this.label7.Text = "Blurred Naive Edge Map";
+            this.label7.Text = "Blurred True Edges";
             this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
-            // pictureBox1
+            // viewer8
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(338, 594);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(320, 240);
-            this.pictureBox1.TabIndex = 15;
-            this.pictureBox1.TabStop = false;
+            this.viewer8.Location = new System.Drawing.Point(664, 594);
+            this.viewer8.Name = "viewer8";
+            this.viewer8.Size = new System.Drawing.Size(320, 240);
+            this.viewer8.TabIndex = 15;
+            this.viewer8.TabStop = false;
+            // 
+            // viewer7
+            // 
+            this.viewer7.Location = new System.Drawing.Point(338, 594);
+            this.viewer7.Name = "viewer7";
+            this.viewer7.Size = new System.Drawing.Size(320, 240);
+            this.viewer7.TabIndex = 17;
+            this.viewer7.TabStop = false;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(433, 837);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(117, 13);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "Normalised True Edges";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(272, 25);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(207, 13);
+            this.label9.TabIndex = 19;
+            this.label9.Text = "Pointwise Multipy Blurred True Edges with:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(497, 12);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(74, 13);
+            this.label10.TabIndex = 20;
+            this.label10.Text = "Blurred Naive:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(485, 25);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(86, 13);
+            this.label11.TabIndex = 21;
+            this.label11.Text = "Blurred Saliency:";
+            // 
+            // blurredNaive
+            // 
+            this.blurredNaive.AutoSize = true;
+            this.blurredNaive.Location = new System.Drawing.Point(577, 12);
+            this.blurredNaive.Name = "blurredNaive";
+            this.blurredNaive.Size = new System.Drawing.Size(0, 13);
+            this.blurredNaive.TabIndex = 22;
+            // 
+            // blurredSaliency
+            // 
+            this.blurredSaliency.AutoSize = true;
+            this.blurredSaliency.Location = new System.Drawing.Point(577, 25);
+            this.blurredSaliency.Name = "blurredSaliency";
+            this.blurredSaliency.Size = new System.Drawing.Size(0, 13);
+            this.blurredSaliency.TabIndex = 23;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 863);
+            this.Controls.Add(this.blurredSaliency);
+            this.Controls.Add(this.blurredNaive);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.viewer7);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.viewer8);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.viewer6);
@@ -247,7 +322,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.viewer4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer7)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,7 +349,14 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox viewer8;
+        private System.Windows.Forms.PictureBox viewer7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label blurredNaive;
+        private System.Windows.Forms.Label blurredSaliency;
 
 
     }

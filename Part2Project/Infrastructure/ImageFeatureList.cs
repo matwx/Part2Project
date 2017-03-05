@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 namespace Part2Project.Infrastructure
 {
-    class ImageFeatureList
+    public class ImageFeatureList
     {
         // Feature order:
-        // 1. Brightness
-        // 2. Intensity Contrast
-        // 3. Saturation
-        // 4. Rule Of Thirds
-        // 5. RegionsOfInterestSize (Bounding box area)
+        // 1. Brightness (L)
+        // 2. Intensity Contrast (L)
+        // 3. Saturation (L)
+        // 4. Rule Of Thirds (H)
+        // 5. RegionsOfInterestSize (Bounding box area) (H)
+        // 6. Blurriness (L)
+        // 7. Background Distraction (H)
+        // 8. Shape Convexity (H)
 
-        public const int VersionNumber = 4;
+        public const int VersionNumber = 5;
         public const int NumFeatures = 8;
         private bool[] _featuresSet;
         private double[] _features;

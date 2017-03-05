@@ -17,6 +17,11 @@ namespace Part2Project.Infrastructure
         private List<string> _imageFilenames;
         private int _numImages = 0;
 
+        public List<string> ImageFilenames
+        {
+            get { return _imageFilenames; }
+        }
+
         public ImageDirectoryFeatures(string dPath)
         {
             _dPath = dPath;

@@ -37,11 +37,13 @@
                 <StackPanel>
                     <TextBlock TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,0,0,5">Please indicate how happy you are with the generated sorting, based on your preference.</TextBlock>
                     <ComboBox SelectedItem="{Binding HapCI}">
-                        <ComboBoxItem>Exactly sorted the wrong way (Worst at top)</ComboBoxItem>
-                        <ComboBoxItem>Mostly sorted the wrong way</ComboBoxItem>
-                        <ComboBoxItem>Apparenty random</ComboBoxItem>
-                        <ComboBoxItem>Mostly sorted correctly</ComboBoxItem>
-                        <ComboBoxItem>Perfectly sorted (Best at top)</ComboBoxItem>
+                        <ComboBoxItem>(-3) - Nearly completely sorted the wrong way</ComboBoxItem>
+                        <ComboBoxItem>(-2) - Mostly sorted the wrong way</ComboBoxItem>
+                        <ComboBoxItem>(-1) - Slightly sorted the wrong way</ComboBoxItem>
+                        <ComboBoxItem>(0) - Apparenty random</ComboBoxItem>
+                        <ComboBoxItem>(+1) - Slightly sorted correctly</ComboBoxItem>
+                        <ComboBoxItem>(+2) - Mostly sorted correctly</ComboBoxItem>
+                        <ComboBoxItem>(+3) - Nearly completely sorted correctly</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
             </Border>

@@ -33,20 +33,28 @@
             </TextBlock>
             <Button Command="{Binding StartCommand}" Content="Start" Width="150" Height="70" Background="#FF5AC76E" FontSize="40" Margin="20, 20, 20, 10"/>
             <Button Command="{Binding StopCommand}" Content="Done" Width="150" Height="70" Background="#FFC75A5A" FontSize="40" Margin="20, 10, 20, 20"/>
-            <Border BorderThickness="1" BorderBrush="#FF616161" Padding="10, 5" Margin="0, 10" Visibility="{Binding QuestionVisibility}">
-                <StackPanel>
-                    <TextBlock TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,0,0,5">Please indicate how happy you are with the generated sorting, based on your preference.</TextBlock>
-                    <ComboBox SelectedItem="{Binding HapCI}">
-                        <ComboBoxItem>(-3) - Nearly completely sorted the wrong way</ComboBoxItem>
-                        <ComboBoxItem>(-2) - Mostly sorted the wrong way</ComboBoxItem>
-                        <ComboBoxItem>(-1) - Slightly sorted the wrong way</ComboBoxItem>
-                        <ComboBoxItem>(0) - Apparenty random</ComboBoxItem>
-                        <ComboBoxItem>(+1) - Slightly sorted correctly</ComboBoxItem>
-                        <ComboBoxItem>(+2) - Mostly sorted correctly</ComboBoxItem>
-                        <ComboBoxItem>(+3) - Nearly completely sorted correctly</ComboBoxItem>
-                    </ComboBox>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+            <StackPanel Visibility="{Binding QuestionVisibility}">
+                <Border BorderThickness="1" BorderBrush="#FF616161" Padding="10, 5" Margin="0, 10">
+                    <StackPanel>
+                        <TextBlock TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,0,0,5">Please indicate how happy you are with the generated sorting, based on your preference.</TextBlock>
+                        <ComboBox SelectedItem="{Binding HapCI}">
+                            <ComboBoxItem>(-3) - Nearly completely sorted the wrong way</ComboBoxItem>
+                            <ComboBoxItem>(-2) - Mostly sorted the wrong way</ComboBoxItem>
+                            <ComboBoxItem>(-1) - Slightly sorted the wrong way</ComboBoxItem>
+                            <ComboBoxItem>(0) - Apparenty random</ComboBoxItem>
+                            <ComboBoxItem>(+1) - Slightly sorted correctly</ComboBoxItem>
+                            <ComboBoxItem>(+2) - Mostly sorted correctly</ComboBoxItem>
+                            <ComboBoxItem>(+3) - Nearly completely sorted correctly</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
+                <TextBlock TextWrapping="Wrap" FontSize="15" Width="300">
+                    After answering the question above, click "Done". Then run the final part of the experiment,
+                    "Assisted_Sorting_Part_2.exe". Make sure to select the same folder of images for that program
+                    as you did for this one (i.e. not a new copy). Once finished with both programs, your results
+                    file to send back will be saved in the same folder as your extracted images.
+                </TextBlock>
+            </StackPanel>
+            </StackPanel>
     </StackPanel>
 </UserControl>

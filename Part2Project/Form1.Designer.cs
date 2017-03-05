@@ -28,21 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.viewer1 = new System.Windows.Forms.PictureBox();
+            this.viewer2 = new System.Windows.Forms.PictureBox();
+            this.btnSelectImage = new System.Windows.Forms.Button();
+            this.dlgImage = new System.Windows.Forms.OpenFileDialog();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             this.SuspendLayout();
+            // 
+            // viewer1
+            // 
+            this.viewer1.Location = new System.Drawing.Point(12, 57);
+            this.viewer1.Name = "viewer1";
+            this.viewer1.Size = new System.Drawing.Size(320, 240);
+            this.viewer1.TabIndex = 0;
+            this.viewer1.TabStop = false;
+            // 
+            // viewer2
+            // 
+            this.viewer2.Location = new System.Drawing.Point(338, 57);
+            this.viewer2.Name = "viewer2";
+            this.viewer2.Size = new System.Drawing.Size(320, 240);
+            this.viewer2.TabIndex = 1;
+            this.viewer2.TabStop = false;
+            // 
+            // btnSelectImage
+            // 
+            this.btnSelectImage.Location = new System.Drawing.Point(12, 12);
+            this.btnSelectImage.Name = "btnSelectImage";
+            this.btnSelectImage.Size = new System.Drawing.Size(75, 39);
+            this.btnSelectImage.TabIndex = 2;
+            this.btnSelectImage.Text = "Select Image";
+            this.btnSelectImage.UseVisualStyleBackColor = true;
+            this.btnSelectImage.Click += new System.EventHandler(this.btnSelectImage_Click);
+            // 
+            // dlgImage
+            // 
+            this.dlgImage.FileName = "openFileDialog1";
+            this.dlgImage.FileOk += new System.ComponentModel.CancelEventHandler(this.dlgImage_FileOk);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(670, 354);
+            this.Controls.Add(this.btnSelectImage);
+            this.Controls.Add(this.viewer2);
+            this.Controls.Add(this.viewer1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.viewer1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer2)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.PictureBox viewer1;
+        private System.Windows.Forms.PictureBox viewer2;
+        private System.Windows.Forms.Button btnSelectImage;
+        private System.Windows.Forms.OpenFileDialog dlgImage;
 
 
     }

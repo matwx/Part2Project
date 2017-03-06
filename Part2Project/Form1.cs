@@ -28,6 +28,10 @@ namespace Part2Project
         {
             dlgImage.ShowDialog();
         }
+        private void btnSelectRealEdges_Click(object sender, EventArgs e)
+        {
+            dlgEdges.ShowDialog();
+        }
 
         private void dlgImage_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -39,16 +43,16 @@ namespace Part2Project
                     // Create the required resized image
                     using (Graphics gfx = Graphics.FromImage(image.Bitmap))
                     {
-                        if (image.Width / (double)image.Height > 4.0 / 3.0)
+                        if (selected.Width / (double)selected.Height > 4.0 / 3.0)
                         {
                             // Too wide - crop left and right
-                            int originalWidth = (int)((double)image.Width / (double)image.Height * 240.0);
+                            int originalWidth = (int)((double)selected.Width / (double)selected.Height * 240.0);
                             gfx.DrawImage(selected, 160 - originalWidth / 2, 0, originalWidth, 240);
                         }
-                        else if (image.Width / (double)image.Height < 4.0 / 3.0)
+                        else if (selected.Width / (double)selected.Height < 4.0 / 3.0)
                         {
                             // Too narrow - crop top and bottom
-                            int originalHeight = (int)((double)image.Height / (double)image.Width * 320.0);
+                            int originalHeight = (int)((double)selected.Height / (double)selected.Width * 320.0);
                             gfx.DrawImage(selected, 0, 120 - originalHeight / 2, 320, originalHeight);
                         }
                         else
@@ -64,6 +68,39 @@ namespace Part2Project
                 viewer1.Image = image.Bitmap;
             }
         }
+        private void dlgEdges_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (dlgEdges.FileName != "")
+            {
+                using (Image selected = Image.FromFile(dlgEdges.FileName))
+                {
+                    edges = new DirectBitmap(320, 240);
+                    // Create the required resized image
+                    using (Graphics gfx = Graphics.FromImage(edges.Bitmap))
+                    {
+                        if (selected.Width / (double)selected.Height > 4.0 / 3.0)
+                        {
+                            // Too wide - crop left and right
+                            int originalWidth = (int)((double)selected.Width / (double)selected.Height * 240.0);
+                            gfx.DrawImage(selected, 160 - originalWidth / 2, 0, originalWidth, 240);
+                        }
+                        else if (selected.Width / (double)selected.Height < 4.0 / 3.0)
+                        {
+                            // Too narrow - crop top and bottom
+                            int originalHeight = (int)((double)selected.Height / (double)selected.Width * 320.0);
+                            gfx.DrawImage(selected, 0, 120 - originalHeight / 2, 320, originalHeight);
+                        }
+                        else
+                        {
+                            // Correct AR
+                            gfx.DrawImage(selected, 0, 0, 320, 240);
+                        }
+                    }
+                }
+
+                viewer4.Image = edges.Bitmap;
+            }
+        }
 
         private bool edgeMap1Helper(Segmentation s, int i, int x, int y)
         {
@@ -72,7 +109,6 @@ namespace Part2Project
 
             return i == s.GetPixelsSegmentIndex(x, y);
         }
-
         private double edgeMap2Helper(SaliencySegmentation ss, int x, int y)
         {
             double result = 0.0;
@@ -211,7 +247,6 @@ namespace Part2Project
 
             return edgeMap;
         }
-
         private void btnEdge1_Click(object sender, EventArgs e)
         {
             // Compute Edge maps
@@ -298,46 +333,7 @@ namespace Part2Project
             salResult = (1 - salResult) * 100.0;
             blurredSaliency.Text = salResult + "%";
         }
-
-        private void dlgEdges_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (dlgEdges.FileName != "")
-            {
-                using (Image selected = Image.FromFile(dlgEdges.FileName))
-                {
-                    edges = new DirectBitmap(320, 240);
-                    // Create the required resized image
-                    using (Graphics gfx = Graphics.FromImage(edges.Bitmap))
-                    {
-                        if (edges.Width / (double)edges.Height > 4.0 / 3.0)
-                        {
-                            // Too wide - crop left and right
-                            int originalWidth = (int)((double)edges.Width / (double)edges.Height * 240.0);
-                            gfx.DrawImage(selected, 160 - originalWidth / 2, 0, originalWidth, 240);
-                        }
-                        else if (edges.Width / (double)edges.Height < 4.0 / 3.0)
-                        {
-                            // Too narrow - crop top and bottom
-                            int originalHeight = (int)((double)edges.Height / (double)edges.Width * 320.0);
-                            gfx.DrawImage(selected, 0, 120 - originalHeight / 2, 320, originalHeight);
-                        }
-                        else
-                        {
-                            // Correct AR
-                            gfx.DrawImage(selected, 0, 0, 320, 240);
-                        }
-                    }
-                }
-
-                viewer4.Image = edges.Bitmap;
-            }
-        }
-
-        private void btnSelectRealEdges_Click(object sender, EventArgs e)
-        {
-            dlgEdges.ShowDialog();
-        }
-
+        
         private void label7_Click(object sender, EventArgs e)
         {
 

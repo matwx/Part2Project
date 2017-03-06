@@ -37,7 +37,7 @@
                             Before starting, note that this is the second part of Stage 2. If you haven't already, please complete Part 1 by running "Assisted_Sorting_Part_1.exe", before running this program.
                         </TextBlock>
                         <TextBlock TextWrapping="Wrap" Width="500" FontSize="15" Margin="0,10,0,0">
-                            In this program, after selecting the folder containing your 40 images to sort, you will be presented with <Run Text="{Binding NumSliders}"/> sliders. 
+                            In this program, after selecting the folder containing your 40 images to sort (Same folder as last time), you will be presented with <Run Text="{Binding NumSliders}"/> sliders. 
                             Each of these represent different extracted features from images, and can take values between -1 and 1.
                             -1 means that you really don't want to see image with a high score on that feature being at the top of the sorting, 1 means that you really do, and 0
                             means that you don't care about that feature.
@@ -220,11 +220,13 @@
                         <StackPanel>
                             <TextBlock TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,0,0,5">Please indicate how happy you are with the generated sorting, based on your preference.</TextBlock>
                             <ComboBox SelectedItem="{Binding HapCI}">
-                                <ComboBoxItem>Exactly sorted the wrong way (Worst at top)</ComboBoxItem>
-                                <ComboBoxItem>Mostly sorted the wrong way</ComboBoxItem>
-                                <ComboBoxItem>Apparently random</ComboBoxItem>
-                                <ComboBoxItem>Mostly sorted correctly</ComboBoxItem>
-                                <ComboBoxItem>Perfectly sorted (Best at top)</ComboBoxItem>
+                                <ComboBoxItem>(-3) - Nearly completely sorted the wrong way</ComboBoxItem>
+                                <ComboBoxItem>(-2) - Mostly sorted the wrong way</ComboBoxItem>
+                                <ComboBoxItem>(-1) - Slightly sorted the wrong way</ComboBoxItem>
+                                <ComboBoxItem>(0) - Apparenty random</ComboBoxItem>
+                                <ComboBoxItem>(+1) - Slightly sorted correctly</ComboBoxItem>
+                                <ComboBoxItem>(+2) - Mostly sorted correctly</ComboBoxItem>
+                                <ComboBoxItem>(+3) - Nearly completely sorted correctly</ComboBoxItem>
                             </ComboBox>
 
                             <TextBlock TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,20,0,5">Which of the three methods for image sorting did you prefer?</TextBlock>
@@ -234,6 +236,13 @@
                                 <ComboBoxItem>Slider-based Assisted Sorting (Stage 2 Part 2)</ComboBoxItem>
                             </ComboBox>
 
+                            <TextBlock TextWrapping="Wrap" Width="300" FontSize="15" Margin="0,20,0,5">
+                                After answering the questions above, click "Done". A results file called "Image_Sorting_Stage2_Results.txt" will be
+                                generated in the same folder as the set of 40 images. Please send this file back as you did for Stage 1. If you have
+                                any comments about the different sorting methods, in particular any reasons for your choice of preference, please let
+                                me know in your response.
+                            </TextBlock>
+                            
                             <Button Command="{Binding DoneCommand}" Content="Done" Width="150" Height="70" Background="#FFC75A5A" FontSize="40" Margin="20, 20, 0, 30"/>
                         </StackPanel>
                     </Border>

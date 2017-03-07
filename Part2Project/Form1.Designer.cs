@@ -59,6 +59,9 @@
             this.dlgPRFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.btnSalFolder = new System.Windows.Forms.Button();
             this.dlgEdgesFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnNaiveFolder = new System.Windows.Forms.Button();
+            this.btnRandFolder = new System.Windows.Forms.Button();
+            this.btnCGAccuracy = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
@@ -319,11 +322,44 @@
             this.btnSalFolder.UseVisualStyleBackColor = true;
             this.btnSalFolder.Click += new System.EventHandler(this.btnMyTestFolder_Click);
             // 
+            // btnNaiveFolder
+            // 
+            this.btnNaiveFolder.Location = new System.Drawing.Point(346, 12);
+            this.btnNaiveFolder.Name = "btnNaiveFolder";
+            this.btnNaiveFolder.Size = new System.Drawing.Size(96, 39);
+            this.btnNaiveFolder.TabIndex = 27;
+            this.btnNaiveFolder.Text = "Run NaiveEdges on Folder";
+            this.btnNaiveFolder.UseVisualStyleBackColor = true;
+            this.btnNaiveFolder.Click += new System.EventHandler(this.btnNaiveFolder_Click);
+            // 
+            // btnRandFolder
+            // 
+            this.btnRandFolder.Location = new System.Drawing.Point(448, 12);
+            this.btnRandFolder.Name = "btnRandFolder";
+            this.btnRandFolder.Size = new System.Drawing.Size(102, 39);
+            this.btnRandFolder.TabIndex = 28;
+            this.btnRandFolder.Text = "Compute Random Accuracy";
+            this.btnRandFolder.UseVisualStyleBackColor = true;
+            this.btnRandFolder.Click += new System.EventHandler(this.btnRandFolder_Click);
+            // 
+            // btnCGAccuracy
+            // 
+            this.btnCGAccuracy.Location = new System.Drawing.Point(556, 12);
+            this.btnCGAccuracy.Name = "btnCGAccuracy";
+            this.btnCGAccuracy.Size = new System.Drawing.Size(85, 39);
+            this.btnCGAccuracy.TabIndex = 29;
+            this.btnCGAccuracy.Text = "Compute CG Accuracy";
+            this.btnCGAccuracy.UseVisualStyleBackColor = true;
+            this.btnCGAccuracy.Click += new System.EventHandler(this.btnCGAccuracy_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 863);
+            this.Controls.Add(this.btnCGAccuracy);
+            this.Controls.Add(this.btnRandFolder);
+            this.Controls.Add(this.btnNaiveFolder);
             this.Controls.Add(this.btnSalFolder);
             this.Controls.Add(this.btnPRFolder);
             this.Controls.Add(this.btnPR);
@@ -400,6 +436,9 @@
         private System.Windows.Forms.FolderBrowserDialog dlgPRFolder;
         private System.Windows.Forms.Button btnSalFolder;
         private System.Windows.Forms.FolderBrowserDialog dlgEdgesFolder;
+        private System.Windows.Forms.Button btnNaiveFolder;
+        private System.Windows.Forms.Button btnRandFolder;
+        private System.Windows.Forms.Button btnCGAccuracy;
 
 
     }

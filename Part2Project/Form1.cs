@@ -342,7 +342,7 @@ namespace Part2Project
 
         }
 
-        private DirectBitmap GenerateEdgeMap(DirectBitmap image)
+        private DirectBitmap GenerateSalEdgeMap(DirectBitmap image)
         {
             // Segmentation-Derived
             const int k = 125;
@@ -453,29 +453,104 @@ namespace Part2Project
                 }
             }
             result /= (totalSalValues + totalTrueValues);
-            result = (1 - result) * 100.0;
+            result = 1 - result;
+
+            return result;
+        }
+        private double ComputeSalAlignment(string originalFilename, string trueFilename, string folderPath, int id)
+        {
+            DirectBitmap salEdges = GenerateSalEdgeMap(GetImageScaled(originalFilename));
+            DirectBitmap trueEdges = GetImageScaled(trueFilename);
+
+            DirectBitmap salEdges_B, trueEdges_B;
+
+            // Blur them
+            float blurSigma = 4f;
+            using (KalikoImage kImage = new KalikoImage(salEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                salEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            // Then normalise true edge map
+            int max = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int)((double)trueEdges.GetPixel(x, y).R / (double)max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            // Then blur truth edge map
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            double result = ComputeEdgeMapAlignment(salEdges_B, trueEdges_B);
+
+            // Save values in a text file
+            string output = "";
+            string nl = Environment.NewLine;
+            output += originalFilename + nl + trueFilename + nl + result;
+            File.WriteAllText(folderPath + "\\" + id + ".txt", output);
 
             return result;
         }
         private void btnMyTestFolder_Click(object sender, EventArgs e)
         {
             // Select the top level BSD folder
-            dlgPRFolder.ShowDialog();
-            if (dlgPRFolder.SelectedPath == "") return;
-            if (!Directory.Exists(dlgPRFolder.SelectedPath + "\\Original") || !Directory.Exists(dlgPRFolder.SelectedPath + "\\Ground Truth")) return;
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Original") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Ground Truth")) return;
 
-            string[] originalFilenames = Directory.GetFiles(dlgPRFolder.SelectedPath + "\\Original");
-            string[] truthFilenames = Directory.GetFiles(dlgPRFolder.SelectedPath + "\\Ground Truth");
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Original");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Ground Truth");
 
             if (originalFilenames.Length != truthFilenames.Length) return;
 
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeSalAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath, i2); });
+            }
 
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+
+            double total = 0.0;
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                total += results[i];
+                output += results[i] + nl;
+            }
+            total /= originalFilenames.Length;
+            output += total;
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\" + "SalResults.txt", output);
         }
 
         private void ComputePRVectorsForAnImage(string originalFilename, string truthFilename, double[] recalls, double[] precisions)
         {
             // Compute Edge map
-            DirectBitmap salEdges = GenerateEdgeMap(GetImageScaled(originalFilename));
+            DirectBitmap salEdges = GenerateSalEdgeMap(GetImageScaled(originalFilename));
             DirectBitmap trueEdges = GetImageScaled(truthFilename);
             precisions = new double[31];
             recalls = new double[31];

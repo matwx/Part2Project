@@ -54,6 +54,9 @@
             this.label11 = new System.Windows.Forms.Label();
             this.blurredNaive = new System.Windows.Forms.Label();
             this.blurredSaliency = new System.Windows.Forms.Label();
+            this.btnPR = new System.Windows.Forms.Button();
+            this.btnPRFolder = new System.Windows.Forms.Button();
+            this.dlgPRFolder = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
@@ -244,7 +247,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(272, 25);
+            this.label9.Location = new System.Drawing.Point(22, 364);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(207, 13);
             this.label9.TabIndex = 19;
@@ -253,7 +256,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(497, 12);
+            this.label10.Location = new System.Drawing.Point(46, 380);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(74, 13);
             this.label10.TabIndex = 20;
@@ -262,7 +265,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(485, 25);
+            this.label11.Location = new System.Drawing.Point(34, 393);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(86, 13);
             this.label11.TabIndex = 21;
@@ -271,7 +274,7 @@
             // blurredNaive
             // 
             this.blurredNaive.AutoSize = true;
-            this.blurredNaive.Location = new System.Drawing.Point(577, 12);
+            this.blurredNaive.Location = new System.Drawing.Point(126, 380);
             this.blurredNaive.Name = "blurredNaive";
             this.blurredNaive.Size = new System.Drawing.Size(0, 13);
             this.blurredNaive.TabIndex = 22;
@@ -279,16 +282,38 @@
             // blurredSaliency
             // 
             this.blurredSaliency.AutoSize = true;
-            this.blurredSaliency.Location = new System.Drawing.Point(577, 25);
+            this.blurredSaliency.Location = new System.Drawing.Point(126, 393);
             this.blurredSaliency.Name = "blurredSaliency";
             this.blurredSaliency.Size = new System.Drawing.Size(0, 13);
             this.blurredSaliency.TabIndex = 23;
+            // 
+            // btnPR
+            // 
+            this.btnPR.Location = new System.Drawing.Point(255, 12);
+            this.btnPR.Name = "btnPR";
+            this.btnPR.Size = new System.Drawing.Size(108, 39);
+            this.btnPR.TabIndex = 24;
+            this.btnPR.Text = "Generate PR Stuff for current images";
+            this.btnPR.UseVisualStyleBackColor = true;
+            this.btnPR.Click += new System.EventHandler(this.btnPR_Click);
+            // 
+            // btnPRFolder
+            // 
+            this.btnPRFolder.Location = new System.Drawing.Point(369, 12);
+            this.btnPRFolder.Name = "btnPRFolder";
+            this.btnPRFolder.Size = new System.Drawing.Size(75, 39);
+            this.btnPRFolder.TabIndex = 25;
+            this.btnPRFolder.Text = "PR folder";
+            this.btnPRFolder.UseVisualStyleBackColor = true;
+            this.btnPRFolder.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 863);
+            this.Controls.Add(this.btnPRFolder);
+            this.Controls.Add(this.btnPR);
             this.Controls.Add(this.blurredSaliency);
             this.Controls.Add(this.blurredNaive);
             this.Controls.Add(this.label11);
@@ -357,6 +382,9 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label blurredNaive;
         private System.Windows.Forms.Label blurredSaliency;
+        private System.Windows.Forms.Button btnPR;
+        private System.Windows.Forms.Button btnPRFolder;
+        private System.Windows.Forms.FolderBrowserDialog dlgPRFolder;
 
 
     }

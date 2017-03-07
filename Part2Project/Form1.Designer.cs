@@ -57,6 +57,8 @@
             this.btnPR = new System.Windows.Forms.Button();
             this.btnPRFolder = new System.Windows.Forms.Button();
             this.dlgPRFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnSalFolder = new System.Windows.Forms.Button();
+            this.dlgEdgesFolder = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
@@ -289,7 +291,7 @@
             // 
             // btnPR
             // 
-            this.btnPR.Location = new System.Drawing.Point(255, 12);
+            this.btnPR.Location = new System.Drawing.Point(785, 12);
             this.btnPR.Name = "btnPR";
             this.btnPR.Size = new System.Drawing.Size(108, 39);
             this.btnPR.TabIndex = 24;
@@ -299,7 +301,7 @@
             // 
             // btnPRFolder
             // 
-            this.btnPRFolder.Location = new System.Drawing.Point(369, 12);
+            this.btnPRFolder.Location = new System.Drawing.Point(899, 12);
             this.btnPRFolder.Name = "btnPRFolder";
             this.btnPRFolder.Size = new System.Drawing.Size(75, 39);
             this.btnPRFolder.TabIndex = 25;
@@ -307,11 +309,22 @@
             this.btnPRFolder.UseVisualStyleBackColor = true;
             this.btnPRFolder.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnSalFolder
+            // 
+            this.btnSalFolder.Location = new System.Drawing.Point(255, 12);
+            this.btnSalFolder.Name = "btnSalFolder";
+            this.btnSalFolder.Size = new System.Drawing.Size(85, 39);
+            this.btnSalFolder.TabIndex = 26;
+            this.btnSalFolder.Text = "Run SalEdges on Folder";
+            this.btnSalFolder.UseVisualStyleBackColor = true;
+            this.btnSalFolder.Click += new System.EventHandler(this.btnMyTestFolder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 863);
+            this.Controls.Add(this.btnSalFolder);
             this.Controls.Add(this.btnPRFolder);
             this.Controls.Add(this.btnPR);
             this.Controls.Add(this.blurredSaliency);
@@ -385,6 +398,8 @@
         private System.Windows.Forms.Button btnPR;
         private System.Windows.Forms.Button btnPRFolder;
         private System.Windows.Forms.FolderBrowserDialog dlgPRFolder;
+        private System.Windows.Forms.Button btnSalFolder;
+        private System.Windows.Forms.FolderBrowserDialog dlgEdgesFolder;
 
 
     }

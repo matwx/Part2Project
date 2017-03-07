@@ -199,6 +199,7 @@ namespace Part2Project
             // Save values in a text file
             string output = "";
             string nl = Environment.NewLine;
+            output += _originalFilename + nl + _truthFilename + nl;
             for (int i = 0; i < 31; i++)
             {
                 output += Recalls[i] + "," + Precisions[i] + nl;

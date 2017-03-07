@@ -437,6 +437,41 @@ namespace Part2Project
 
             return result;
         }
+
+        private double ComputeEdgeMapAlignment(DirectBitmap original, DirectBitmap truth)
+        {
+            // Compute Correlations
+            double result = 0.0;
+            double totalTrueValues = 0.0, totalSalValues = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    totalSalValues += Math.Pow(original.GetPixel(x, y).R / 255.0, 2);
+                    totalTrueValues += Math.Pow(truth.GetPixel(x, y).R / 255.0, 2);
+                    result += Math.Pow((original.GetPixel(x, y).R / 255.0) - (truth.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            result /= (totalSalValues + totalTrueValues);
+            result = (1 - result) * 100.0;
+
+            return result;
+        }
+        private void btnMyTestFolder_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgPRFolder.ShowDialog();
+            if (dlgPRFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgPRFolder.SelectedPath + "\\Original") || !Directory.Exists(dlgPRFolder.SelectedPath + "\\Ground Truth")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgPRFolder.SelectedPath + "\\Original");
+            string[] truthFilenames = Directory.GetFiles(dlgPRFolder.SelectedPath + "\\Ground Truth");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+
+        }
+
         private void ComputePRVectorsForAnImage(string originalFilename, string truthFilename, double[] recalls, double[] precisions)
         {
             // Compute Edge map
@@ -573,7 +608,6 @@ namespace Part2Project
                 PRCurve.Bitmap.Save(dlgPRFolder.SelectedPath + "\\PR.png", ImageFormat.Png);
             }
         }
-
         private void btnPR_Click(object sender, EventArgs e)
         {
             // Compute Edge map

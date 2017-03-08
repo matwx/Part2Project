@@ -33,6 +33,7 @@ namespace Part2Project
         {
             dlgImage.ShowDialog();
         }
+
         private void btnSelectRealEdges_Click(object sender, EventArgs e)
         {
             dlgEdges.ShowDialog();
@@ -48,16 +49,16 @@ namespace Part2Project
                     // Create the required resized image
                     using (Graphics gfx = Graphics.FromImage(_image.Bitmap))
                     {
-                        if (selected.Width / (double)selected.Height > 4.0 / 3.0)
+                        if (selected.Width / (double) selected.Height > 4.0 / 3.0)
                         {
                             // Too wide - crop left and right
-                            int originalWidth = (int)((double)selected.Width / (double)selected.Height * 240.0);
+                            int originalWidth = (int) ((double) selected.Width / (double) selected.Height * 240.0);
                             gfx.DrawImage(selected, 160 - originalWidth / 2, 0, originalWidth, 240);
                         }
-                        else if (selected.Width / (double)selected.Height < 4.0 / 3.0)
+                        else if (selected.Width / (double) selected.Height < 4.0 / 3.0)
                         {
                             // Too narrow - crop top and bottom
-                            int originalHeight = (int)((double)selected.Height / (double)selected.Width * 320.0);
+                            int originalHeight = (int) ((double) selected.Height / (double) selected.Width * 320.0);
                             gfx.DrawImage(selected, 0, 120 - originalHeight / 2, 320, originalHeight);
                         }
                         else
@@ -67,12 +68,13 @@ namespace Part2Project
                         }
                     }
 
-                    
+
                 }
 
                 viewer1.Image = _image.Bitmap;
             }
         }
+
         private void dlgEdges_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (dlgEdges.FileName != "")
@@ -83,16 +85,16 @@ namespace Part2Project
                     // Create the required resized image
                     using (Graphics gfx = Graphics.FromImage(_trueEdges.Bitmap))
                     {
-                        if (selected.Width / (double)selected.Height > 4.0 / 3.0)
+                        if (selected.Width / (double) selected.Height > 4.0 / 3.0)
                         {
                             // Too wide - crop left and right
-                            int originalWidth = (int)((double)selected.Width / (double)selected.Height * 240.0);
+                            int originalWidth = (int) ((double) selected.Width / (double) selected.Height * 240.0);
                             gfx.DrawImage(selected, 160 - originalWidth / 2, 0, originalWidth, 240);
                         }
-                        else if (selected.Width / (double)selected.Height < 4.0 / 3.0)
+                        else if (selected.Width / (double) selected.Height < 4.0 / 3.0)
                         {
                             // Too narrow - crop top and bottom
-                            int originalHeight = (int)((double)selected.Height / (double)selected.Width * 320.0);
+                            int originalHeight = (int) ((double) selected.Height / (double) selected.Width * 320.0);
                             gfx.DrawImage(selected, 0, 120 - originalHeight / 2, 320, originalHeight);
                         }
                         else
@@ -114,6 +116,7 @@ namespace Part2Project
 
             return i == s.GetPixelsSegmentIndex(x, y);
         }
+
         private double edgeMap2Helper(SaliencySegmentation ss, int x, int y)
         {
             double result = 0.0;
@@ -126,13 +129,14 @@ namespace Part2Project
                     for (int k = y - 1; k <= y + 1; k++)
                     {
                         if (ss.GetPixelsSegmentSize(j, k) > 0.01 * ss.Width * ss.Height)
-                        result = Math.Max(result, ss.GetSegmentsSaliency(ss.GetPixelsSegmentIndex(j, k)));
+                            result = Math.Max(result, ss.GetSegmentsSaliency(ss.GetPixelsSegmentIndex(j, k)));
                     }
                 }
             }
 
             return result;
         }
+
         private DirectBitmap Edge1()
         {
             // Segmentation-Derived
@@ -189,6 +193,7 @@ namespace Part2Project
 
             return edgeMap;
         }
+
         private DirectBitmap Edge2()
         {
             // Segmentation-Derived
@@ -244,7 +249,7 @@ namespace Part2Project
                     else
                     {
                         double sal = edgeMap2Helper(ss, x, y);
-                        int val = (int)(sal * sal * 255.0);
+                        int val = (int) (sal * sal * 255.0);
                         edgeMap.SetPixel(x, y, Color.FromArgb(val, val, val));
                     }
                 }
@@ -252,13 +257,16 @@ namespace Part2Project
 
             return edgeMap;
         }
+
         private void btnEdge1_Click(object sender, EventArgs e)
         {
             // Compute Edge maps
             DirectBitmap naiveEdges = Edge1();
             DirectBitmap salEdges = Edge2();
-            DirectBitmap naiveEdges_B, salEdges_B, trueEdges_B;
+            DirectBitmap kMeansEdges = KMeansEdges(_image, 3);
+            DirectBitmap naiveEdges_B, salEdges_B, trueEdges_B, kMeans_B;
 
+            viewer9.Image = kMeansEdges.Bitmap;
             viewer2.Image = naiveEdges.Bitmap;
             viewer3.Image = salEdges.Bitmap;
 
@@ -274,9 +282,15 @@ namespace Part2Project
                 kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
                 salEdges_B = new DirectBitmap(kImage.GetAsBitmap());
             }
+            using (KalikoImage kImage = new KalikoImage(kMeansEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                kMeans_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
 
             viewer5.Image = naiveEdges_B.Bitmap;
             viewer6.Image = salEdges_B.Bitmap;
+            viewer10.Image = kMeans_B.Bitmap;
 
             // Then normalise true edge map
             DirectBitmap trueEdges = new DirectBitmap((Bitmap) viewer4.Image);
@@ -310,7 +324,7 @@ namespace Part2Project
 
             // Then compute Correlations
             // First, naive images
-            double naiveResult = 0.0, totalNaiveValues = 0.0, totalTrueValues = 0.0, totalSalValues = 0.0;
+            double naiveResult = 0.0, totalNaiveValues = 0.0, totalTrueValues = 0.0, totalSalValues = 0.0, totalKMValues = 0.0;
             for (int x = 0; x < 320; x++)
             {
                 for (int y = 0; y < 240; y++)
@@ -318,7 +332,9 @@ namespace Part2Project
                     totalNaiveValues += Math.Pow(naiveEdges_B.GetPixel(x, y).R / 255.0, 2);
                     totalSalValues += Math.Pow(salEdges_B.GetPixel(x, y).R / 255.0, 2);
                     totalTrueValues += Math.Pow(trueEdges_B.GetPixel(x, y).R / 255.0, 2);
-                    naiveResult += Math.Pow((naiveEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                    totalKMValues += Math.Pow(kMeans_B.GetPixel(x, y).R / 255.0, 2);
+                    naiveResult +=
+                        Math.Pow((naiveEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
                 }
             }
             naiveResult /= (totalNaiveValues + totalTrueValues);
@@ -331,14 +347,29 @@ namespace Part2Project
             {
                 for (int y = 0; y < 240; y++)
                 {
-                    salResult += Math.Pow((salEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                    salResult += Math.Pow(
+                        (salEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
                 }
             }
             salResult /= (totalSalValues + totalTrueValues);
             salResult = (1 - salResult) * 100.0;
             blurredSaliency.Text = salResult + "%";
+
+            // Then, K-Means images
+            double kMResult = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    kMResult +=
+                        Math.Pow((kMeans_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            kMResult /= (totalKMValues + totalTrueValues);
+            kMResult = (1 - kMResult) * 100.0;
+            blurredKMeans.Text = kMResult + "%";
         }
-        
+
         private void label7_Click(object sender, EventArgs e)
         {
 
@@ -616,6 +647,343 @@ namespace Part2Project
 
             // Save values in a text file
             File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\SalResults\\SalResults.txt", output);
+        }
+
+        private long LongRandom(long min, long max, Random rand)
+        {
+            byte[] buf = new byte[8];
+            rand.NextBytes(buf);
+            long longRand = BitConverter.ToInt64(buf, 0);
+
+            return (Math.Abs(longRand % (max - min)) + min);
+        }
+        private DirectBitmap KMeansEdges(DirectBitmap image, int k)
+        {
+            int numUpdates = -1;
+
+            // Create a smaller image to actually find the cluster centres
+            var centres = new Color[k];
+            int[] counts = new int[k];
+            int[] totalsR = new int[k];
+            int[] totalsG = new int[k];
+            int[] totalsB = new int[k];
+            Random rand = new Random();
+            int[][] assignments = new int[image.Width][];
+            int[][] largeAssignments = new int[image.Width][];
+            for (int i = 0; i < image.Width; i++)
+            {
+                largeAssignments[i] = new int[image.Height];
+            }
+            for (int i = 0; i < image.Width; i++)
+            {
+                assignments[i] = new int[image.Height];
+            }
+
+            // 1) Pick K clusters using the K++ algorithm
+
+            // 1.1) Choose one center uniformly at random from among the data points.
+            centres[0] = image.GetPixel(rand.Next(0, image.Width), rand.Next(0, image.Height));
+
+            for (int l = 1; l < k; l++)
+            {
+                // 1.2) For each data point x, compute D(x), the distance between x and the nearest center that has already been chosen.
+                //      Use the assignments 2D array for this purpose.
+                long totalDistances = 0;
+                for (int i = 0; i < image.Width; i++)
+                {
+                    for (int j = 0; j < image.Height; j++)
+                    {
+
+                        Color pixel = image.GetPixel(i, j);
+                        for (int p = 0; p < l; p++)
+                        {
+                            int val = (pixel.R - centres[l - 1].R) * (pixel.R - centres[l - 1].R) +
+                                      (pixel.G - centres[l - 1].G) * (pixel.G - centres[l - 1].G) +
+                                      (pixel.B - centres[l - 1].B) * (pixel.B - centres[l - 1].B);
+                            //int val = colourDifference(pixel, centres[l - 1]);
+
+                            val *= val;
+                            if (val < assignments[i][j] || p == 0) assignments[i][j] = val;
+                        }
+
+                        totalDistances += assignments[i][j];
+                    }
+                }
+
+                // 1.3) Choose one new data point at random as a new center, using a weighted probability distribution where a point x is 
+                //      chosen with probability proportional to D(x)^2.
+                long randomNumber = LongRandom(0, totalDistances, rand);
+                bool done = false;
+                for (int i = 0; i < image.Width; i++)
+                {
+                    for (int j = 0; j < image.Height; j++)
+                    {
+                        if (randomNumber < assignments[i][j])
+                        {
+                            centres[l] = image.GetPixel(i, j);
+                            done = true;
+                            break;
+                        }
+                    }
+                    if (done) break;
+                }
+
+                // 1.4) Repeat Steps 2 and 3 until k centers have been chosen.
+            }
+            // 1.5) Now that the initial centers have been chosen, proceed using standard k-means clustering.
+
+
+            bool updateMade = false;
+
+            // 4) Repeat steps 2 and 3 until convergence is attained (i.e. no pixels change clusters)
+            do
+            {
+                // Save the current state of the image
+                numUpdates++;
+
+                updateMade = false;
+                for (int i = 0; i < k; i++)
+                {
+                    counts[i] = 0;
+                    totalsR[i] = 0;
+                    totalsG[i] = 0;
+                    totalsB[i] = 0;
+                }
+
+                // 2) Assign each pixel in the image to the cluster that minimizes the distance between the pixel and the cluster center
+                for (int i = 0; i < image.Width; i++)
+                {
+                    for (int j = 0; j < image.Height; j++)
+                    {
+                        Color pixel = image.GetPixel(i, j);
+                        int minL = 0, minDifference = Int16.MaxValue;
+                        for (int l = 0; l < k; l++)
+                        {
+                            // Calculate difference in colour between point (x,y) and centre l
+                            int squareDifference = (pixel.R - centres[l].R) * (pixel.R - centres[l].R) +
+                                                   (pixel.G - centres[l].G) * (pixel.G - centres[l].G) +
+                                                   (pixel.B - centres[l].B) * (pixel.B - centres[l].B);
+
+                            //squareDifference = colourDifference(pixel, centres[l]);
+
+                            if (squareDifference < minDifference)
+                            {
+                                minL = l;
+                                minDifference = squareDifference;
+                            }
+                        }
+                        if (minL != assignments[i][j])
+                        {
+                            // Pixel changing cluster
+                            updateMade = true;
+                            assignments[i][j] = minL;
+                        }
+
+                        // Add to new totals and counts for new cluster centres
+                        counts[minL]++;
+                        totalsR[minL] += pixel.R;
+                        totalsG[minL] += pixel.G;
+                        totalsB[minL] += pixel.B;
+                    }
+                }
+
+                // 3) Re-compute the cluster centers by averaging all of the pixels in the cluster
+                for (int l = 0; l < k; l++)
+                {
+                    centres[l] = Color.FromArgb(totalsR[l] / (counts[l] + 1), totalsG[l] / (counts[l] + 1),
+                        totalsB[l] / (counts[l] + 1));
+                }
+
+            } while (updateMade);
+
+
+            // Now we have the cluster centres, assign each pixel in the larger image to the cluster that minimizes the 
+            // distance between the pixel and the cluster center
+            largeAssignments = new int[image.Width][];
+            for (int i = 0; i < image.Width; i++)
+            {
+                largeAssignments[i] = new int[image.Height];
+            }
+
+            for (int i = 0; i < image.Width; i++)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    Color pixel = image.GetPixel(i, j);
+                    int minL = 0, minDifference = Int16.MaxValue;
+                    for (int l = 0; l < k; l++)
+                    {
+                        // Calculate difference in colour between point (x,y) and centre l
+                        int squareDifference = (pixel.R - centres[l].R) * (pixel.R - centres[l].R) +
+                                               (pixel.G - centres[l].G) * (pixel.G - centres[l].G) +
+                                               (pixel.B - centres[l].B) * (pixel.B - centres[l].B);
+
+                        //squareDifference = colourDifference(pixel, centres[l]);
+
+                        if (squareDifference < minDifference)
+                        {
+                            minL = l;
+                            minDifference = squareDifference;
+                        }
+                    }
+                    largeAssignments[i][j] = minL;
+                }
+            }
+
+            // Create edge map
+            DirectBitmap edgeMap = new DirectBitmap(320, 240);
+            for (int x = 0; x < edgeMap.Width; x++)
+            {
+                for (int y = 0; y < edgeMap.Height; y++)
+                {
+                    int i = largeAssignments[x][y];
+                    bool notOnEdge = true;
+
+                    if (x > 0)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= i == largeAssignments[x - 1][y - 1];
+                        }
+                        notOnEdge &= i == largeAssignments[x - 1][y];
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= i == largeAssignments[x - 1][y + 1];
+                        }
+                    }
+                    if (x < edgeMap.Width - 1)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= i == largeAssignments[x + 1][y - 1];
+                        }
+                        notOnEdge &= i == largeAssignments[x + 1][y];
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= i == largeAssignments[x + 1][y + 1];
+                        }
+                    }
+                    if (y > 0)
+                    {
+                        notOnEdge &= i == largeAssignments[x][y - 1];
+                    }
+                    if (y < edgeMap.Height - 1)
+                    {
+                        notOnEdge &= i == largeAssignments[x][y + 1];
+                    }
+
+                    if (notOnEdge) edgeMap.SetPixel(x, y, Color.Black);
+                    else edgeMap.SetPixel(x, y, Color.White);
+
+                    //                    edgeMap.SetPixel(x, y, centres[largeAssignments[x][y]]);
+                }
+            }
+
+            return edgeMap;
+        }
+        private double ComputeKMAlignment(string originalFilename, string trueFilename, string folderPath, int id, int k)
+        {
+            DirectBitmap bmp = GetImageScaled(originalFilename);
+            DirectBitmap KMEdges = KMeansEdges(bmp, k);
+            DirectBitmap trueEdges = GetImageScaled(trueFilename);
+
+            DirectBitmap KMEdges_B, trueEdges_B;
+
+            // Blur them
+            float blurSigma = 4f;
+            using (KalikoImage kImage = new KalikoImage(KMEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                KMEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            // Then normalise true edge map
+            int max = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int)((double)trueEdges.GetPixel(x, y).R / (double)max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            // Then blur truth edge map
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            double result = ComputeEdgeMapAlignment(KMEdges_B, trueEdges_B);
+
+            // Save values in a text file
+            string output = "";
+            string nl = Environment.NewLine;
+            output += originalFilename + nl + trueFilename + nl + result;
+            File.WriteAllText(folderPath + "\\DeleteMe_" + id + ".txt", output);
+
+            return result;
+        }
+        private void btnKMeansFolder_Click(object sender, EventArgs e)
+        {
+            int K_MEANS_K = 4;
+
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Original") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Ground Truth")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Original");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Ground Truth");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K);
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeKMAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath, i2, K_MEANS_K); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+
+            List<Pair> pairs = new List<Pair>();
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+
+                var newPair = new Pair();
+                newPair.score = results[i];
+                newPair.filename = originalFilenames[i];
+                pairs.Add(newPair);
+            }
+
+            pairs.Sort();
+            pairs.Reverse();
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                File.Copy(pairs[i].filename, dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K + "\\" + i + " - " + pairs[i].score + ".jpg");
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K + "\\kMeansResults.txt", output);
         }
 
         private void ComputePRVectorsForAnImage(string originalFilename, string truthFilename, double[] recalls, double[] precisions)
@@ -1105,6 +1473,56 @@ namespace Part2Project
 
             // Save values in a text file
             File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\CGresults\\CGresults.txt", output);
+        }
+
+        private void btngPbucmcolorAccuracy_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\100Test") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\gPb_ucm_color")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\gPb_ucm_color");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\100Test");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Results\\gPb_ucm_color_Results"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\gPb_ucm_color_Results");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeEdgeAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath + "\\Results", i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\gPb_ucm_color_Results\\gPb_ucm_color_Results.txt", output);
+        }
+
+
+
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

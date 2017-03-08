@@ -62,6 +62,14 @@
             this.btnNaiveFolder = new System.Windows.Forms.Button();
             this.btnRandFolder = new System.Windows.Forms.Button();
             this.btnCGAccuracy = new System.Windows.Forms.Button();
+            this.btngPbucmcolorAccuracy = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.viewer9 = new System.Windows.Forms.PictureBox();
+            this.blurredKMeans = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.viewer10 = new System.Windows.Forms.PictureBox();
+            this.btnKMeansFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
@@ -70,6 +78,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.viewer6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer10)).BeginInit();
             this.SuspendLayout();
             // 
             // viewer1
@@ -294,9 +304,9 @@
             // 
             // btnPR
             // 
-            this.btnPR.Location = new System.Drawing.Point(785, 12);
+            this.btnPR.Location = new System.Drawing.Point(1252, 12);
             this.btnPR.Name = "btnPR";
-            this.btnPR.Size = new System.Drawing.Size(108, 39);
+            this.btnPR.Size = new System.Drawing.Size(25, 39);
             this.btnPR.TabIndex = 24;
             this.btnPR.Text = "Generate PR Stuff for current images";
             this.btnPR.UseVisualStyleBackColor = true;
@@ -304,9 +314,9 @@
             // 
             // btnPRFolder
             // 
-            this.btnPRFolder.Location = new System.Drawing.Point(899, 12);
+            this.btnPRFolder.Location = new System.Drawing.Point(1283, 12);
             this.btnPRFolder.Name = "btnPRFolder";
-            this.btnPRFolder.Size = new System.Drawing.Size(75, 39);
+            this.btnPRFolder.Size = new System.Drawing.Size(27, 39);
             this.btnPRFolder.TabIndex = 25;
             this.btnPRFolder.Text = "PR folder";
             this.btnPRFolder.UseVisualStyleBackColor = true;
@@ -352,11 +362,92 @@
             this.btnCGAccuracy.UseVisualStyleBackColor = true;
             this.btnCGAccuracy.Click += new System.EventHandler(this.btnCGAccuracy_Click);
             // 
+            // btngPbucmcolorAccuracy
+            // 
+            this.btngPbucmcolorAccuracy.Location = new System.Drawing.Point(647, 12);
+            this.btngPbucmcolorAccuracy.Name = "btngPbucmcolorAccuracy";
+            this.btngPbucmcolorAccuracy.Size = new System.Drawing.Size(105, 39);
+            this.btngPbucmcolorAccuracy.TabIndex = 30;
+            this.btngPbucmcolorAccuracy.Text = "Compute gPb_ucm Accuracy";
+            this.btngPbucmcolorAccuracy.UseVisualStyleBackColor = true;
+            this.btngPbucmcolorAccuracy.Click += new System.EventHandler(this.btngPbucmcolorAccuracy_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(1070, 300);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(134, 13);
+            this.label12.TabIndex = 32;
+            this.label12.Text = "K-Means Edge Map (k = 3)";
+            // 
+            // viewer9
+            // 
+            this.viewer9.Location = new System.Drawing.Point(990, 57);
+            this.viewer9.Name = "viewer9";
+            this.viewer9.Size = new System.Drawing.Size(320, 240);
+            this.viewer9.TabIndex = 31;
+            this.viewer9.TabStop = false;
+            // 
+            // blurredKMeans
+            // 
+            this.blurredKMeans.AutoSize = true;
+            this.blurredKMeans.Location = new System.Drawing.Point(126, 406);
+            this.blurredKMeans.Name = "blurredKMeans";
+            this.blurredKMeans.Size = new System.Drawing.Size(0, 13);
+            this.blurredKMeans.TabIndex = 34;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(68, 406);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(52, 13);
+            this.label14.TabIndex = 33;
+            this.label14.Text = "K-Means:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(1096, 568);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(137, 13);
+            this.label13.TabIndex = 36;
+            this.label13.Text = "Blurred K-Means Edge Map";
+            this.label13.Click += new System.EventHandler(this.label13_Click);
+            // 
+            // viewer10
+            // 
+            this.viewer10.Location = new System.Drawing.Point(990, 325);
+            this.viewer10.Name = "viewer10";
+            this.viewer10.Size = new System.Drawing.Size(320, 240);
+            this.viewer10.TabIndex = 35;
+            this.viewer10.TabStop = false;
+            this.viewer10.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // btnKMeansFolder
+            // 
+            this.btnKMeansFolder.Location = new System.Drawing.Point(758, 12);
+            this.btnKMeansFolder.Name = "btnKMeansFolder";
+            this.btnKMeansFolder.Size = new System.Drawing.Size(99, 39);
+            this.btnKMeansFolder.TabIndex = 37;
+            this.btnKMeansFolder.Text = "Compute kMeans Accuracy";
+            this.btnKMeansFolder.UseVisualStyleBackColor = true;
+            this.btnKMeansFolder.Click += new System.EventHandler(this.btnKMeansFolder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1000, 863);
+            this.ClientSize = new System.Drawing.Size(1319, 863);
+            this.Controls.Add(this.btnKMeansFolder);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.viewer10);
+            this.Controls.Add(this.blurredKMeans);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.viewer9);
+            this.Controls.Add(this.btngPbucmcolorAccuracy);
             this.Controls.Add(this.btnCGAccuracy);
             this.Controls.Add(this.btnRandFolder);
             this.Controls.Add(this.btnNaiveFolder);
@@ -398,6 +489,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.viewer6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer10)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -439,6 +532,14 @@
         private System.Windows.Forms.Button btnNaiveFolder;
         private System.Windows.Forms.Button btnRandFolder;
         private System.Windows.Forms.Button btnCGAccuracy;
+        private System.Windows.Forms.Button btngPbucmcolorAccuracy;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.PictureBox viewer9;
+        private System.Windows.Forms.Label blurredKMeans;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.PictureBox viewer10;
+        private System.Windows.Forms.Button btnKMeansFolder;
 
 
     }

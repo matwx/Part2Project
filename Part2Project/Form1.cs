@@ -258,11 +258,204 @@ namespace Part2Project
             return edgeMap;
         }
 
+        private void btnEdge1_Click(object sender, EventArgs e)
+        {
+            // Compute Edge maps
+            DirectBitmap naiveEdges = Edge1();
+            DirectBitmap salEdges = Edge2();
+            DirectBitmap kMeansEdges = KMeansEdges(_image, 3);
+            DirectBitmap otsuEdges = OtsuEdges(_image);
+            DirectBitmap naiveEdges_B, salEdges_B, trueEdges_B, kMeans_B, otsu_B;
+
+            viewer9.Image = kMeansEdges.Bitmap;
+            viewer2.Image = naiveEdges.Bitmap;
+            viewer3.Image = salEdges.Bitmap;
+            viewer5.Image = otsuEdges.Bitmap;
+
+            // Blur them
+            float blurSigma = 4f;
+            using (KalikoImage kImage = new KalikoImage(naiveEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                naiveEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+            using (KalikoImage kImage = new KalikoImage(salEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                salEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+            using (KalikoImage kImage = new KalikoImage(kMeansEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                kMeans_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+            using (KalikoImage kImage = new KalikoImage(otsuEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                otsu_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            viewer6.Image = salEdges_B.Bitmap;
+
+            // Then normalise true edge map
+            DirectBitmap trueEdges = new DirectBitmap((Bitmap) viewer4.Image);
+            int max = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int) ((double) trueEdges.GetPixel(x, y).R / (double) max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            viewer7.Image = trueEdges.Bitmap;
+
+            // Then blur truth edge map
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            viewer8.Image = trueEdges_B.Bitmap;
+
+            // Then compute Correlations
+            // First, naive images
+            double naiveResult = 0.0, 
+                totalNaiveValues = 0.0, 
+                totalTrueValues = 0.0, 
+                totalSalValues = 0.0, 
+                totalKMValues = 0.0,
+                totalOtsuValues = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    totalNaiveValues += Math.Pow(naiveEdges_B.GetPixel(x, y).R / 255.0, 2);
+                    totalSalValues += Math.Pow(salEdges_B.GetPixel(x, y).R / 255.0, 2);
+                    totalTrueValues += Math.Pow(trueEdges_B.GetPixel(x, y).R / 255.0, 2);
+                    totalKMValues += Math.Pow(kMeans_B.GetPixel(x, y).R / 255.0, 2);
+                    totalOtsuValues += Math.Pow(otsu_B.GetPixel(x, y).R / 255.0, 2);
+                    naiveResult +=
+                        Math.Pow((naiveEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            naiveResult /= (totalNaiveValues + totalTrueValues);
+            naiveResult = (1 - naiveResult) * 100.0;
+            blurredNaive.Text = naiveResult + "%";
+
+            // Second, saliency images
+            double salResult = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    salResult += Math.Pow(
+                        (salEdges_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            salResult /= (totalSalValues + totalTrueValues);
+            salResult = (1 - salResult) * 100.0;
+            blurredSaliency.Text = salResult + "%";
+
+            // Then, K-Means images
+            double kMResult = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    kMResult +=
+                        Math.Pow((kMeans_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            kMResult /= (totalKMValues + totalTrueValues);
+            kMResult = (1 - kMResult) * 100.0;
+            blurredKMeans.Text = kMResult + "%";
+
+            // Then, Otsu images
+            double otsuResult = 0.0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    otsuResult +=
+                        Math.Pow((otsu_B.GetPixel(x, y).R / 255.0) - (trueEdges_B.GetPixel(x, y).R / 255.0), 2);
+                }
+            }
+            otsuResult /= (totalOtsuValues + totalTrueValues);
+            otsuResult = (1 - otsuResult) * 100.0;
+            blurredOtsu.Text = otsuResult + "%";
+        }
+
         private void label7_Click(object sender, EventArgs e)
         {
 
         }
 
+        private DirectBitmap GenerateNaiveEdgeMap(DirectBitmap image)
+        {
+            // Segmentation-Derived
+            const int k = 125;
+            const double sigma = 0.6;
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+
+            // Create edge map
+            DirectBitmap edgeMap = new DirectBitmap(320, 240);
+            for (int x = 0; x < edgeMap.Width; x++)
+            {
+                for (int y = 0; y < edgeMap.Height; y++)
+                {
+                    int i = s.GetPixelsSegmentIndex(x, y);
+                    bool notOnEdge = true;
+
+                    if (x > 0)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= edgeMap1Helper(s, i, x - 1, y - 1);
+                        }
+                        notOnEdge &= edgeMap1Helper(s, i, x - 1, y);
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= edgeMap1Helper(s, i, x - 1, y + 1);
+                        }
+                    }
+                    if (x < edgeMap.Width - 1)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= edgeMap1Helper(s, i, x + 1, y - 1);
+                        }
+                        notOnEdge &= edgeMap1Helper(s, i, x + 1, y);
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= edgeMap1Helper(s, i, x + 1, y + 1);
+                        }
+                    }
+                    if (y > 0)
+                    {
+                        notOnEdge &= edgeMap1Helper(s, i, x, y - 1);
+                    }
+                    if (y < edgeMap.Height - 1)
+                    {
+                        notOnEdge &= edgeMap1Helper(s, i, x, y + 1);
+                    }
+
+                    if (notOnEdge) edgeMap.SetPixel(x, y, Color.Black);
+                    else edgeMap.SetPixel(x, y, Color.White);
+                }
+            }
+
+            return edgeMap;
+        }
         private DirectBitmap GenerateSalEdgeMap(DirectBitmap image)
         {
             // Segmentation-Derived
@@ -441,8 +634,8 @@ namespace Part2Project
 
             if (originalFilenames.Length != truthFilenames.Length) return;
 
-            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\SalResults"))
-                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\SalResults");
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\CIEDE2000Results"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\CIEDE2000Results");
 
             // Set up a task for each image
             double[] results = new double[originalFilenames.Length];
@@ -450,7 +643,7 @@ namespace Part2Project
             for (int i = 0; i < originalFilenames.Length; i++)
             {
                 int i2 = i;
-                tasks[i] = Task.Run(() => { results[i2] = ComputeSalAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath, i2); });
+                tasks[i] = Task.Run(() => { results[i2] = ComputeNaiveAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath, i2); });
             }
 
             Task.WaitAll(tasks);
@@ -458,7 +651,7 @@ namespace Part2Project
             string output = "";
             string nl = Environment.NewLine;
 
-            List<Pair> pairs = new List<Pair>(); 
+            List<Pair> pairs = new List<Pair>();
             for (int i = 0; i < originalFilenames.Length; i++)
             {
                 tasks[i].Dispose();
@@ -474,11 +667,588 @@ namespace Part2Project
             pairs.Reverse();
             for (int i = 0; i < pairs.Count; i++)
             {
-                File.Copy(pairs[i].filename, dlgEdgesFolder.SelectedPath + "\\SalResults\\" + i + " - " + pairs[i].score + ".jpg");
+                File.Copy(pairs[i].filename, dlgEdgesFolder.SelectedPath + "\\CIEDE2000Results\\" + i + " - " + pairs[i].score + ".jpg");
             }
 
             // Save values in a text file
-            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\SalResults\\SalResults.txt", output);
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\CIEDE2000Results\\CIEDE2000Results.txt", output);
+        }
+
+        private long LongRandom(long min, long max, Random rand)
+        {
+            byte[] buf = new byte[8];
+            rand.NextBytes(buf);
+            long longRand = BitConverter.ToInt64(buf, 0);
+
+            return (Math.Abs(longRand % (max - min)) + min);
+        }
+        private DirectBitmap KMeansEdges(DirectBitmap image, int k)
+        {
+            int numUpdates = -1;
+
+            // Create a smaller image to actually find the cluster centres
+            var centres = new Color[k];
+            int[] counts = new int[k];
+            int[] totalsR = new int[k];
+            int[] totalsG = new int[k];
+            int[] totalsB = new int[k];
+            Random rand = new Random();
+            int[][] assignments = new int[image.Width][];
+            int[][] largeAssignments = new int[image.Width][];
+            for (int i = 0; i < image.Width; i++)
+            {
+                largeAssignments[i] = new int[image.Height];
+            }
+            for (int i = 0; i < image.Width; i++)
+            {
+                assignments[i] = new int[image.Height];
+            }
+
+            // 1) Pick K clusters using the K++ algorithm
+
+            // 1.1) Choose one center uniformly at random from among the data points.
+            centres[0] = image.GetPixel(rand.Next(0, image.Width), rand.Next(0, image.Height));
+
+            for (int l = 1; l < k; l++)
+            {
+                // 1.2) For each data point x, compute D(x), the distance between x and the nearest center that has already been chosen.
+                //      Use the assignments 2D array for this purpose.
+                long totalDistances = 0;
+                for (int i = 0; i < image.Width; i++)
+                {
+                    for (int j = 0; j < image.Height; j++)
+                    {
+
+                        Color pixel = image.GetPixel(i, j);
+                        for (int p = 0; p < l; p++)
+                        {
+                            int val = (pixel.R - centres[l - 1].R) * (pixel.R - centres[l - 1].R) +
+                                      (pixel.G - centres[l - 1].G) * (pixel.G - centres[l - 1].G) +
+                                      (pixel.B - centres[l - 1].B) * (pixel.B - centres[l - 1].B);
+                            //int val = colourDifference(pixel, centres[l - 1]);
+
+                            val *= val;
+                            if (val < assignments[i][j] || p == 0) assignments[i][j] = val;
+                        }
+
+                        totalDistances += assignments[i][j];
+                    }
+                }
+
+                // 1.3) Choose one new data point at random as a new center, using a weighted probability distribution where a point x is 
+                //      chosen with probability proportional to D(x)^2.
+                long randomNumber = LongRandom(0, totalDistances, rand);
+                bool done = false;
+                for (int i = 0; i < image.Width; i++)
+                {
+                    for (int j = 0; j < image.Height; j++)
+                    {
+                        if (randomNumber < assignments[i][j])
+                        {
+                            centres[l] = image.GetPixel(i, j);
+                            done = true;
+                            break;
+                        }
+                    }
+                    if (done) break;
+                }
+
+                // 1.4) Repeat Steps 2 and 3 until k centers have been chosen.
+            }
+            // 1.5) Now that the initial centers have been chosen, proceed using standard k-means clustering.
+
+
+            bool updateMade = false;
+
+            // 4) Repeat steps 2 and 3 until convergence is attained (i.e. no pixels change clusters)
+            do
+            {
+                // Save the current state of the image
+                numUpdates++;
+
+                updateMade = false;
+                for (int i = 0; i < k; i++)
+                {
+                    counts[i] = 0;
+                    totalsR[i] = 0;
+                    totalsG[i] = 0;
+                    totalsB[i] = 0;
+                }
+
+                // 2) Assign each pixel in the image to the cluster that minimizes the distance between the pixel and the cluster center
+                for (int i = 0; i < image.Width; i++)
+                {
+                    for (int j = 0; j < image.Height; j++)
+                    {
+                        Color pixel = image.GetPixel(i, j);
+                        int minL = 0, minDifference = Int16.MaxValue;
+                        for (int l = 0; l < k; l++)
+                        {
+                            // Calculate difference in colour between point (x,y) and centre l
+                            int squareDifference = (pixel.R - centres[l].R) * (pixel.R - centres[l].R) +
+                                                   (pixel.G - centres[l].G) * (pixel.G - centres[l].G) +
+                                                   (pixel.B - centres[l].B) * (pixel.B - centres[l].B);
+
+                            //squareDifference = colourDifference(pixel, centres[l]);
+
+                            if (squareDifference < minDifference)
+                            {
+                                minL = l;
+                                minDifference = squareDifference;
+                            }
+                        }
+                        if (minL != assignments[i][j])
+                        {
+                            // Pixel changing cluster
+                            updateMade = true;
+                            assignments[i][j] = minL;
+                        }
+
+                        // Add to new totals and counts for new cluster centres
+                        counts[minL]++;
+                        totalsR[minL] += pixel.R;
+                        totalsG[minL] += pixel.G;
+                        totalsB[minL] += pixel.B;
+                    }
+                }
+
+                // 3) Re-compute the cluster centers by averaging all of the pixels in the cluster
+                for (int l = 0; l < k; l++)
+                {
+                    centres[l] = Color.FromArgb(totalsR[l] / (counts[l] + 1), totalsG[l] / (counts[l] + 1),
+                        totalsB[l] / (counts[l] + 1));
+                }
+
+            } while (updateMade);
+
+
+            // Now we have the cluster centres, assign each pixel in the larger image to the cluster that minimizes the 
+            // distance between the pixel and the cluster center
+            largeAssignments = new int[image.Width][];
+            for (int i = 0; i < image.Width; i++)
+            {
+                largeAssignments[i] = new int[image.Height];
+            }
+
+            for (int i = 0; i < image.Width; i++)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    Color pixel = image.GetPixel(i, j);
+                    int minL = 0, minDifference = Int16.MaxValue;
+                    for (int l = 0; l < k; l++)
+                    {
+                        // Calculate difference in colour between point (x,y) and centre l
+                        int squareDifference = (pixel.R - centres[l].R) * (pixel.R - centres[l].R) +
+                                               (pixel.G - centres[l].G) * (pixel.G - centres[l].G) +
+                                               (pixel.B - centres[l].B) * (pixel.B - centres[l].B);
+
+                        //squareDifference = colourDifference(pixel, centres[l]);
+
+                        if (squareDifference < minDifference)
+                        {
+                            minL = l;
+                            minDifference = squareDifference;
+                        }
+                    }
+                    largeAssignments[i][j] = minL;
+                }
+            }
+
+            // Create edge map
+            DirectBitmap edgeMap = new DirectBitmap(320, 240);
+            for (int x = 0; x < edgeMap.Width; x++)
+            {
+                for (int y = 0; y < edgeMap.Height; y++)
+                {
+                    int i = largeAssignments[x][y];
+                    bool notOnEdge = true;
+
+                    if (x > 0)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= i == largeAssignments[x - 1][y - 1];
+                        }
+                        notOnEdge &= i == largeAssignments[x - 1][y];
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= i == largeAssignments[x - 1][y + 1];
+                        }
+                    }
+                    if (x < edgeMap.Width - 1)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= i == largeAssignments[x + 1][y - 1];
+                        }
+                        notOnEdge &= i == largeAssignments[x + 1][y];
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= i == largeAssignments[x + 1][y + 1];
+                        }
+                    }
+                    if (y > 0)
+                    {
+                        notOnEdge &= i == largeAssignments[x][y - 1];
+                    }
+                    if (y < edgeMap.Height - 1)
+                    {
+                        notOnEdge &= i == largeAssignments[x][y + 1];
+                    }
+
+                    if (notOnEdge) edgeMap.SetPixel(x, y, Color.Black);
+                    else edgeMap.SetPixel(x, y, Color.White);
+
+                    //                    edgeMap.SetPixel(x, y, centres[largeAssignments[x][y]]);
+                }
+            }
+
+            return edgeMap;
+        }
+        private double ComputeKMAlignment(string originalFilename, string trueFilename, string folderPath, int id, int k)
+        {
+            DirectBitmap bmp = GetImageScaled(originalFilename);
+            DirectBitmap KMEdges = KMeansEdges(bmp, k);
+            DirectBitmap trueEdges = GetImageScaled(trueFilename);
+
+            DirectBitmap KMEdges_B, trueEdges_B;
+
+            // Blur them
+            float blurSigma = 4f;
+            using (KalikoImage kImage = new KalikoImage(KMEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                KMEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            // Then normalise true edge map
+            int max = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int)((double)trueEdges.GetPixel(x, y).R / (double)max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            // Then blur truth edge map
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            double result = ComputeEdgeMapAlignment(KMEdges_B, trueEdges_B);
+
+            // Save values in a text file
+            string output = "";
+            string nl = Environment.NewLine;
+            output += originalFilename + nl + trueFilename + nl + result;
+            File.WriteAllText(folderPath + "\\DeleteMe_" + id + ".txt", output);
+
+            return result;
+        }
+        private void btnKMeansFolder_Click(object sender, EventArgs e)
+        {
+            int K_MEANS_K = 4;
+
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Original") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Ground Truth")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Original");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Ground Truth");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K);
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeKMAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath, i2, K_MEANS_K); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+
+            List<Pair> pairs = new List<Pair>();
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+
+                var newPair = new Pair();
+                newPair.score = results[i];
+                newPair.filename = originalFilenames[i];
+                pairs.Add(newPair);
+            }
+
+            pairs.Sort();
+            pairs.Reverse();
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                File.Copy(pairs[i].filename, dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K + "\\" + i + " - " + pairs[i].score + ".jpg");
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\kMeansResults" + K_MEANS_K + "\\kMeansResults.txt", output);
+        }
+
+        private double ComputeOtsuAlignment(string originalFilename, string trueFilename, string folderPath, int id)
+        {
+            DirectBitmap bmp = GetImageScaled(originalFilename);
+            DirectBitmap otsuEdges = OtsuEdges(bmp);
+            DirectBitmap trueEdges = GetImageScaled(trueFilename);
+
+            DirectBitmap OtsuEdges_B, trueEdges_B;
+
+            // Blur them
+            float blurSigma = 4f;
+            using (KalikoImage kImage = new KalikoImage(otsuEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                OtsuEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            // Then normalise true edge map
+            int max = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int)((double)trueEdges.GetPixel(x, y).R / (double)max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            // Then blur truth edge map
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            double result = ComputeEdgeMapAlignment(OtsuEdges_B, trueEdges_B);
+
+            // Save values in a text file
+            string output = "";
+            string nl = Environment.NewLine;
+            output += originalFilename + nl + trueFilename + nl + result;
+            File.WriteAllText(folderPath + "\\DeleteMe_" + id + ".txt", output);
+
+            return result;
+        }
+        private DirectBitmap OtsuEdges(DirectBitmap image)
+        {
+            // Compute Histogram
+            double[] histcounts = new double[256];
+            for (int i = 0; i < 256; i++)
+            {
+                histcounts[i] = 0;
+            }
+
+            for (int i = 0; i < image.Width; i++)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    Color pix = image.GetPixel(i, j);
+                    double value = (double)pix.R * 0.21 + (double)pix.G * 0.72 + (double)pix.B * 0.07;
+                    histcounts[(int)value]++;
+                }
+            }
+
+            // Normalise histogram
+            for (int i = 0; i < 256; i++)
+            {
+                histcounts[i] = histcounts[i] / (image.Width * image.Height);
+            }
+
+            // Do Otsu
+            double w_0 = 0, w_1 = 0, u_0 = 0, u_1 = 0, max_o = 0, thresh = 0;
+
+            for (int t = 0; t < 256; t++)
+            {
+                // Calculate w_i(t) and u_i(t)
+                w_0 = 0;
+                for (int i = 0; i < t; i++)
+                {
+                    w_0 += histcounts[i];
+                }
+
+                w_1 = 0;
+                for (int i = t; i < 256; i++)
+                {
+                    w_1 += histcounts[i];
+                }
+
+                u_0 = 0;
+                for (int i = 0; i < t; i++)
+                {
+                    u_0 += i * histcounts[i] / w_0;
+                }
+
+                u_1 = 0;
+                for (int i = t; i < 256; i++)
+                {
+                    u_1 += i * histcounts[i] / w_1;
+                }
+
+
+                // Calculate o^2_b(t)
+                double o_b = w_0 * w_1 * Math.Pow(u_0 - u_1, 2);
+
+                // Update maximum o^2_b and the t which gave it
+                if (o_b > max_o)
+                {
+                    max_o = o_b;
+                    thresh = t;
+                }
+            }
+
+            // Now need to draw the image with the threshold
+            var otsuBinaryImage = new bool[image.Width, image.Height];
+            for (int i = 0; i < image.Width; i++)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    Color pix = image.GetPixel(i, j);
+                    double value = (double)pix.R * 0.21 + (double)pix.G * 0.72 + (double)pix.B * 0.07;
+                    if (value <= thresh)
+                    {
+                        otsuBinaryImage[i, j] = false;
+                    }
+                    else
+                    {
+                        otsuBinaryImage[i, j] = true;
+                    }
+                }
+            }
+
+            // Create edge map
+            DirectBitmap edgeMap = new DirectBitmap(320, 240);
+            for (int x = 0; x < edgeMap.Width; x++)
+            {
+                for (int y = 0; y < edgeMap.Height; y++)
+                {
+                    bool i = otsuBinaryImage[x, y];
+                    bool notOnEdge = true;
+
+                    if (x > 0)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= i == otsuBinaryImage[x - 1, y - 1];
+                        }
+                        notOnEdge &= i == otsuBinaryImage[x - 1, y];
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= i == otsuBinaryImage[x - 1, y + 1];
+                        }
+                    }
+                    if (x < edgeMap.Width - 1)
+                    {
+                        if (y > 0)
+                        {
+                            notOnEdge &= i == otsuBinaryImage[x + 1, y - 1];
+                        }
+                        notOnEdge &= i == otsuBinaryImage[x + 1, y];
+                        if (y < edgeMap.Height - 1)
+                        {
+                            notOnEdge &= i == otsuBinaryImage[x + 1, y + 1];
+                        }
+                    }
+                    if (y > 0)
+                    {
+                        notOnEdge &= i == otsuBinaryImage[x, y - 1];
+                    }
+                    if (y < edgeMap.Height - 1)
+                    {
+                        notOnEdge &= i == otsuBinaryImage[x, y + 1];
+                    }
+
+                    if (notOnEdge) edgeMap.SetPixel(x, y, Color.Black);
+                    else edgeMap.SetPixel(x, y, Color.White);
+
+                    //edgeMap.SetPixel(x, y, otsuBinaryImage[x, y] ? Color.White : Color.Black);
+                }
+            }
+
+            return edgeMap;
+        }
+        private void OtsuFolderAccuracy(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Original") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Ground Truth")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Original");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Ground Truth");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\otsuResults"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\otsuResults");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeOtsuAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath, i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+
+            List<Pair> pairs = new List<Pair>();
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+
+                var newPair = new Pair();
+                newPair.score = results[i];
+                newPair.filename = originalFilenames[i];
+                pairs.Add(newPair);
+            }
+
+            pairs.Sort();
+            pairs.Reverse();
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                File.Copy(pairs[i].filename, dlgEdgesFolder.SelectedPath + "\\otsuResults\\" + i + " - " + pairs[i].score + ".jpg");
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\otsuResults\\otsuResults.txt", output);
         }
 
         private void ComputePRVectorsForAnImage(string originalFilename, string truthFilename, double[] recalls, double[] precisions)
@@ -737,6 +1507,313 @@ namespace Part2Project
 
                 PRCurve.Bitmap.Save("D:\\Users\\Matt\\Downloads\\BSD\\PR.png", ImageFormat.Png);
             }
+        }
+
+        private double ComputeNaiveAlignment(string originalFilename, string trueFilename, string folderPath, int id)
+        {
+            DirectBitmap bmp = GetImageScaled(originalFilename);
+            DirectBitmap naiveEdgeMap = GenerateNaiveEdgeMap(bmp);
+            DirectBitmap trueEdges = GetImageScaled(trueFilename);
+
+            DirectBitmap naiveEdges_B, trueEdges_B;
+
+            // Blur them
+            float blurSigma = 4f;
+            using (KalikoImage kImage = new KalikoImage(naiveEdgeMap.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                naiveEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            // Then normalise true edge map
+            int max = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int)((double)trueEdges.GetPixel(x, y).R / (double)max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            // Then blur truth edge map
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            double result = ComputeEdgeMapAlignment(naiveEdges_B, trueEdges_B);
+
+            // Save values in a text file
+            string output = "";
+            string nl = Environment.NewLine;
+            output += originalFilename + nl + trueFilename + nl + result;
+            File.WriteAllText(folderPath + "\\DeleteMe_" + id + ".txt", output);
+
+            return result;
+        }
+        private void btnNaiveFolder_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Original") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Ground Truth")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Original");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Ground Truth");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\NaiveResults"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\NaiveResults");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeNaiveAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath, i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+
+            List<Pair> pairs = new List<Pair>();
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+
+                var newPair = new Pair();
+                newPair.score = results[i];
+                newPair.filename = originalFilenames[i];
+                pairs.Add(newPair);
+            }
+
+            pairs.Sort();
+            pairs.Reverse();
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                File.Copy(pairs[i].filename, dlgEdgesFolder.SelectedPath + "\\NaiveResults\\" + i + " - " + pairs[i].score + ".jpg");
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\NaiveResults\\NaiveResults.txt", output);
+        }
+
+        private double ComputeEdgeAlignment(string originalFilename, string trueFilename, string folderPath, int id)
+        {
+            DirectBitmap genEdges = GetImageScaled(originalFilename);
+            DirectBitmap trueEdges = GetImageScaled(trueFilename);
+
+            DirectBitmap genEdges_B, trueEdges_B;
+
+            // Normalise edge maps
+            int max = 0, genMax = 0;
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    max = Math.Max(max, trueEdges.GetPixel(x, y).R);
+                    genMax = Math.Max(genMax, genEdges.GetPixel(x, y).R);
+                }
+            }
+            for (int x = 0; x < 320; x++)
+            {
+                for (int y = 0; y < 240; y++)
+                {
+                    int val = (int)((double)trueEdges.GetPixel(x, y).R / (double)max * 255.0);
+                    trueEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+
+                    val = (int)((double)genEdges.GetPixel(x, y).R / (double)genMax * 255.0);
+                    genEdges.SetPixel(x, y, Color.FromArgb(val, val, val));
+                }
+            }
+
+            // Then blur then
+            float blurSigma = 4f;
+            using (KalikoImage kImage = new KalikoImage(trueEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                trueEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+            using (KalikoImage kImage = new KalikoImage(genEdges.Bitmap))
+            {
+                kImage.ApplyFilter(new GaussianBlurFilter(blurSigma));
+                genEdges_B = new DirectBitmap(kImage.GetAsBitmap());
+            }
+
+            double result = ComputeEdgeMapAlignment(genEdges_B, trueEdges_B);
+
+            // Save values in a text file
+            string output = "";
+            string nl = Environment.NewLine;
+            output += originalFilename + nl + trueFilename + nl + result;
+            File.WriteAllText(folderPath + "\\DeleteMe_" + id + ".txt", output);
+
+            return result;
+        }
+        private void btnRandFolder_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\100Test") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Random")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\Random");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\100Test");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Results\\RandResults"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\RandResults");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeEdgeAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath + "\\Results", i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\RandResults\\RandResults.txt", output);
+        }
+
+        private void btnCGAccuracy_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\100Test") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\ColourGradient")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\ColourGradient");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\100Test");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Results\\CGresults"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\CGresults");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeEdgeAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath + "\\Results", i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\CGresults\\CGresults.txt", output);
+        }
+
+        private void btngPbucmcolorAccuracy_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\100Test") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\gPb_ucm_color")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\gPb_ucm_color");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\100Test");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Results\\gPb_ucm_color_Results"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\gPb_ucm_color_Results");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeEdgeAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath + "\\Results", i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\gPb_ucm_color_Results\\gPb_ucm_color_Results.txt", output);
+        }
+
+        private void btnBGCGTGFolder_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\100Test") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\BGCGTG")) return;
+
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\BGCGTG");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\100Test");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Results\\BGCGTGResults"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\Results\\BGCGTGResults");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeEdgeAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath + "\\Results", i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\BGCGTGResults\\BGCGTGResults.txt", output);
         }
 
 

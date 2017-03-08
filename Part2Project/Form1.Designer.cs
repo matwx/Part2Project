@@ -33,7 +33,6 @@
             this.btnSelectImage = new System.Windows.Forms.Button();
             this.dlgImage = new System.Windows.Forms.OpenFileDialog();
             this.viewer3 = new System.Windows.Forms.PictureBox();
-            this.btnEdge = new System.Windows.Forms.Button();
             this.btnSelectRealEdges = new System.Windows.Forms.Button();
             this.viewer4 = new System.Windows.Forms.PictureBox();
             this.dlgEdges = new System.Windows.Forms.OpenFileDialog();
@@ -117,16 +116,6 @@
             this.viewer3.Size = new System.Drawing.Size(320, 240);
             this.viewer3.TabIndex = 3;
             this.viewer3.TabStop = false;
-            // 
-            // btnEdge
-            // 
-            this.btnEdge.Location = new System.Drawing.Point(174, 12);
-            this.btnEdge.Name = "btnEdge";
-            this.btnEdge.Size = new System.Drawing.Size(75, 39);
-            this.btnEdge.TabIndex = 4;
-            this.btnEdge.Text = "Edge Maps";
-            this.btnEdge.UseVisualStyleBackColor = true;
-            this.btnEdge.Click += new System.EventHandler(this.btnEdge1_Click);
             // 
             // btnSelectRealEdges
             // 
@@ -312,7 +301,7 @@
             // 
             // btnSalFolder
             // 
-            this.btnSalFolder.Location = new System.Drawing.Point(255, 12);
+            this.btnSalFolder.Location = new System.Drawing.Point(176, 12);
             this.btnSalFolder.Name = "btnSalFolder";
             this.btnSalFolder.Size = new System.Drawing.Size(85, 39);
             this.btnSalFolder.TabIndex = 26;
@@ -434,7 +423,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.viewer4);
             this.Controls.Add(this.btnSelectRealEdges);
-            this.Controls.Add(this.btnEdge);
             this.Controls.Add(this.viewer3);
             this.Controls.Add(this.btnSelectImage);
             this.Controls.Add(this.viewer2);
@@ -464,7 +452,6 @@
         private System.Windows.Forms.Button btnSelectImage;
         private System.Windows.Forms.OpenFileDialog dlgImage;
         private System.Windows.Forms.PictureBox viewer3;
-        private System.Windows.Forms.Button btnEdge;
         private System.Windows.Forms.Button btnSelectRealEdges;
         private System.Windows.Forms.PictureBox viewer4;
         private System.Windows.Forms.OpenFileDialog dlgEdges;

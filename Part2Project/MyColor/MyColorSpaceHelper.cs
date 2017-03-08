@@ -77,17 +77,19 @@ namespace Part2Project.MyColor
             // a problem I've been finding with the Lab distance metric in very light/dark
             // regions.
 
-            double i1 = c1.R * 0.21 + c1.G * 0.72 + c1.B * 0.07;
-            double i2 = c2.R * 0.21 + c2.G * 0.72 + c2.B * 0.07;
+//            double i1 = c1.R * 0.21 + c1.G * 0.72 + c1.B * 0.07;
+//            double i2 = c2.R * 0.21 + c2.G * 0.72 + c2.B * 0.07;
+//
+//            if (Math.Min(i1, i2) < 20 || Math.Max(i1, i2) > 210)
+//            {
+//                return Math.Abs(i1 - i2) / 255 * 10;
+//            }
+//            else
+//            {
+//                return CIEDE2000(RGBtoLab(c1), RGBtoLab(c2));
+//            }
 
-            if (Math.Min(i1, i2) < 20 || Math.Max(i1, i2) > 210)
-            {
-                return Math.Abs(i1 - i2) / 255 * 10;
-            }
-            else
-            {
-                return CIEDE2000(RGBtoLab(c1), RGBtoLab(c2));
-            }
+            return CIEDE2000(RGBtoLab(c1), RGBtoLab(c2));
         }
 
         public static double GetIntensityFromRGB(int r, int g, int b)

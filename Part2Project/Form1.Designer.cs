@@ -70,6 +70,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.viewer10 = new System.Windows.Forms.PictureBox();
             this.btnKMeansFolder = new System.Windows.Forms.Button();
+            this.btnBGTGFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
@@ -435,11 +436,22 @@
             this.btnKMeansFolder.UseVisualStyleBackColor = true;
             this.btnKMeansFolder.Click += new System.EventHandler(this.btnKMeansFolder_Click);
             // 
+            // btnBGTGFolder
+            // 
+            this.btnBGTGFolder.Location = new System.Drawing.Point(863, 12);
+            this.btnBGTGFolder.Name = "btnBGTGFolder";
+            this.btnBGTGFolder.Size = new System.Drawing.Size(94, 39);
+            this.btnBGTGFolder.TabIndex = 38;
+            this.btnBGTGFolder.Text = "Compute BGTG Accuracy";
+            this.btnBGTGFolder.UseVisualStyleBackColor = true;
+            this.btnBGTGFolder.Click += new System.EventHandler(this.btnBGTGFolder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1319, 863);
+            this.Controls.Add(this.btnBGTGFolder);
             this.Controls.Add(this.btnKMeansFolder);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.viewer10);
@@ -540,6 +552,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.PictureBox viewer10;
         private System.Windows.Forms.Button btnKMeansFolder;
+        private System.Windows.Forms.Button btnBGTGFolder;
 
 
     }

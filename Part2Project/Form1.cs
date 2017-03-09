@@ -1513,7 +1513,43 @@ namespace Part2Project
             File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\gPb_ucm_color_Results\\gPb_ucm_color_Results.txt", output);
         }
 
+        private void btnBGTGFolder_Click(object sender, EventArgs e)
+        {
+            // Select the top level BSD folder
+            dlgEdgesFolder.ShowDialog();
+            if (dlgEdgesFolder.SelectedPath == "") return;
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\100Test") || !Directory.Exists(dlgEdgesFolder.SelectedPath + "\\BGTG")) return;
 
+            string[] originalFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\BGTG");
+            string[] truthFilenames = Directory.GetFiles(dlgEdgesFolder.SelectedPath + "\\100Test");
+
+            if (originalFilenames.Length != truthFilenames.Length) return;
+
+            if (!Directory.Exists(dlgEdgesFolder.SelectedPath + "\\Results\\BGTGResults"))
+                Directory.CreateDirectory(dlgEdgesFolder.SelectedPath + "\\Results\\BGTGResults");
+
+            // Set up a task for each image
+            double[] results = new double[originalFilenames.Length];
+            Task[] tasks = new Task[originalFilenames.Length];
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                int i2 = i;
+                tasks[i] = Task.Run(() => { results[i2] = ComputeEdgeAlignment(originalFilenames[i2], truthFilenames[i2], dlgEdgesFolder.SelectedPath + "\\Results", i2); });
+            }
+
+            Task.WaitAll(tasks);
+
+            string output = "";
+            string nl = Environment.NewLine;
+            for (int i = 0; i < originalFilenames.Length; i++)
+            {
+                tasks[i].Dispose();
+                output += results[i] + nl;
+            }
+
+            // Save values in a text file
+            File.WriteAllText(dlgEdgesFolder.SelectedPath + "\\Results\\BGTGResults\\BGTGResults.txt", output);
+        }
 
 
         private void label13_Click(object sender, EventArgs e)
@@ -1524,6 +1560,8 @@ namespace Part2Project
         {
 
         }
+
+        
     }
 
     public class Pair : IComparable

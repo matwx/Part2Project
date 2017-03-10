@@ -21,7 +21,7 @@ namespace Part2Project.Infrastructure
         public const int VersionNumber = 5;
         public const int NumFeatures = 8;
         private bool[] _featuresSet;
-        private double[] _features;
+        public double[] _features;
         public string ImageFilename { get; private set; }
 
         public ImageFeatureList(string filename)

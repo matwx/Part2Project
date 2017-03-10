@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.btnDoTest = new System.Windows.Forms.Button();
+            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // btnDoTest
@@ -39,6 +40,7 @@
             this.btnDoTest.TabIndex = 0;
             this.btnDoTest.Text = "Create Orderings for All Features for All Datasets";
             this.btnDoTest.UseVisualStyleBackColor = true;
+            this.btnDoTest.Click += new System.EventHandler(this.btnDoTest_Click);
             // 
             // Form1
             // 
@@ -56,6 +58,7 @@
         #endregion
 
         private System.Windows.Forms.Button btnDoTest;
+        private System.Windows.Forms.FolderBrowserDialog dlgFolder;
 
 
 

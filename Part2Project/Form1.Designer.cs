@@ -31,6 +31,7 @@
             this.btnDoTest = new System.Windows.Forms.Button();
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.btnAllImages = new System.Windows.Forms.Button();
+            this.btnRoISizeVSBackDist = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnDoTest
@@ -51,12 +52,24 @@
             this.btnAllImages.TabIndex = 1;
             this.btnAllImages.Text = "Same for all images";
             this.btnAllImages.UseVisualStyleBackColor = true;
+            this.btnAllImages.Click += new System.EventHandler(this.btnAllImages_Click);
+            // 
+            // btnRoISizeVSBackDist
+            // 
+            this.btnRoISizeVSBackDist.Location = new System.Drawing.Point(12, 135);
+            this.btnRoISizeVSBackDist.Name = "btnRoISizeVSBackDist";
+            this.btnRoISizeVSBackDist.Size = new System.Drawing.Size(112, 47);
+            this.btnRoISizeVSBackDist.TabIndex = 2;
+            this.btnRoISizeVSBackDist.Text = "SaveRanksForBackDistComparedToRoISize";
+            this.btnRoISizeVSBackDist.UseVisualStyleBackColor = true;
+            this.btnRoISizeVSBackDist.Click += new System.EventHandler(this.btnRoISizeVSBackDist_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(337, 373);
+            this.Controls.Add(this.btnRoISizeVSBackDist);
             this.Controls.Add(this.btnAllImages);
             this.Controls.Add(this.btnDoTest);
             this.Name = "Form1";
@@ -71,6 +84,7 @@
         private System.Windows.Forms.Button btnDoTest;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
         private System.Windows.Forms.Button btnAllImages;
+        private System.Windows.Forms.Button btnRoISizeVSBackDist;
 
 
 

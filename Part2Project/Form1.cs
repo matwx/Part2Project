@@ -69,11 +69,11 @@ namespace Part2Project
 
             string[][][] sortedFeatureLists = new string[4][][];
             
-            for (int dataSetNum = 1; dataSetNum <= 4; dataSetNum++)
+            for (int dataSetNum = 0; dataSetNum < 4; dataSetNum++)
             {
                 // Create an output directory for Dataset i
-                var currInDir = p + "\\Dataset " + dataSetNum;
-                var currOutDir = sp + "\\Dataset" + dataSetNum;
+                var currInDir = p + "\\Dataset " + (dataSetNum + 1);
+                var currOutDir = sp + "\\Dataset" + (dataSetNum + 1);
                 if (!Directory.Exists(currOutDir)) Directory.CreateDirectory(currOutDir);
                 
                 // Compute features for all images
@@ -82,9 +82,10 @@ namespace Part2Project
 
                 // Sort images by each feature, and save the ordering in a text file
                 // (one file for each feature)
-                sortedFeatureLists[dataSetNum]
-                for (int j = 0; j < 8; j++)
+                sortedFeatureLists[dataSetNum] = new string[8][];
+                for (int featureNum = 0; featureNum < 8; featureNum++)
                 {
+                    sortedFeatureLists[dataSetNum][featureNum] = new string[40];
                     List<Pair> jthFeatureSortingList = new List<Pair>();
 
                     // Construct the list to sort based on the jth feature
@@ -92,7 +93,7 @@ namespace Part2Project
                     {
                         Pair newPair = new Pair();
                         newPair.filename = imageFeatureList.ImageFilename;
-                        newPair.score = imageFeatureList._features[j];
+                        newPair.score = imageFeatureList._features[featureNum];
                         jthFeatureSortingList.Add(newPair);
                     }
 
@@ -103,15 +104,43 @@ namespace Part2Project
                     // Save the ordering in a file
                     string output = "";
                     string nl = Environment.NewLine;
-                    foreach (var pair in jthFeatureSortingList)
+                    for (var imageNum = 0; imageNum < jthFeatureSortingList.Count; imageNum++)
                     {
+                        var pair = jthFeatureSortingList[imageNum];
+                        sortedFeatureLists[dataSetNum][featureNum][imageNum] = pair.filename.Split('\\').Last().Split('.').First();
                         output += pair.filename.Split('\\').Last().Split('.').First() + nl;
                     }
 
-                    File.WriteAllText(currOutDir + "\\" + featureNames[j] + ".txt", output);
+                    File.WriteAllText(currOutDir + "\\" + featureNames[featureNum] + ".txt", output);
                 }
 
-                // Now we want to compute the Spearman's Rank Correlation Coefficient for all of the 
+                // Now we want to compute the Spearman's Rank Correlation Coefficient for all of the pairs of features
+                currOutDir += "\\Spearmans";
+                string toFile = "";
+                if (!Directory.Exists(currOutDir)) Directory.CreateDirectory(currOutDir);
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = i + 1; j < 8; j++)
+                    {
+                        // We want to compute the correlation for the feature pair (i, j)
+                        int sum_d_squared = 0;
+                        for (int r = 0; r < 40; r++)
+                        {
+                            // The iRank is 'r'
+                            string searchFor = sortedFeatureLists[dataSetNum][j][r];
+                            // Search for 'searchFor' in the sorted feature list for feature i
+                            int jRank = Array.IndexOf(sortedFeatureLists[dataSetNum][i], searchFor);
+                            int d = jRank - r;
+                            sum_d_squared += d * d;
+                        }
+
+                        double rho = 1.0 - 6.0 * sum_d_squared / (40.0 * (40.0 * 40.0 - 1.0));
+
+                        toFile += featureNames[i] + " and " + featureNames[j] + "," + rho + Environment.NewLine;
+                    }
+                }
+
+                File.WriteAllText(currOutDir + "\\correlations.txt", toFile);
             }
         }
     }

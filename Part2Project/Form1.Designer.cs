@@ -30,23 +30,34 @@
         {
             this.btnDoTest = new System.Windows.Forms.Button();
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnAllImages = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnDoTest
             // 
             this.btnDoTest.Location = new System.Drawing.Point(12, 12);
             this.btnDoTest.Name = "btnDoTest";
-            this.btnDoTest.Size = new System.Drawing.Size(112, 47);
+            this.btnDoTest.Size = new System.Drawing.Size(112, 64);
             this.btnDoTest.TabIndex = 0;
-            this.btnDoTest.Text = "Create Orderings for All Features for All Datasets";
+            this.btnDoTest.Text = "Create Orderings and correlations for All Features for All Datasets";
             this.btnDoTest.UseVisualStyleBackColor = true;
             this.btnDoTest.Click += new System.EventHandler(this.btnDoTest_Click);
+            // 
+            // btnAllImages
+            // 
+            this.btnAllImages.Location = new System.Drawing.Point(12, 82);
+            this.btnAllImages.Name = "btnAllImages";
+            this.btnAllImages.Size = new System.Drawing.Size(112, 47);
+            this.btnAllImages.TabIndex = 1;
+            this.btnAllImages.Text = "Same for all images";
+            this.btnAllImages.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(337, 373);
+            this.Controls.Add(this.btnAllImages);
             this.Controls.Add(this.btnDoTest);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -59,6 +70,7 @@
 
         private System.Windows.Forms.Button btnDoTest;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
+        private System.Windows.Forms.Button btnAllImages;
 
 
 

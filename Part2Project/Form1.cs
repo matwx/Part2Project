@@ -143,6 +143,11 @@ namespace Part2Project
                 File.WriteAllText(currOutDir + "\\correlations.txt", toFile);
             }
         }
+
+        private void btnReadRecords_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class Pair : IComparable
@@ -153,6 +158,48 @@ namespace Part2Project
         public int CompareTo(object obj)
         {
             return score.CompareTo(((Pair) obj).score);
+        }
+    }
+
+    public class UserRecord
+    {
+        public enum LoP
+        {
+            AlmostNever,
+            Occasionally,
+            Hobby,
+            Professional
+        }
+
+        public enum Happiness
+        {
+            AllWrong,
+            MostlyWrong,
+            SlightlyWrong,
+            Random,
+            SlightlyCorrect,
+            MostlyCorrect,
+            AllCorrect
+        }
+
+        public string Name { get; private set; }
+        public bool SegFeaturesEnabled { get; private set; }
+        public string[] DatasetMapping { get; private set; }
+        public string[] ManualSorting { get; private set; }
+        public string[] IntuitiveSorting { get; private set; }
+        public string[] EfficientSorting { get; private set; }
+        public LoP LevelOfPhotography { get; private set; }
+        public double ManualSortingTime { get; private set; }
+        public double IntuitiveSortingTime { get; private set; }
+        public double EfficientSortingTime { get; private set; }
+        public Happiness IntuitiveHappiness { get; private set; }
+        public Happiness EfficientHappiness { get; private set; }
+        public double[] IntuitiveWeights { get; private set; }
+        public double[] EfficientWeights { get; private set; }
+        
+        public UserRecord(string filename)
+        {
+            // Open the file and save all of the data
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Part2Project
     public partial class Form1 : Form
     {
         private DirectBitmap _image, _trueEdges;
+        private List<UserRecord> _records;
 
         public Form1()
         {
@@ -146,7 +147,24 @@ namespace Part2Project
 
         private void btnReadRecords_Click(object sender, EventArgs e)
         {
+            dlgFolder.ShowDialog();
+            if (dlgFolder.SelectedPath == "") return;
 
+            var filenames = Directory.GetFiles(dlgFolder.SelectedPath);
+            List<string> recordFilenames = new List<string>();
+            foreach (var filename in filenames)
+            {
+                if (filename.Split('\\').Last().Split('.').Last() == "txt")
+                    recordFilenames.Add(filename);
+            }
+            if (recordFilenames.Count == 0) return;
+
+            _records = new List<UserRecord>();
+            foreach (var recordFilename in recordFilenames)
+            {
+                var newRecord = new UserRecord(recordFilename);
+                _records.Add(newRecord);
+            }
         }
     }
 
@@ -182,7 +200,15 @@ namespace Part2Project
             AllCorrect
         }
 
+        public enum Method
+        {
+            Manual,
+            PictureBased,
+            SliderBased
+        }
+
         public string Name { get; private set; }
+        public int DatasetNum { get; private set; }
         public bool SegFeaturesEnabled { get; private set; }
         public string[] DatasetMapping { get; private set; }
         public string[] ManualSorting { get; private set; }
@@ -196,10 +222,139 @@ namespace Part2Project
         public Happiness EfficientHappiness { get; private set; }
         public double[] IntuitiveWeights { get; private set; }
         public double[] EfficientWeights { get; private set; }
+        public int NumIntuitiveIterations { get; private set; }
+        public Method FavouriteMethod { get; private set; }
         
         public UserRecord(string filename)
         {
             // Open the file and save all of the data
+            StreamReader file = new StreamReader(filename);
+
+            file.ReadLine();
+            Name = file.ReadLine();
+            file.ReadLine();
+            DatasetNum = Convert.ToInt32(file.ReadLine());
+            SegFeaturesEnabled = file.ReadLine().Equals("Yes");
+            file.ReadLine();
+            file.ReadLine();
+            file.ReadLine();
+            file.ReadLine();
+            file.ReadLine();
+            DatasetMapping = new string[40];
+            for (int i = 0; i < 40; i++)
+            {
+                DatasetMapping[i] = file.ReadLine();
+            }
+            switch (file.ReadLine())
+            {
+                case "Almost never use a camera":
+                    LevelOfPhotography = LoP.AlmostNever;
+                    break;
+                case "Occasionally take photographs":
+                    LevelOfPhotography = LoP.Occasionally;
+                    break;
+                case "Photography is a hobby":
+                    LevelOfPhotography = LoP.Hobby;
+                    break;
+                case "Professional Photographer":
+                    LevelOfPhotography = LoP.Professional;
+                    break;
+            }
+            ManualSortingTime = Convert.ToDouble(file.ReadLine());
+            ManualSorting = new string[40];
+            for (int i = 0; i < 40; i++)
+            {
+                ManualSorting[i] = file.ReadLine();
+            }
+            file.ReadLine();
+            switch (file.ReadLine())
+            {
+                case "(-3) - Nearly completely sorted the wrong way":
+                    IntuitiveHappiness = Happiness.AllWrong;
+                    break;
+                case "(-2) - Mostly sorted the wrong way":
+                    IntuitiveHappiness = Happiness.MostlyWrong;
+                    break;
+                case "(-1) - Slightly sorted the wrong way":
+                    IntuitiveHappiness = Happiness.SlightlyWrong;
+                    break;
+                case "(0) - Apparenty random":
+                    IntuitiveHappiness = Happiness.Random;
+                    break;
+                case "(+1) - Slightly sorted correctly":
+                    IntuitiveHappiness = Happiness.SlightlyCorrect;
+                    break;
+                case "(+2) - Mostly sorted correctly":
+                    IntuitiveHappiness = Happiness.MostlyCorrect;
+                    break;
+                case "(+3) - Nearly completely sorted correctly":
+                    IntuitiveHappiness = Happiness.AllCorrect;
+                    break;
+            }
+            IntuitiveSortingTime = Convert.ToDouble(file.ReadLine());
+            IntuitiveSorting = new string[40];
+            for (int i = 0; i < 40; i++)
+            {
+                IntuitiveSorting[i] = file.ReadLine();
+            }
+            IntuitiveWeights = new double[8];
+            for (int i = 0; i < 8; i++)
+            {
+                IntuitiveWeights[i] = Convert.ToDouble(file.ReadLine());
+            }
+            NumIntuitiveIterations = Convert.ToInt32(file.ReadLine());
+            file.ReadLine();
+            EfficientSortingTime = Convert.ToDouble(file.ReadLine());
+            EfficientSorting = new string[40];
+            for (int i = 0; i < 40; i++)
+            {
+                EfficientSorting[i] = file.ReadLine();
+            }
+            EfficientWeights = new double[8];
+            for (int i = 0; i < 8; i++)
+            {
+                EfficientWeights[i] = Convert.ToDouble(file.ReadLine());
+            }
+            switch (file.ReadLine())
+            {
+                case "(-3) - Nearly completely sorted the wrong way":
+                    EfficientHappiness = Happiness.AllWrong;
+                    break;
+                case "(-2) - Mostly sorted the wrong way":
+                    EfficientHappiness = Happiness.MostlyWrong;
+                    break;
+                case "(-1) - Slightly sorted the wrong way":
+                    EfficientHappiness = Happiness.SlightlyWrong;
+                    break;
+                case "(0) - Apparenty random":
+                    EfficientHappiness = Happiness.Random;
+                    break;
+                case "(+1) - Slightly sorted correctly":
+                    EfficientHappiness = Happiness.SlightlyCorrect;
+                    break;
+                case "(+2) - Mostly sorted correctly":
+                    EfficientHappiness = Happiness.MostlyCorrect;
+                    break;
+                case "(+3) - Nearly completely sorted correctly":
+                    EfficientHappiness = Happiness.AllCorrect;
+                    break;
+            }
+            switch (file.ReadLine())
+            {
+                case "Manual Sorting (Stage 1)":
+                    FavouriteMethod = Method.Manual;
+                    break;
+                case "Picture-based Assisted Sorting (Stage 2 Part 1)":
+                    FavouriteMethod = Method.PictureBased;
+                    break;
+                case "Slider-based Assisted Sorting (Stage 2 Part 2)":
+                    FavouriteMethod = Method.SliderBased;
+                    break;
+            }
+
+            // Close the file
+            file.Close();
+            file.Dispose();
         }
     }
 }

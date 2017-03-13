@@ -14,7 +14,7 @@ namespace Part2Project.Features
 
         public double ComputeFeature(Bitmap image)
         {
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.6);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.0);
             SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.6);
 
             bool[] trueSegments = new bool[ss.NumSegments];
@@ -124,7 +124,7 @@ namespace Part2Project.Features
         {
             Bitmap result = new Bitmap(image);
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.6);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.0);
             SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.6);
 
             bool[] trueSegments = new bool[ss.NumSegments];

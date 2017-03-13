@@ -14,8 +14,8 @@ namespace Part2Project.Features
         public double ComputeFeature(Bitmap image)
         {
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.6);
 
             double[] segmentSpreads = GetRoTSpreads(rots);
 
@@ -57,8 +57,8 @@ namespace Part2Project.Features
             Bitmap result = new Bitmap(image);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.6);
 
             double[] segmentSpreads = GetRoTSpreads(rots);
             double[] segmentTemps = new double[rots.NumSegments];
@@ -91,8 +91,8 @@ namespace Part2Project.Features
             Bitmap result = new Bitmap(image);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.6);
 
             // Get max x and y values for each segment
             double[] segmentLefts = new double[rots.NumSegments];
@@ -151,8 +151,8 @@ namespace Part2Project.Features
             Bitmap result = new Bitmap(image);
 
             // Get saliency segmentation
-            Segmentation s = GraphBasedImageSegmentation.Segment(image, 150, 0.8);
-            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.8);
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, 0.6);
 
             double[] segmentDists = new double[rots.NumSegments];
 

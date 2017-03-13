@@ -64,7 +64,7 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp.Bitmap, 125, 0.6);
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp.Bitmap, 125, 0.0);
 
             SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.6);
 
@@ -76,7 +76,7 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp.Bitmap, 125, 0.6);
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp.Bitmap, 125, 0.0);
 
             SaliencySegmentation ss = new SaliencySegmentation(s, bmp, 0.6);
 

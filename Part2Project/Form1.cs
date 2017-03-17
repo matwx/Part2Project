@@ -150,6 +150,7 @@ namespace Part2Project
             dlgFolder.ShowDialog();
             if (dlgFolder.SelectedPath == "") return;
 
+            // Store the record filenames
             var filenames = Directory.GetFiles(dlgFolder.SelectedPath);
             List<string> recordFilenames = new List<string>();
             foreach (var filename in filenames)
@@ -159,6 +160,7 @@ namespace Part2Project
             }
             if (recordFilenames.Count == 0) return;
 
+            // Load the records into memory
             _records = new List<UserRecord>();
             foreach (var recordFilename in recordFilenames)
             {
@@ -181,6 +183,9 @@ namespace Part2Project
 
     public class UserRecord
     {
+       
+        #region Properties
+
         public enum LoP
         {
             AlmostNever,
@@ -188,7 +193,6 @@ namespace Part2Project
             Hobby,
             Professional
         }
-
         public enum Happiness
         {
             AllWrong,
@@ -199,7 +203,6 @@ namespace Part2Project
             MostlyCorrect,
             AllCorrect
         }
-
         public enum Method
         {
             Manual,
@@ -224,7 +227,46 @@ namespace Part2Project
         public double[] EfficientWeights { get; private set; }
         public int NumIntuitiveIterations { get; private set; }
         public Method FavouriteMethod { get; private set; }
-        
+
+        #endregion
+
+        private void NormaliseRankings()
+        {
+            string[] canonicalNames;
+
+            // Rename all of the rankings so that they are in terms of the canonical dataset names
+            if (DatasetNum == 2)
+            {
+                // The dataset is numbered differently
+                canonicalNames = new[]
+                {
+                    "Birds_1", "Birds_2", "Birds_3", "Birds_4", "Birds_5", "Birds_6", "Birds_7", "Birds_8", "Birds_9", "Birds_10",
+                    "Butterflies_1", "Butterflies_2", "Butterflies_3", "Butterflies_4", "Butterflies_5", 
+                    "Butterflies_6", "Butterflies_7", "Butterflies_8", "Butterflies_9", "Butterflies_10",
+                    "Goats_1", "Goats_2", "Goats_3", "Goats_4", "Goats_5", "Goats_6", "Goats_7", "Goats_8", "Goats_9", "Goats_10",
+                    "Reindeer_1", "Reindeer_2", "Reindeer_3", "Reindeer_4", "Reindeer_5", "Reindeer_6", "Reindeer_7", "Reindeer_8", "Reindeer_9", "Reindeer_10"
+                };
+            }
+            else
+            {
+                // The dataset is numbered "01" to "40"
+                canonicalNames = new []
+                {
+                    "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                    "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                    "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+                };
+            }
+
+            for (int i = 0; i < 40; i++)
+            {
+                ManualSorting[i] = canonicalNames[Array.IndexOf(DatasetMapping, ManualSorting[i])];
+                IntuitiveSorting[i] = canonicalNames[Array.IndexOf(DatasetMapping, IntuitiveSorting[i])];
+                EfficientSorting[i] = canonicalNames[Array.IndexOf(DatasetMapping, EfficientSorting[i])];
+            }
+        }
+
         public UserRecord(string filename)
         {
             // Open the file and save all of the data
@@ -355,6 +397,8 @@ namespace Part2Project
             // Close the file
             file.Close();
             file.Dispose();
+
+            NormaliseRankings();
         }
     }
 }

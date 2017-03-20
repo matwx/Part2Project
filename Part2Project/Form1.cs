@@ -28,7 +28,7 @@ namespace Part2Project
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            btnReadRecords.PerformClick();
         }
 
         // Feature order:
@@ -147,8 +147,10 @@ namespace Part2Project
 
         private void btnReadRecords_Click(object sender, EventArgs e)
         {
-            dlgFolder.ShowDialog();
-            if (dlgFolder.SelectedPath == "") return;
+//            dlgFolder.ShowDialog();
+//            if (dlgFolder.SelectedPath == "") return;
+            dlgFolder.SelectedPath =
+                @"D:\Users\Matt\Dropbox\1 - University\1 - Work\Part II\Part II Project\Evaluation\Final User Result files";
 
             // Store the record filenames
             var filenames = Directory.GetFiles(dlgFolder.SelectedPath);
@@ -166,6 +168,392 @@ namespace Part2Project
             {
                 var newRecord = new UserRecord(recordFilename);
                 _records.Add(newRecord);
+            }
+        }
+
+        private string ManualCorrelation(int datasetNum)
+        {
+            double totalRho = 0, numPairs = 0;
+            string result = "";
+
+            // Compute spearmans for each pair of records in dataset
+            for (int i = 0; i < _records.Count; i++)
+            {
+                for (int j = i; j < _records.Count; j++)
+                {
+                    // If we have a proper pair of records from dataset
+                    if (i != j && _records[i].DatasetNum == datasetNum && _records[j].DatasetNum == datasetNum)
+                    {
+                        // We want to compute the correlation for the feature pair (i, j)
+                        int sum_d_squared = 0;
+                        for (int r = 0; r < 40; r++)
+                        {
+                            // The iRank is 'r'
+                            string searchFor = _records[j].ManualSorting[r];
+                            // Search for 'searchFor' in the sorted feature list for feature i
+                            int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                            int d = jRank - r;
+                            sum_d_squared += d * d;
+                        }
+
+                        double rho = 1.0 - 6.0 * sum_d_squared / (40.0 * (40.0 * 40.0 - 1.0));
+                        totalRho += rho;
+                        numPairs++;
+
+                        result += "Pair " + numPairs + ": " + rho + Environment.NewLine;
+                    }
+                }
+            }
+
+            result += Environment.NewLine + "average rho: " + (totalRho / numPairs);
+            return result;
+        }
+        private void btnAvManCorrel1_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+            double totalTotalRho = 0, totalTotalNum = 0;
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                double totalRho = 0, numPairs = 0;
+
+                //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                // Compute spearmans for each pair of records in dataset
+                for (int i = 0; i < _records.Count; i++)
+                {
+                    for (int j = i; j < _records.Count; j++)
+                    {
+                        // If we have a proper pair of records from dataset
+                        if (i != j && _records[i].DatasetNum == datasetNum && _records[j].DatasetNum == datasetNum)
+                        {
+                            // We want to compute the correlation for the feature pair (i, j)
+                            int sum_d_squared = 0;
+                            for (int r = 0; r < 40; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[j].ManualSorting[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                int d = jRank - r;
+                                sum_d_squared += d * d;
+                            }
+
+                            double rho = 1.0 - 6.0 * sum_d_squared / (40.0 * (40.0 * 40.0 - 1.0));
+                            totalRho += rho;
+                            numPairs++;
+
+                            txt.Text += rho + Environment.NewLine;
+                        }
+                    }
+                }
+
+                //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                txt.Text += Environment.NewLine;
+
+                totalTotalRho += totalRho;
+                totalTotalNum += numPairs;
+            }
+
+            txt.Text += Environment.NewLine + "average rho: " + (totalTotalRho / totalTotalNum);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                for (int seg = 1; seg >= 0; seg--)
+                {
+                    double totalRho = 0, numPairs = 0;
+
+                    //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                    // Compute spearmans for each record in dataset
+                    for (int i = 0; i < _records.Count; i++)
+                    {
+                        // If we have a record from dataset with the correct seg bool
+                        if (_records[i].DatasetNum == datasetNum && _records[i].SegFeaturesEnabled == (seg == 1))
+                        {
+                            // We want to compute the correlation for the intuitive against manual
+                            int sum_d_squared = 0;
+                            for (int r = 0; r < 40; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[i].IntuitiveSorting[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                int d = jRank - r;
+                                sum_d_squared += d * d;
+                            }
+
+                            double rho = 1.0 - 6.0 * sum_d_squared / (40.0 * (40.0 * 40.0 - 1.0));
+                            totalRho += rho;
+                            numPairs++;
+
+                            txt.Text += rho + Environment.NewLine;
+//                            txt.Text += _records[i].Name + " intuitiveCorrel: " + rho + Environment.NewLine;
+                        }
+                    }
+
+                    //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                    //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                    txt.Text += Environment.NewLine;
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                for (int seg = 1; seg >= 0; seg--)
+                {
+                    double totalRho = 0, numPairs = 0;
+
+                    //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                    // Compute spearmans for each record in dataset
+                    for (int i = 0; i < _records.Count; i++)
+                    {
+                        // If we have a record from dataset with the correct seg bool
+                        if (_records[i].DatasetNum == datasetNum && _records[i].SegFeaturesEnabled == (seg == 1))
+                        {
+                            // We want to compute the correlation for the intuitive against manual
+                            int sum_d_squared = 0;
+                            for (int r = 0; r < 40; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[i].EfficientSorting[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                int d = jRank - r;
+                                sum_d_squared += d * d;
+                            }
+
+                            double rho = 1.0 - 6.0 * sum_d_squared / (40.0 * (40.0 * 40.0 - 1.0));
+                            totalRho += rho;
+                            numPairs++;
+
+                            txt.Text += rho + Environment.NewLine;
+//                            txt.Text += _records[i].Name + " efficientCorrel: " + rho + Environment.NewLine;
+                        }
+                    }
+
+                    //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                    //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                    txt.Text += Environment.NewLine;
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                for (int seg = 1; seg >= 0; seg--)
+                {
+                    double totalRho = 0;
+
+                    //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                    // Compute spearmans for each record in dataset
+                    for (int i = 0; i < _records.Count; i++)
+                    {
+                        // If we have a record from dataset with the correct seg bool
+                        if (_records[i].DatasetNum == datasetNum && _records[i].SegFeaturesEnabled == (seg == 1))
+                        {
+                            // We want to compute the fraction of intuitive top-10 that are in manual top-10
+                            double numinBothTopTen = 0;
+                            for (int r = 0; r < 10; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[i].IntuitiveSorting[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                if (jRank < 10)
+                                {
+                                    // It is in that bottom-left square of the scatterGraph
+                                    numinBothTopTen++;
+                                }
+                            }
+
+                            double rho = numinBothTopTen / 10.0;
+                            totalRho += rho;
+
+                            txt.Text += rho + Environment.NewLine;
+//                              txt.Text += _records[i].Name + " intCorrel: " + rho + Environment.NewLine;
+                        }
+                    }
+
+                    //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                    //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                    txt.Text += Environment.NewLine;
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                for (int seg = 1; seg >= 0; seg--)
+                {
+                    double totalRho = 0;
+
+                    //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                    // Compute spearmans for each record in dataset
+                    for (int i = 0; i < _records.Count; i++)
+                    {
+                        // If we have a record from dataset with the correct seg bool
+                        if (_records[i].DatasetNum == datasetNum && _records[i].SegFeaturesEnabled == (seg == 1))
+                        {
+                            // We want to compute the fraction of efficient top-10 that are in manual top-10
+                            double numinBothTopTen = 0;
+                            for (int r = 0; r < 10; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[i].EfficientSorting[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                if (jRank < 10)
+                                {
+                                    // It is in that bottom-left square of the scatterGraph
+                                    numinBothTopTen++;
+                                }
+                            }
+
+                            double rho = numinBothTopTen / 10.0;
+                            totalRho += rho;
+
+                            txt.Text += rho + Environment.NewLine;
+//                            txt.Text += _records[i].Name + " effCorrel: " + rho + Environment.NewLine;
+                        }
+                    }
+
+                    //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                    //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                    txt.Text += Environment.NewLine;
+                }
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+            double totalTotalRho = 0, totalTotalNum = 0;
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                double totalRho = 0, numPairs = 0;
+
+                //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                // Compute spearmans for each pair of records in dataset
+                for (int i = 0; i < _records.Count; i++)
+                {
+                    for (int j = i; j < _records.Count; j++)
+                    {
+                        // If we have a proper pair of records from dataset
+                        if (i != j && _records[i].DatasetNum == datasetNum && _records[j].DatasetNum == datasetNum)
+                        {
+                            // We want to compute the correlation for the feature pair (i, j)
+                            double numinBothTopTen = 0;
+                            for (int r = 0; r < 10; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[j].ManualSorting[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                if (jRank < 10)
+                                {
+                                    // It is in that bottom-left square of the scatterGraph
+                                    numinBothTopTen++;
+                                }
+                            }
+
+                            double rho = numinBothTopTen / 10.0;
+                            totalRho += rho;
+                            numPairs++;
+
+                            txt.Text += rho + Environment.NewLine;
+                        }
+                    }
+                }
+
+                //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                txt.Text += Environment.NewLine;
+
+                totalTotalRho += totalRho;
+                totalTotalNum += numPairs;
+            }
+
+            txt.Text += Environment.NewLine + "average rho: " + (totalTotalRho / totalTotalNum);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+            Random rand = new Random();
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                for (int seg = 1; seg >= 0; seg--)
+                {
+                    double totalRho = 0;
+
+                    //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                    // Compute spearmans for each record in dataset
+                    for (int i = 0; i < _records.Count; i++)
+                    {
+                        // If we have a record from dataset with the correct seg bool
+                        if (_records[i].DatasetNum == datasetNum && _records[i].SegFeaturesEnabled == (seg == 1))
+                        {
+                            // We want to compute the fraction of efficient top-10 that are in manual top-10
+                            double numinBothTopTen = 0;
+                            for (int j = 0; j < 100000; j++)
+                            {
+                                List<int> chosenRanks = new List<int>();
+                                for (int r = 0; r < 10; r++)
+                                {
+                                    // The iRank is random
+                                    int iRank = rand.Next(0, 40);
+                                    while (chosenRanks.Contains(iRank))
+                                    {
+                                        iRank = rand.Next(0, 40);
+                                    }
+                                    chosenRanks.Add(iRank);
+                                    if (iRank < 10)
+                                    {
+                                        // It is in that bottom-left square of the scatterGraph
+                                        numinBothTopTen++;
+                                    }
+                                }
+                            }
+
+                            double rho = numinBothTopTen / 1000000.0;
+                            totalRho += rho;
+
+                            txt.Text += rho + Environment.NewLine;
+                            //                            txt.Text += _records[i].Name + " effCorrel: " + rho + Environment.NewLine;
+                        }
+                    }
+
+                    //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                    //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                    txt.Text += Environment.NewLine;
+                }
             }
         }
     }

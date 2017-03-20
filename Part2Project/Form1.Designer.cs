@@ -38,6 +38,8 @@
             this.viewer = new System.Windows.Forms.PictureBox();
             this.btnChooseImage = new System.Windows.Forms.Button();
             this.btnSegSaliency = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
@@ -133,11 +135,22 @@
             this.btnSegSaliency.Visible = false;
             this.btnSegSaliency.Click += new System.EventHandler(this.btnSegSaliency_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(459, 10);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(86, 37);
+            this.button1.TabIndex = 27;
+            this.button1.Text = "Save Viewer2";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 311);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnSegSaliency);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -169,6 +182,8 @@
         private System.Windows.Forms.PictureBox viewer;
         private System.Windows.Forms.Button btnChooseImage;
         private System.Windows.Forms.Button btnSegSaliency;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.FolderBrowserDialog dlgFolder;
     }
 }
 

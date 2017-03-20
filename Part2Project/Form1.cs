@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text));
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), 0.0);
 
             SaliencySegmentation ss = new SaliencySegmentation(s, bmp, double.Parse(txtSigma.Text));
 
@@ -71,11 +72,19 @@ namespace Part2Project
         {
             // Do GBIS on our (resized) input image
 
-            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text));
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), 0.0);
 
             SaliencySegmentation ss = new SaliencySegmentation(s, bmp, double.Parse(txtSigma.Text));
 
             viewer2.Image = ss.GetSegmentSaliencyMap();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dlgFolder.ShowDialog();
+            if (dlgFolder.SelectedPath == "" || viewer2.Image == null) return;
+
+            viewer2.Image.Save(dlgFolder.SelectedPath + "\\salSeg.png", ImageFormat.Png);
         }
     }
 }

@@ -41,6 +41,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
@@ -175,11 +177,22 @@
             this.label4.Text = "Edge\r\nWeights:";
             this.label4.Visible = false;
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(664, 11);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(46, 37);
+            this.btnSave.TabIndex = 16;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(670, 305);
+            this.ClientSize = new System.Drawing.Size(719, 305);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -217,6 +230,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.FolderBrowserDialog dlgFolder;
     }
 }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,6 +95,21 @@ namespace Part2Project
             }
 
             viewer2.Image = outImage;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dlgFolder.ShowDialog();
+            if (dlgFolder.SelectedPath == "") return;
+
+            if (viewer.Image != null && viewer2.Image != null)
+            {
+                viewer.Image.Save(dlgFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+                if (((string)cmboDisplayType.SelectedItem).Equals("Random"))
+                    viewer2.Image.Save(dlgFolder.SelectedPath + "\\segRand.png", ImageFormat.Png);
+                else
+                    viewer2.Image.Save(dlgFolder.SelectedPath + "\\segAve.png", ImageFormat.Png);
+            }
         }
     }
 }

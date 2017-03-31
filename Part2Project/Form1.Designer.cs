@@ -60,6 +60,7 @@
             this.btnSingleThreaded.TabIndex = 2;
             this.btnSingleThreaded.Text = "Single-threaded";
             this.btnSingleThreaded.UseVisualStyleBackColor = true;
+            this.btnSingleThreaded.Click += new System.EventHandler(this.btnSingleThreaded_Click);
             // 
             // Form1
             // 

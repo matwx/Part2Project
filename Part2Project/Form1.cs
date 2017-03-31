@@ -56,19 +56,23 @@ namespace Part2Project
             string p = "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Speed tests";
 
             List<int> folderSizesToTest = new List<int>();
-            for (int i = 0; i < 50; i--)
+            for (int i = 28; i < 30; i++)
             {
-                // 1 to 50
+                // 1 to 30
                 folderSizesToTest.Add(i+1);
             }
 
-            File.WriteAllText(p + "\\temp\\results.txt", "");
+            //File.WriteAllText(p + "\\temp\\results.txt", "");
 
             string[] filenames = Directory.GetFiles(p + "\\50 Original Images\\");
 
             foreach (int folderSize in folderSizesToTest)
             {
-                while (Directory.EnumerateFileSystemEntries(p + "\\temp").Any()){} // Wait for directory to be empty
+                while (Directory.EnumerateFileSystemEntries(p + "\\temp").Count() > 1){} // Wait for directory to be empty
+
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                System.Threading.Thread.Sleep(2000);
 
                 for (int i = 0; i < folderSize; i++)
                 {
@@ -76,11 +80,56 @@ namespace Part2Project
                 }
 
                 DateTime start = DateTime.Now;
-                var featureComputer = new ImageDirectoryFeatures(p + "\\50 Original Images\\");
+                var featureComputer = new ImageDirectoryFeatures(p + "\\temp");
                 featureComputer.GetDirectoryFeatures();
                 double milliseconds = (DateTime.Now - start).TotalMilliseconds;
 
-                File.AppendAllText(p + "\\temp\\results.txt", folderSize + "," + milliseconds + Environment.NewLine);
+                File.AppendAllText(p + "\\temp\\results.txt", folderSize + ", " + milliseconds + Environment.NewLine);
+
+                for (int i = 0; i < folderSize; i++)
+                {
+                    File.Delete(p + "\\temp\\image" + i + ".jpg");
+                }
+            }
+        }
+
+        private void btnSingleThreaded_Click(object sender, EventArgs e)
+        {
+            string p = "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Speed tests";
+
+            List<int> folderSizesToTest = new List<int>();
+            for (int i = 0; i < 30; i++)
+            {
+                // 1 to 30
+                folderSizesToTest.Add(i + 1);
+            }
+
+            //File.WriteAllText(p + "\\temp\\results.txt", "");
+
+            string[] filenames = Directory.GetFiles(p + "\\50 Original Images\\");
+
+            foreach (int folderSize in folderSizesToTest)
+            {
+                while (Directory.EnumerateFileSystemEntries(p + "\\temp").Count() > 1) { } // Wait for directory to be empty
+
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                System.Threading.Thread.Sleep(2000);
+
+                for (int i = 0; i < folderSize; i++)
+                {
+                    File.Copy(filenames[i], p + "\\temp\\image" + i + ".jpg");
+                }
+
+                DateTime start = DateTime.Now;
+                for (int i = 0; i < folderSize; i++)
+                {
+                    ImageFeatures imFeat = new ImageFeatures(p + "\\temp\\image" + i + ".jpg");
+                    imFeat.ThreadPoolCallback();
+                }
+                double milliseconds = (DateTime.Now - start).TotalMilliseconds;
+
+                File.AppendAllText(p + "\\temp\\results.txt", folderSize + ", " + milliseconds + Environment.NewLine);
 
                 for (int i = 0; i < folderSize; i++)
                 {

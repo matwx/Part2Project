@@ -42,6 +42,7 @@
             this.btnMultiThreaded.TabIndex = 0;
             this.btnMultiThreaded.Text = "Multi-threaded";
             this.btnMultiThreaded.UseVisualStyleBackColor = true;
+            this.btnMultiThreaded.Click += new System.EventHandler(this.btnMultiThreaded_Click);
             // 
             // txt
             // 

@@ -50,6 +50,44 @@ namespace Part2Project
             "Background_Distraction",
             "Shape_Convexity"
         };
+
+        private void btnMultiThreaded_Click(object sender, EventArgs e)
+        {
+            string p = "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Speed tests";
+
+            List<int> folderSizesToTest = new List<int>();
+            for (int i = 0; i < 50; i--)
+            {
+                // 1 to 50
+                folderSizesToTest.Add(i+1);
+            }
+
+            File.WriteAllText(p + "\\temp\\results.txt", "");
+
+            string[] filenames = Directory.GetFiles(p + "\\50 Original Images\\");
+
+            foreach (int folderSize in folderSizesToTest)
+            {
+                while (Directory.EnumerateFileSystemEntries(p + "\\temp").Any()){} // Wait for directory to be empty
+
+                for (int i = 0; i < folderSize; i++)
+                {
+                    File.Copy(filenames[i], p + "\\temp\\image" + i + ".jpg");
+                }
+
+                DateTime start = DateTime.Now;
+                var featureComputer = new ImageDirectoryFeatures(p + "\\50 Original Images\\");
+                featureComputer.GetDirectoryFeatures();
+                double milliseconds = (DateTime.Now - start).TotalMilliseconds;
+
+                File.AppendAllText(p + "\\temp\\results.txt", folderSize + "," + milliseconds + Environment.NewLine);
+
+                for (int i = 0; i < folderSize; i++)
+                {
+                    File.Delete(p + "\\temp\\image" + i + ".jpg");
+                }
+            }
+        }
     }
 
     public class Pair : IComparable

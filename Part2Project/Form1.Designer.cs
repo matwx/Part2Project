@@ -28,63 +28,60 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnDoTest = new System.Windows.Forms.Button();
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnAllImages = new System.Windows.Forms.Button();
-            this.btnRoISizeVSBackDist = new System.Windows.Forms.Button();
+            this.btnMultiThreaded = new System.Windows.Forms.Button();
+            this.txt = new System.Windows.Forms.TextBox();
+            this.btnSingleThreaded = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // btnDoTest
+            // btnMultiThreaded
             // 
-            this.btnDoTest.Location = new System.Drawing.Point(12, 12);
-            this.btnDoTest.Name = "btnDoTest";
-            this.btnDoTest.Size = new System.Drawing.Size(112, 64);
-            this.btnDoTest.TabIndex = 0;
-            this.btnDoTest.Text = "Create Orderings and correlations for All Features for All Datasets";
-            this.btnDoTest.UseVisualStyleBackColor = true;
-            this.btnDoTest.Click += new System.EventHandler(this.btnDoTest_Click);
+            this.btnMultiThreaded.Location = new System.Drawing.Point(12, 12);
+            this.btnMultiThreaded.Name = "btnMultiThreaded";
+            this.btnMultiThreaded.Size = new System.Drawing.Size(94, 44);
+            this.btnMultiThreaded.TabIndex = 0;
+            this.btnMultiThreaded.Text = "Multi-threaded";
+            this.btnMultiThreaded.UseVisualStyleBackColor = true;
             // 
-            // btnAllImages
+            // txt
             // 
-            this.btnAllImages.Location = new System.Drawing.Point(12, 82);
-            this.btnAllImages.Name = "btnAllImages";
-            this.btnAllImages.Size = new System.Drawing.Size(112, 47);
-            this.btnAllImages.TabIndex = 1;
-            this.btnAllImages.Text = "Same for all images";
-            this.btnAllImages.UseVisualStyleBackColor = true;
-            this.btnAllImages.Click += new System.EventHandler(this.btnAllImages_Click);
+            this.txt.Location = new System.Drawing.Point(112, 12);
+            this.txt.Multiline = true;
+            this.txt.Name = "txt";
+            this.txt.Size = new System.Drawing.Size(292, 468);
+            this.txt.TabIndex = 1;
             // 
-            // btnRoISizeVSBackDist
+            // btnSingleThreaded
             // 
-            this.btnRoISizeVSBackDist.Location = new System.Drawing.Point(12, 135);
-            this.btnRoISizeVSBackDist.Name = "btnRoISizeVSBackDist";
-            this.btnRoISizeVSBackDist.Size = new System.Drawing.Size(112, 47);
-            this.btnRoISizeVSBackDist.TabIndex = 2;
-            this.btnRoISizeVSBackDist.Text = "SaveRanksForBackDistComparedToRoISize";
-            this.btnRoISizeVSBackDist.UseVisualStyleBackColor = true;
-            this.btnRoISizeVSBackDist.Click += new System.EventHandler(this.btnRoISizeVSBackDist_Click);
+            this.btnSingleThreaded.Location = new System.Drawing.Point(12, 62);
+            this.btnSingleThreaded.Name = "btnSingleThreaded";
+            this.btnSingleThreaded.Size = new System.Drawing.Size(94, 44);
+            this.btnSingleThreaded.TabIndex = 2;
+            this.btnSingleThreaded.Text = "Single-threaded";
+            this.btnSingleThreaded.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(337, 373);
-            this.Controls.Add(this.btnRoISizeVSBackDist);
-            this.Controls.Add(this.btnAllImages);
-            this.Controls.Add(this.btnDoTest);
+            this.ClientSize = new System.Drawing.Size(769, 614);
+            this.Controls.Add(this.btnSingleThreaded);
+            this.Controls.Add(this.txt);
+            this.Controls.Add(this.btnMultiThreaded);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button btnDoTest;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
-        private System.Windows.Forms.Button btnAllImages;
-        private System.Windows.Forms.Button btnRoISizeVSBackDist;
+        private System.Windows.Forms.Button btnMultiThreaded;
+        private System.Windows.Forms.TextBox txt;
+        private System.Windows.Forms.Button btnSingleThreaded;
 
 
 

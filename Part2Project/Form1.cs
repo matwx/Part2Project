@@ -56,7 +56,7 @@ namespace Part2Project
             string p = "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Speed tests";
 
             List<int> folderSizesToTest = new List<int>();
-            for (int i = 28; i < 30; i++)
+            for (int i = 0; i < 50; i++)
             {
                 // 1 to 30
                 folderSizesToTest.Add(i+1);
@@ -70,9 +70,9 @@ namespace Part2Project
             {
                 while (Directory.EnumerateFileSystemEntries(p + "\\temp").Count() > 1){} // Wait for directory to be empty
 
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                System.Threading.Thread.Sleep(2000);
+//                GC.WaitForPendingFinalizers();
+//                GC.Collect();
+//                System.Threading.Thread.Sleep(2000);
 
                 for (int i = 0; i < folderSize; i++)
                 {

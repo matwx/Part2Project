@@ -39,8 +39,14 @@
             this.viewer2 = new System.Windows.Forms.PictureBox();
             this.btnBrightnessFolder = new System.Windows.Forms.Button();
             this.btnBrightness = new System.Windows.Forms.Button();
+            this.viewer3 = new System.Windows.Forms.PictureBox();
+            this.btnAvRGB = new System.Windows.Forms.Button();
+            this.viewer4 = new System.Windows.Forms.PictureBox();
+            this.btnDiff = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer4)).BeginInit();
             this.SuspendLayout();
             // 
             // dlgChooseImage
@@ -137,11 +143,51 @@
             this.btnBrightness.Visible = false;
             this.btnBrightness.Click += new System.EventHandler(this.btnBrightness_Click);
             // 
+            // viewer3
+            // 
+            this.viewer3.Location = new System.Drawing.Point(664, 53);
+            this.viewer3.Name = "viewer3";
+            this.viewer3.Size = new System.Drawing.Size(320, 240);
+            this.viewer3.TabIndex = 34;
+            this.viewer3.TabStop = false;
+            // 
+            // btnAvRGB
+            // 
+            this.btnAvRGB.Location = new System.Drawing.Point(898, 10);
+            this.btnAvRGB.Name = "btnAvRGB";
+            this.btnAvRGB.Size = new System.Drawing.Size(86, 37);
+            this.btnAvRGB.TabIndex = 35;
+            this.btnAvRGB.Text = "Average RGB map";
+            this.btnAvRGB.UseVisualStyleBackColor = true;
+            this.btnAvRGB.Click += new System.EventHandler(this.btnAvRGB_Click);
+            // 
+            // viewer4
+            // 
+            this.viewer4.Location = new System.Drawing.Point(990, 53);
+            this.viewer4.Name = "viewer4";
+            this.viewer4.Size = new System.Drawing.Size(320, 240);
+            this.viewer4.TabIndex = 36;
+            this.viewer4.TabStop = false;
+            // 
+            // btnDiff
+            // 
+            this.btnDiff.Location = new System.Drawing.Point(1224, 10);
+            this.btnDiff.Name = "btnDiff";
+            this.btnDiff.Size = new System.Drawing.Size(86, 37);
+            this.btnDiff.TabIndex = 37;
+            this.btnDiff.Text = "Difference";
+            this.btnDiff.UseVisualStyleBackColor = true;
+            this.btnDiff.Click += new System.EventHandler(this.btnDiff_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(849, 311);
+            this.ClientSize = new System.Drawing.Size(1326, 305);
+            this.Controls.Add(this.btnDiff);
+            this.Controls.Add(this.viewer4);
+            this.Controls.Add(this.btnAvRGB);
+            this.Controls.Add(this.viewer3);
             this.Controls.Add(this.btnBrightness);
             this.Controls.Add(this.btnBrightnessFolder);
             this.Controls.Add(this.viewer2);
@@ -156,6 +202,8 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer4)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -173,6 +221,10 @@
         private System.Windows.Forms.PictureBox viewer2;
         private System.Windows.Forms.Button btnBrightnessFolder;
         private System.Windows.Forms.Button btnBrightness;
+        private System.Windows.Forms.PictureBox viewer3;
+        private System.Windows.Forms.Button btnAvRGB;
+        private System.Windows.Forms.PictureBox viewer4;
+        private System.Windows.Forms.Button btnDiff;
     }
 }
 

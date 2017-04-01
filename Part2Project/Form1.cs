@@ -208,5 +208,51 @@ namespace Part2Project
                 current++;
             }
         }
+
+        private void btnAvRGB_Click(object sender, EventArgs e)
+        {
+            if (bmp == null) return;
+
+            Bitmap result = new Bitmap(bmp.Width, bmp.Height);
+
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    Color c = bmp.GetPixel(i, j);
+                    double val = (c.R + c.G + c.B) / 3.0;
+                    result.SetPixel(i, j, Color.FromArgb((int)val, (int)val, (int)val));
+                }
+            }
+
+            viewer3.Image = result;
+        }
+
+        private void btnDiff_Click(object sender, EventArgs e)
+        {
+            Bitmap result = new Bitmap(bmp.Width, bmp.Height);
+
+            int max = 0;
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    int val = Math.Abs(((Bitmap) viewer3.Image).GetPixel(i, j).R - ((Bitmap) viewer2.Image).GetPixel(i, j).R);
+                    result.SetPixel(i, j, Color.FromArgb(val, val, val));
+                    if (val > max) max = val;
+                }
+            }
+
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    int val = (int)(result.GetPixel(i, j).R / (double) max * 255.0);
+                    result.SetPixel(i, j, Color.FromArgb(val, val, val));
+                }
+            }
+
+            viewer4.Image = result;
+        }
     }
 }

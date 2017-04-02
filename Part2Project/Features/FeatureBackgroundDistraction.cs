@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -116,7 +117,8 @@ namespace Part2Project.Features
                 }
                 r = colourNum;
 
-                double weight = H[i] / (double) hmax;
+//                double weight = H[i] / (double) hmax;
+                double weight = 1;
 
                 // Convert to colour
                 Color c = Color.FromArgb((int)Math.Round(r * weight / 15.0 * 255.0), (int)Math.Round(g * weight / 15.0 * 255.0), (int)Math.Round(b * weight / 15.0 * 255.0));
@@ -125,7 +127,40 @@ namespace Part2Project.Features
                 {
                     for (int y = 0; y < 8; y++)
                     {
-                        result.SetPixel(row * 8 + x, col * 8 + y, c);
+                        if (H[i] >= 0.01 * hmax) result.SetPixel(row * 8 + x, col * 8 + y, c);
+                        else result.SetPixel(row * 8 + x, col * 8 + y, Color.Black);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public static DirectBitmap GetQuantisation(DirectBitmap image, bool[][] boundedBinarySaliencyMap)
+        {
+            DirectBitmap result = new DirectBitmap(image.Width, image.Height);
+
+            // Every pixel that's false is considered part of the background
+            // Quantise remaining pixels into 16 levels for each colour channel, leaving
+            // 4096 possible colours.
+
+            // Compute Histogram
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    if (boundedBinarySaliencyMap[x][y])
+                    {
+                        result.SetPixel(x, y, Color.Black);
+                    }
+                    else
+                    {
+                        Color c = image.GetPixel(x, y);
+                        int r = (int)Math.Round(c.R / 255.0 * 15.0);
+                        int g = (int)Math.Round(c.G / 255.0 * 15.0);
+                        int b = (int)Math.Round(c.B / 255.0 * 15.0);
+
+                        result.SetPixel(x, y, Color.FromArgb((int)Math.Round(r / 15.0 * 255.0), (int)Math.Round(g / 15.0 * 255.0), (int)Math.Round(b / 15.0 * 255.0)));
                     }
                 }
             }

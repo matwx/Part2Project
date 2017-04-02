@@ -130,8 +130,23 @@ namespace Part2Project
             {
                 boundedBinarySaliencyMap[x] = new bool[image.Height];
             }
-            FeatureRegionsOfInterestSize.ComputeFeature(ss, boundedBinarySaliencyMap); // Updates map for f_BD // *** FEATURE ***
+            viewer1.Image = FeatureRegionsOfInterestSize.GetBoundingBoxMap(image, ss, boundedBinarySaliencyMap).Bitmap; // Updates map for f_BD // *** FEATURE ***
             viewer2.Image = FeatureBackgroundDistraction.GetHistogram(image, boundedBinarySaliencyMap).Bitmap; // Uses map // *** FEATURE ***
+            viewer3.Image = FeatureBackgroundDistraction.GetQuantisation(image, boundedBinarySaliencyMap).Bitmap;
+
+            int val = (int) (FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap) * 0.11 * 4096);
+            label1.Text = "Colour Histogram of Background: " + val + " colours out of 4096";
+            label2.Text = "Quantised background";
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dlgFolder.ShowDialog();
+            if (dlgFolder.SelectedPath == "") return;
+
+            if (viewer1.Image != null) viewer1.Image.Save(dlgFolder.SelectedPath + "\\viewer1.png", ImageFormat.Png);
+            if (viewer2.Image != null) viewer2.Image.Save(dlgFolder.SelectedPath + "\\viewer2.png", ImageFormat.Png);
+            if (viewer3.Image != null) viewer3.Image.Save(dlgFolder.SelectedPath + "\\viewer3.png", ImageFormat.Png);
         }
     }
 

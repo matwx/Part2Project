@@ -51,91 +51,87 @@ namespace Part2Project
             "Shape_Convexity"
         };
 
-        private void btnMultiThreaded_Click(object sender, EventArgs e)
+        private void btnSelectImage_Click(object sender, EventArgs e)
         {
-            string p = "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Speed tests";
-
-            List<int> folderSizesToTest = new List<int>();
-            for (int i = 0; i < 50; i++)
-            {
-                // 1 to 30
-                folderSizesToTest.Add(i+1);
-            }
-
-            //File.WriteAllText(p + "\\temp\\results.txt", "");
-
-            string[] filenames = Directory.GetFiles(p + "\\50 Original Images\\");
-
-            foreach (int folderSize in folderSizesToTest)
-            {
-                while (Directory.EnumerateFileSystemEntries(p + "\\temp").Count() > 1){} // Wait for directory to be empty
-
-//                GC.WaitForPendingFinalizers();
-//                GC.Collect();
-//                System.Threading.Thread.Sleep(2000);
-
-                for (int i = 0; i < folderSize; i++)
-                {
-                    File.Copy(filenames[i], p + "\\temp\\image" + i + ".jpg");
-                }
-
-                DateTime start = DateTime.Now;
-                var featureComputer = new ImageDirectoryFeatures(p + "\\temp");
-                featureComputer.GetDirectoryFeatures();
-                double milliseconds = (DateTime.Now - start).TotalMilliseconds;
-
-                File.AppendAllText(p + "\\temp\\results.txt", folderSize + ", " + milliseconds + Environment.NewLine);
-
-                for (int i = 0; i < folderSize; i++)
-                {
-                    File.Delete(p + "\\temp\\image" + i + ".jpg");
-                }
-            }
+            dlgFile.ShowDialog();
         }
 
-        private void btnSingleThreaded_Click(object sender, EventArgs e)
+        private ImageFeatureList result;
+        private SaliencySegmentation ss;
+        private DirectBitmap image;
+
+        private void dlgFile_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            string p = "D:\\Users\\Matt\\Documents\\1 - Part II Project Tests\\Speed tests";
+            string filename = dlgFile.FileName;
 
-            List<int> folderSizesToTest = new List<int>();
-            for (int i = 0; i < 30; i++)
+            result = new ImageFeatureList(filename);
+
+            // If they can't be retrieved from Exif, we need to compute them
+            // First read the image from file as a bitmap
+            using (Image selected = Image.FromFile(filename))
             {
-                // 1 to 30
-                folderSizesToTest.Add(i + 1);
+                image = new DirectBitmap(
+                    (int) ((double) selected.Width / (double) selected.Height * 240.0), 240);
+                // First compute blurriness
+                using (DirectBitmap image512X512 = new DirectBitmap(512, 512))
+                {
+                    // Create the required resized image
+                    using (Graphics gfx = Graphics.FromImage(image512X512.Bitmap))
+                    {
+                        int originalWidth = (int)((double)selected.Width / (double)selected.Height * 512.0);
+                        gfx.DrawImage(selected, 256 - originalWidth / 2, 0, originalWidth, 512);
+                    }
+
+                    // Then compute the features and store the results
+                    // Low-level
+//                    result.Blurriness = FeatureBlurriness.ComputeFeature(image512X512); // *** FEATURE ***
+                }
+
+                // Create the required resized image
+                using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                {
+                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                }
+
+                // Then compute the features and store the results
+                // Low-level
+//                result.Brightness = FeatureBrightness.ComputeFeature(image); // *** FEATURE ***
+//                result.IntensityContrast = FeatureIntensityContrast.ComputeFeature(image); // *** FEATURE ***
+//                result.Saturation = FeatureSaturation.ComputeFeature(image); // *** FEATURE ***
+
+                // Segmentation-Derived
+                const int k = 125;
+                const double sigma = 0.6;
+//                Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+//                ss = new SaliencySegmentation(s, image, sigma);
+                bool[][] boundedBinarySaliencyMap = new bool[image.Width][];
+                for (int x = 0; x < image.Width; x++)
+                {
+                    boundedBinarySaliencyMap[x] = new bool[image.Height];
+                }
+//                result.RegionsOfInterestSize = FeatureRegionsOfInterestSize.ComputeFeature(ss, boundedBinarySaliencyMap); // Updates map for f_BD // *** FEATURE ***
+//                result.BackgroundDistraction = FeatureBackgroundDistraction.ComputeFeature(image, boundedBinarySaliencyMap); // Uses map // *** FEATURE ***
             }
 
-            //File.WriteAllText(p + "\\temp\\results.txt", "");
+//            result.RuleOfThirds = FeatureRuleOfThirds.ComputeFeature(ss); // *** FEATURE ***
+//            result.ShapeConvexity = FeatureShapeConvexity.ComputeFeature(ss); // *** FEATURE ***
 
-            string[] filenames = Directory.GetFiles(p + "\\50 Original Images\\");
+            viewer1.Image = image.Bitmap;
+        }
 
-            foreach (int folderSize in folderSizesToTest)
+        private void btnBackDistractHist_Click(object sender, EventArgs e)
+        {
+            const int k = 125;
+            const double sigma = 0.6;
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
+            ss = new SaliencySegmentation(s, image, sigma);
+            bool[][] boundedBinarySaliencyMap = new bool[image.Width][];
+            for (int x = 0; x < image.Width; x++)
             {
-                while (Directory.EnumerateFileSystemEntries(p + "\\temp").Count() > 1) { } // Wait for directory to be empty
-
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                System.Threading.Thread.Sleep(2000);
-
-                for (int i = 0; i < folderSize; i++)
-                {
-                    File.Copy(filenames[i], p + "\\temp\\image" + i + ".jpg");
-                }
-
-                DateTime start = DateTime.Now;
-                for (int i = 0; i < folderSize; i++)
-                {
-                    ImageFeatures imFeat = new ImageFeatures(p + "\\temp\\image" + i + ".jpg");
-                    imFeat.ThreadPoolCallback();
-                }
-                double milliseconds = (DateTime.Now - start).TotalMilliseconds;
-
-                File.AppendAllText(p + "\\temp\\results.txt", folderSize + ", " + milliseconds + Environment.NewLine);
-
-                for (int i = 0; i < folderSize; i++)
-                {
-                    File.Delete(p + "\\temp\\image" + i + ".jpg");
-                }
+                boundedBinarySaliencyMap[x] = new bool[image.Height];
             }
+            FeatureRegionsOfInterestSize.ComputeFeature(ss, boundedBinarySaliencyMap); // Updates map for f_BD // *** FEATURE ***
+            viewer2.Image = FeatureBackgroundDistraction.GetHistogram(image, boundedBinarySaliencyMap).Bitmap; // Uses map // *** FEATURE ***
         }
     }
 

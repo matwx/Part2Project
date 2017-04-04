@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using Kaliko.ImageLibrary;
 using Kaliko.ImageLibrary.Filters;
 using Kaliko.ImageLibrary.ColorSpace;
@@ -233,6 +234,7 @@ namespace Part2Project.ImageSegmentation
             eList.Sort();
 
             // For each edge eList
+            int count = 0;
             foreach (GraphEdge e in eList)
             {
                 // If the edge joins two discinct components
@@ -246,6 +248,61 @@ namespace Part2Project.ImageSegmentation
                         // Then merge the two components
                         dSet.Union(e.V1, e.V2, e.Weight);
                     }
+                }
+
+                count++;
+
+                if (count % 1000 == 0 && false)
+                {
+                    var s = new Segmentation(dSet);
+
+                    // Create output segmentation image
+                    Bitmap bmp = null;
+                    if (count > 1000)
+                        bmp = new Bitmap(
+                            "D:\\Users\\Matt\\Dropbox\\1 - University\\1 - Work\\Part II\\" +
+                            "Part II Project\\Deliverables\\Dissertation\\sections\\mainmatter\\" +
+                            "implementation\\figs\\segGif\\i_" + (count - 1000) + ".png");
+                    using (Bitmap outImage = new Bitmap(320, 240))
+                    {
+                        Color[] randomColours = new Color[s.NumSegments];
+                        Random rand = new Random();
+
+                        for (int x = 0; x < 320; x++)
+                        {
+                            for (int y = 0; y < 240; y++)
+                            {
+                                if (true)
+                                {
+                                    if (randomColours[s.GetPixelsSegmentIndex(x, y)].IsEmpty)
+                                    {
+                                        if (count == 6000)
+                                        {
+                                            randomColours[s.GetPixelsSegmentIndex(x, y)] = Color.FromArgb(
+                                                rand.Next(0, 256), rand.Next(0, 256), rand.Next(0, 256));
+                                        }
+                                        else
+                                        {
+                                            if (bmp != null)
+                                                randomColours[s.GetPixelsSegmentIndex(x, y)] = bmp.GetPixel(x, y);
+                                        }
+                                    }
+                                    
+                                    outImage.SetPixel(x, y, randomColours[s.GetPixelsSegmentIndex(x, y)]);
+                                }
+                                else
+                                {
+                                    RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
+                                    outImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
+                                }
+                            }
+                        }
+
+                        outImage.Save("D:\\Users\\Matt\\Dropbox\\1 - University\\1 - Work\\Part II\\" +
+                                            "Part II Project\\Deliverables\\Dissertation\\sections\\mainmatter\\" +
+                                            "implementation\\figs\\segGif\\i_" + count + ".png", ImageFormat.Png);
+                    }
+                    
                 }
             }
 

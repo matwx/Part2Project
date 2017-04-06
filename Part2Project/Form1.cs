@@ -102,14 +102,31 @@ namespace Part2Project
             dlgFolder.ShowDialog();
             if (dlgFolder.SelectedPath == "") return;
 
-            if (viewer.Image != null && viewer2.Image != null)
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), double.Parse(txtSigma.Text), (string)cmboEdgeWeights.SelectedItem);
+
+            // Create output segmentation image
+            Bitmap randOutImage = new Bitmap(bmp.Width, bmp.Height);
+            Bitmap aveOutImage = new Bitmap(bmp.Width, bmp.Height);
+            Color[] randomColours = new Color[s.NumSegments];
+            Random rand = new Random();
+
+            for (int x = 0; x < bmp.Width; x++)
             {
-                viewer.Image.Save(dlgFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
-                if (((string)cmboDisplayType.SelectedItem).Equals("Random"))
-                    viewer2.Image.Save(dlgFolder.SelectedPath + "\\segRand.png", ImageFormat.Png);
-                else
-                    viewer2.Image.Save(dlgFolder.SelectedPath + "\\segAve.png", ImageFormat.Png);
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    if (randomColours[s.GetPixelsSegmentIndex(x, y)].IsEmpty)
+                        randomColours[s.GetPixelsSegmentIndex(x, y)] = Color.FromArgb(rand.Next(0, 256),
+                            rand.Next(0, 256), rand.Next(0, 256));
+                    randOutImage.SetPixel(x, y, randomColours[s.GetPixelsSegmentIndex(x, y)]);
+
+                    RGB pixelColour = ColorSpaceHelper.LabtoRGB(s.GetPixelsSegmentColour(x, y));
+                    aveOutImage.SetPixel(x, y, Color.FromArgb(pixelColour.Red, pixelColour.Green, pixelColour.Blue));
+                }
             }
+
+            randOutImage.Save(dlgFolder.SelectedPath + "\\segRand.png", ImageFormat.Png);
+            aveOutImage.Save(dlgFolder.SelectedPath + "\\segAve.png", ImageFormat.Png);
+            viewer.Image.Save(dlgFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
         }
     }
 }

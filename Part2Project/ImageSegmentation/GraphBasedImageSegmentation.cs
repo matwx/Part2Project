@@ -14,6 +14,8 @@ namespace Part2Project.ImageSegmentation
     {
         #region Initialisation
 
+        private static double maxE = 0.0;
+
         private static double deltaE(CIELab c1, CIELab c2)
         {
             double k_L = 2, k_C = 1, k_H = 1;
@@ -76,16 +78,24 @@ namespace Part2Project.ImageSegmentation
 
         private static double ComputeEdgeWeight(Bitmap image, int x1, int y1, int x2, int y2, string edgeWeightType)
         {
+            double result;
+
             Color c1 = image.GetPixel(x1, y1);
             Color c2 = image.GetPixel(x2, y2);
 
-            if (edgeWeightType.Equals("CIELabDist"))
+            if (edgeWeightType.Equals("RGBDist"))
+            {
+                result = Math.Sqrt((c1.R - c2.R) * (c1.R - c2.R) + (c1.G - c2.G) * (c1.G - c2.G) + (c1.B - c2.B) * (c1.B - c2.B));
+                result /= 30 / 1.7;
+            }
+            else if (edgeWeightType.Equals("CIELabDist"))
             {
                 // This converts the pixels to CIE L*A*B* color space and computes 
                 CIELab lab1 = ColorSpaceHelper.RGBtoLab(c1);
                 CIELab lab2 = ColorSpaceHelper.RGBtoLab(c2);
 
-                return Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+                result = Math.Sqrt((lab1.A - lab2.A) * (lab1.A - lab2.A) + (lab1.B - lab2.B) * (lab1.B - lab2.B) + (lab1.L - lab2.L) * (lab1.L - lab2.L));
+                result /= 3.8 / 1.7;
             }
             else if (edgeWeightType.Equals("Hybrid"))
             {
@@ -99,11 +109,11 @@ namespace Part2Project.ImageSegmentation
 
                 if (Math.Min(i1, i2) < 20 || Math.Max(i1, i2) > 210)
                 {
-                    return Math.Abs(i1 - i2) / 255 * 10;
+                    result = Math.Abs(i1 - i2) / 255 * 10;
                 }
                 else
                 {
-                    return deltaE(ColorSpaceHelper.RGBtoLab(c1), ColorSpaceHelper.RGBtoLab(c2));
+                    result = deltaE(ColorSpaceHelper.RGBtoLab(c1), ColorSpaceHelper.RGBtoLab(c2));
                 }
             }
             else if (edgeWeightType.Equals("HybridInterpolation"))
@@ -121,7 +131,7 @@ namespace Part2Project.ImageSegmentation
 
                 if (Math.Min(i1, i2) < 10 || Math.Max(i1, i2) > 230)
                 {
-                    return Math.Abs(i1 - i2) / 255;
+                    result = Math.Abs(i1 - i2) / 255;
                 }
                 if (Math.Min(i1, i2) < 20 || Math.Max(i1, i2) > 210)
                 {
@@ -132,16 +142,17 @@ namespace Part2Project.ImageSegmentation
                     if (Math.Min(i1, i2) < 35) t = (Math.Min(i1, i2) - 10) / 10;
                     else t = (230 - Math.Max(i1, i2)) / 20;
 
-                    return eVal * t + iVal * (1 - t);
+                    result = eVal * t + iVal * (1 - t);
                 }
                 else
                 {
-                    return deltaE(lab1, lab2);
+                    result = deltaE(lab1, lab2);
                 }
             }
             else if (edgeWeightType.Equals("CIEDE2000"))
             {
-                return deltaE(ColorSpaceHelper.RGBtoLab(c1), ColorSpaceHelper.RGBtoLab(c2));
+                result = deltaE(ColorSpaceHelper.RGBtoLab(c1), ColorSpaceHelper.RGBtoLab(c2));
+                result /= 2.0 / 1.7;
             }
             else if (edgeWeightType.Equals("NotZero"))
             {
@@ -152,7 +163,7 @@ namespace Part2Project.ImageSegmentation
 
                 Random rand = new Random();
 
-                return (Math.Abs(dE) < 1) ? (rand.NextDouble() * 4 + 1) : dE;
+                result = (Math.Abs(dE) < 1) ? (rand.NextDouble() * 4 + 1) : dE;
             }
             else
             {
@@ -161,8 +172,13 @@ namespace Part2Project.ImageSegmentation
                 // This just works out the intensity difference between two pixels
                 double i1 = (double)c1.R * 0.21 + (double)c1.G * 0.72 + (double)c1.B * 0.07;
                 double i2 = (double)c2.R * 0.21 + (double)c2.G * 0.72 + (double)c2.B * 0.07;
-                return (int)Math.Abs(i1 - i2);
+                result = (int)Math.Abs(i1 - i2);
+                result /= 180 / 1.7;
             }
+
+            maxE += result;
+
+            return result;
         }
 
         private static void InitialiseEdges(Bitmap image, GraphBasedDisjointSet dSet, List<GraphEdge> eList, string edgeWeightType)
@@ -222,6 +238,8 @@ namespace Part2Project.ImageSegmentation
 
         public static Segmentation Segment(Bitmap image, double k, double sigma, string edgeWeightType)
         {
+            maxE = 0;
+
             // Transform the image as required
             image = ScaleAndBlur(image, sigma);
 
@@ -232,6 +250,8 @@ namespace Part2Project.ImageSegmentation
 
             // Sort E by non-decreasing edge weight
             eList.Sort();
+
+            maxE /= eList.Count;
 
             // For each edge eList
             int count = 0;

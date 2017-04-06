@@ -95,7 +95,7 @@
             this.txtK.Name = "txtK";
             this.txtK.Size = new System.Drawing.Size(53, 20);
             this.txtK.TabIndex = 8;
-            this.txtK.Text = "400";
+            this.txtK.Text = "125";
             this.txtK.Visible = false;
             // 
             // txtSigma
@@ -126,6 +126,7 @@
             this.cmboEdgeWeights.FormattingEnabled = true;
             this.cmboEdgeWeights.Items.AddRange(new object[] {
             "IntensityDiff",
+            "RGBDist",
             "CIELabDist",
             "CIEDE2000",
             "Hybrid",

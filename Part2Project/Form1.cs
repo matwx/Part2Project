@@ -44,6 +44,8 @@ namespace Part2Project
             {
                 btnGBIS.Visible = true;
                 btnSegSaliency.Visible = true;
+                btnHighlightSmall.Visible = true;
+                btnRenormalise.Visible = true;
                 label1.Visible = true;
                 label2.Visible = true;
                 txtK.Visible = true;
@@ -82,9 +84,30 @@ namespace Part2Project
         private void button1_Click(object sender, EventArgs e)
         {
             dlgFolder.ShowDialog();
-            if (dlgFolder.SelectedPath == "" || viewer2.Image == null) return;
+            if (dlgFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
 
+            viewer.Image.Save(dlgFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
             viewer2.Image.Save(dlgFolder.SelectedPath + "\\salSeg.png", ImageFormat.Png);
+        }
+
+        private void btnRenormalise_Click(object sender, EventArgs e)
+        {
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), 0.0);
+
+            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, double.Parse(txtSigma.Text));
+            ss.RenormaliseToIgnore();
+
+            viewer2.Image = ss.GetSegmentSaliencyMap();
+        }
+
+        private void btnHighlightSmall_Click(object sender, EventArgs e)
+        {
+            Segmentation s = GraphBasedImageSegmentation.Segment(bmp, int.Parse(txtK.Text), 0.0);
+
+            SaliencySegmentation ss = new SaliencySegmentation(s, bmp, double.Parse(txtSigma.Text));
+            ss.RenormaliseToIgnore();
+
+            viewer2.Image = ss.GetHighlightedSegmentSaliencyMap();
         }
     }
 }

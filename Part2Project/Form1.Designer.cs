@@ -40,6 +40,8 @@
             this.btnSegSaliency = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnHighlightSmall = new System.Windows.Forms.Button();
+            this.btnRenormalise = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
@@ -52,7 +54,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(363, 24);
+            this.label2.Location = new System.Drawing.Point(486, 22);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 25;
@@ -62,7 +64,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(288, 24);
+            this.label1.Location = new System.Drawing.Point(411, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(16, 13);
             this.label1.TabIndex = 24;
@@ -71,27 +73,27 @@
             // 
             // txtSigma
             // 
-            this.txtSigma.Location = new System.Drawing.Point(400, 21);
+            this.txtSigma.Location = new System.Drawing.Point(523, 19);
             this.txtSigma.Name = "txtSigma";
             this.txtSigma.Size = new System.Drawing.Size(53, 20);
             this.txtSigma.TabIndex = 21;
-            this.txtSigma.Text = "0.0";
+            this.txtSigma.Text = "0.6";
             this.txtSigma.Visible = false;
             // 
             // txtK
             // 
-            this.txtK.Location = new System.Drawing.Point(304, 21);
+            this.txtK.Location = new System.Drawing.Point(427, 19);
             this.txtK.Name = "txtK";
             this.txtK.Size = new System.Drawing.Size(53, 20);
             this.txtK.TabIndex = 20;
-            this.txtK.Text = "400";
+            this.txtK.Text = "125";
             this.txtK.Visible = false;
             // 
             // btnGBIS
             // 
-            this.btnGBIS.Location = new System.Drawing.Point(104, 11);
+            this.btnGBIS.Location = new System.Drawing.Point(73, 10);
             this.btnGBIS.Name = "btnGBIS";
-            this.btnGBIS.Size = new System.Drawing.Size(86, 37);
+            this.btnGBIS.Size = new System.Drawing.Size(57, 37);
             this.btnGBIS.TabIndex = 19;
             this.btnGBIS.Text = "Saliency Map";
             this.btnGBIS.UseVisualStyleBackColor = true;
@@ -100,7 +102,7 @@
             // 
             // viewer2
             // 
-            this.viewer2.Location = new System.Drawing.Point(338, 53);
+            this.viewer2.Location = new System.Drawing.Point(348, 53);
             this.viewer2.Name = "viewer2";
             this.viewer2.Size = new System.Drawing.Size(320, 240);
             this.viewer2.TabIndex = 18;
@@ -118,7 +120,7 @@
             // 
             this.btnChooseImage.Location = new System.Drawing.Point(12, 12);
             this.btnChooseImage.Name = "btnChooseImage";
-            this.btnChooseImage.Size = new System.Drawing.Size(86, 37);
+            this.btnChooseImage.Size = new System.Drawing.Size(55, 37);
             this.btnChooseImage.TabIndex = 16;
             this.btnChooseImage.Text = "Choose Image";
             this.btnChooseImage.UseVisualStyleBackColor = true;
@@ -126,7 +128,7 @@
             // 
             // btnSegSaliency
             // 
-            this.btnSegSaliency.Location = new System.Drawing.Point(196, 10);
+            this.btnSegSaliency.Location = new System.Drawing.Point(136, 10);
             this.btnSegSaliency.Name = "btnSegSaliency";
             this.btnSegSaliency.Size = new System.Drawing.Size(86, 37);
             this.btnSegSaliency.TabIndex = 26;
@@ -137,19 +139,43 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(459, 10);
+            this.button1.Location = new System.Drawing.Point(582, 8);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(86, 37);
             this.button1.TabIndex = 27;
-            this.button1.Text = "Save Viewer2";
+            this.button1.Text = "Save Both";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnHighlightSmall
+            // 
+            this.btnHighlightSmall.Location = new System.Drawing.Point(307, 10);
+            this.btnHighlightSmall.Name = "btnHighlightSmall";
+            this.btnHighlightSmall.Size = new System.Drawing.Size(98, 37);
+            this.btnHighlightSmall.TabIndex = 28;
+            this.btnHighlightSmall.Text = "Highlight Ignored Segments";
+            this.btnHighlightSmall.UseVisualStyleBackColor = true;
+            this.btnHighlightSmall.Visible = false;
+            this.btnHighlightSmall.Click += new System.EventHandler(this.btnHighlightSmall_Click);
+            // 
+            // btnRenormalise
+            // 
+            this.btnRenormalise.Location = new System.Drawing.Point(228, 10);
+            this.btnRenormalise.Name = "btnRenormalise";
+            this.btnRenormalise.Size = new System.Drawing.Size(73, 37);
+            this.btnRenormalise.TabIndex = 29;
+            this.btnRenormalise.Text = "Renormalise to Ignore";
+            this.btnRenormalise.UseVisualStyleBackColor = true;
+            this.btnRenormalise.Visible = false;
+            this.btnRenormalise.Click += new System.EventHandler(this.btnRenormalise_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 311);
+            this.ClientSize = new System.Drawing.Size(682, 311);
+            this.Controls.Add(this.btnRenormalise);
+            this.Controls.Add(this.btnHighlightSmall);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnSegSaliency);
             this.Controls.Add(this.label2);
@@ -184,6 +210,8 @@
         private System.Windows.Forms.Button btnSegSaliency;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
+        private System.Windows.Forms.Button btnHighlightSmall;
+        private System.Windows.Forms.Button btnRenormalise;
     }
 }
 

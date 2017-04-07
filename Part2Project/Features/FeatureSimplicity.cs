@@ -217,5 +217,177 @@ namespace Part2Project.Features
             }
             return result;
         }
+
+        public Bitmap GetBoundingBoxMap2(Bitmap image)
+        {
+            Bitmap result = new Bitmap(image);
+
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.0);
+            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.6);
+
+            bool[] trueSegments = new bool[ss.NumSegments];
+            double[] newSaliencies = new double[ss.NumSegments];
+            int numTrueSegments = 0;
+
+            // Re-normalise the segment saliencies, excluding the smallest ones
+            double maxSal = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
+                    maxSal = ss.GetSegmentsSaliency(i);
+            }
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                newSaliencies[i] = ss.GetSegmentsSaliency(i) / maxSal;
+            }
+
+            // Convert segment saliency map into a binary map, using a threshold, alpha
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && newSaliencies[i] > alpha)
+                {
+                    trueSegments[i] = true;
+                    numTrueSegments++;
+                }
+                else trueSegments[i] = false;
+            }
+
+            int[] trueSegmentIndicies = new int[numTrueSegments];
+            int count = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (trueSegments[i])
+                {
+                    trueSegmentIndicies[count] = i;
+                    count++;
+                }
+            }
+
+            // Generate bounding boxes for all of the segments that are 'true' in the binary ROI map
+            int[] lefts = new int[ss.NumSegments];
+            int[] rights = new int[ss.NumSegments];
+            int[] tops = new int[ss.NumSegments];
+            int[] bottoms = new int[ss.NumSegments];
+            bool[] initialised = new bool[ss.NumSegments];
+
+            for (int x = 0; x < ss.Width; x++)
+            {
+                for (int y = 0; y < ss.Height; y++)
+                {
+                    int i = ss.GetPixelsSegmentIndex(x, y);
+                    if (trueSegments[i])
+                    {
+                        if (initialised[i])
+                        {
+                            if (x < lefts[i]) lefts[i] = x;
+                            if (x > rights[i]) rights[i] = x;
+                            if (y < tops[i]) tops[i] = y;
+                            if (y > bottoms[i]) bottoms[i] = y;
+                        }
+                        else
+                        {
+                            lefts[i] = x;
+                            rights[i] = x;
+                            tops[i] = y;
+                            bottoms[i] = y;
+
+                            initialised[i] = true;
+                        }
+                    }
+
+                    // Also clear the result image
+                    result.SetPixel(x, y, Color.Black);
+                }
+            }
+
+            using (var gfx = Graphics.FromImage(result))
+            {
+                foreach (int i in trueSegmentIndicies)
+                {
+                    // Add this segment's bounding box to the map
+                    gfx.FillRectangle(Brushes.White, lefts[i], tops[i], rights[i] - lefts[i], bottoms[i] - tops[i]);
+                    
+                    // Draw border lines
+                    gfx.DrawLine(new Pen(Color.Red, 2f), lefts[i], tops[i], rights[i], tops[i]);
+                    gfx.DrawLine(new Pen(Color.Red, 2f), lefts[i], tops[i], lefts[i], bottoms[i]);
+                    gfx.DrawLine(new Pen(Color.Red, 2f), rights[i], bottoms[i], lefts[i], bottoms[i]);
+                    gfx.DrawLine(new Pen(Color.Red, 2f), rights[i], bottoms[i], rights[i], tops[i]);
+                }
+
+                foreach (int i in trueSegmentIndicies)
+                {
+                    // Draw border lines
+                    gfx.DrawLine(new Pen(Color.Red, 2f), lefts[i], tops[i], rights[i], tops[i]);
+                    gfx.DrawLine(new Pen(Color.Red, 2f), lefts[i], tops[i], lefts[i], bottoms[i]);
+                    gfx.DrawLine(new Pen(Color.Red, 2f), rights[i], bottoms[i], lefts[i], bottoms[i]);
+                    gfx.DrawLine(new Pen(Color.Red, 2f), rights[i], bottoms[i], rights[i], tops[i]);
+                }
+            }
+            
+            return result;
+        }
+
+        public Bitmap GetSalientEnoughSegmentsMap(Bitmap image)
+        {
+            Bitmap result = new Bitmap(image);
+
+            Segmentation s = GraphBasedImageSegmentation.Segment(image, 125.0, 0.0);
+            SaliencySegmentation ss = new SaliencySegmentation(s, image, 0.6);
+
+            bool[] trueSegments = new bool[ss.NumSegments];
+            double[] newSaliencies = new double[ss.NumSegments];
+            int numTrueSegments = 0;
+
+            // Re-normalise the segment saliencies, excluding the smallest ones
+            double maxSal = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > maxSal)
+                    maxSal = ss.GetSegmentsSaliency(i);
+            }
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                newSaliencies[i] = ss.GetSegmentsSaliency(i) / maxSal;
+            }
+
+            // Convert segment saliency map into a binary map, using a threshold, alpha
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) > 0.01 * ss.Width * ss.Height && newSaliencies[i] > alpha)
+                {
+                    trueSegments[i] = true;
+                    numTrueSegments++;
+                }
+                else trueSegments[i] = false;
+            }
+
+            int[] trueSegmentIndicies = new int[numTrueSegments];
+            int count = 0;
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (trueSegments[i])
+                {
+                    trueSegmentIndicies[count] = i;
+                    count++;
+                }
+            }
+
+            for (int x = 0; x < s.Width; x++)
+            {
+                for (int y = 0; y < s.Height; y++)
+                {
+                    result.SetPixel(x, y, Color.Black);
+                    foreach (int i in trueSegmentIndicies)
+                    {
+                        if (s.GetPixelsSegmentIndex(x, y) == i)
+                        {
+                            result.SetPixel(x, y, Color.White);
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        }
     }
 }

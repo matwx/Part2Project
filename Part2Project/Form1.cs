@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -52,6 +53,8 @@ namespace Part2Project
                 btnROT.Visible = true;
                 btnIC.Visible = true;
                 btnBrightness.Visible = true;
+                btnBoundingBoxes.Visible = true;
+                btnSalientEnoughSegments.Visible = true;
                 btnSat.Visible = true;
                 btnSimplicity.Visible = true;
             }
@@ -314,6 +317,29 @@ namespace Part2Project
                 File.Move(newNames[key], dlgChooseFolder.SelectedPath + "\\" + current.ToString() + "--" + key.ToString() + "--Simp.jpg");
                 current++;
             }
+        }
+
+        private void btnSalientEnoughSegments_Click(object sender, EventArgs e)
+        {
+            FeatureSimplicity f = new FeatureSimplicity();
+
+            viewer2.Image = f.GetSalientEnoughSegmentsMap(bmp);
+        }
+
+        private void btnBoundingBoxes_Click(object sender, EventArgs e)
+        {
+            FeatureSimplicity f = new FeatureSimplicity();
+
+            viewer2.Image = f.GetBoundingBoxMap2(bmp);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            if (dlgChooseFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
+
+            viewer.Image.Save(dlgChooseFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+            viewer2.Image.Save(dlgChooseFolder.SelectedPath + "\\viewer2.png", ImageFormat.Png);
         }
     }
 }

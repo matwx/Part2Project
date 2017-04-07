@@ -44,6 +44,9 @@
             this.btnSimplicity = new System.Windows.Forms.Button();
             this.btnSimpFolder = new System.Windows.Forms.Button();
             this.btnSegSal = new System.Windows.Forms.Button();
+            this.btnSalientEnoughSegments = new System.Windows.Forms.Button();
+            this.btnBoundingBoxes = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             this.SuspendLayout();
@@ -195,11 +198,46 @@
             this.btnSegSal.Visible = false;
             this.btnSegSal.Click += new System.EventHandler(this.btnSegSal_Click);
             // 
+            // btnSalientEnoughSegments
+            // 
+            this.btnSalientEnoughSegments.Location = new System.Drawing.Point(653, 10);
+            this.btnSalientEnoughSegments.Name = "btnSalientEnoughSegments";
+            this.btnSalientEnoughSegments.Size = new System.Drawing.Size(86, 37);
+            this.btnSalientEnoughSegments.TabIndex = 39;
+            this.btnSalientEnoughSegments.Text = "Salient Enough Segs";
+            this.btnSalientEnoughSegments.UseVisualStyleBackColor = true;
+            this.btnSalientEnoughSegments.Visible = false;
+            this.btnSalientEnoughSegments.Click += new System.EventHandler(this.btnSalientEnoughSegments_Click);
+            // 
+            // btnBoundingBoxes
+            // 
+            this.btnBoundingBoxes.Location = new System.Drawing.Point(745, 10);
+            this.btnBoundingBoxes.Name = "btnBoundingBoxes";
+            this.btnBoundingBoxes.Size = new System.Drawing.Size(86, 37);
+            this.btnBoundingBoxes.TabIndex = 40;
+            this.btnBoundingBoxes.Text = "Bounding Boxes";
+            this.btnBoundingBoxes.UseVisualStyleBackColor = true;
+            this.btnBoundingBoxes.Visible = false;
+            this.btnBoundingBoxes.Click += new System.EventHandler(this.btnBoundingBoxes_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(713, 224);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(86, 37);
+            this.btnSave.TabIndex = 41;
+            this.btnSave.Text = "Save Both";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(853, 311);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnBoundingBoxes);
+            this.Controls.Add(this.btnSalientEnoughSegments);
             this.Controls.Add(this.btnSegSal);
             this.Controls.Add(this.btnSimpFolder);
             this.Controls.Add(this.btnSimplicity);
@@ -241,6 +279,9 @@
         private System.Windows.Forms.Button btnSimplicity;
         private System.Windows.Forms.Button btnSimpFolder;
         private System.Windows.Forms.Button btnSegSal;
+        private System.Windows.Forms.Button btnSalientEnoughSegments;
+        private System.Windows.Forms.Button btnBoundingBoxes;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 

@@ -41,6 +41,7 @@
             this.btnROTDistmap = new System.Windows.Forms.Button();
             this.btnROTSpreadmap = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.btnSaveViewers = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
@@ -163,11 +164,23 @@
             this.btnSave.Visible = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // btnSaveViewers
+            // 
+            this.btnSaveViewers.Location = new System.Drawing.Point(664, 96);
+            this.btnSaveViewers.Name = "btnSaveViewers";
+            this.btnSaveViewers.Size = new System.Drawing.Size(86, 37);
+            this.btnSaveViewers.TabIndex = 33;
+            this.btnSaveViewers.Text = "Save both";
+            this.btnSaveViewers.UseVisualStyleBackColor = true;
+            this.btnSaveViewers.Visible = false;
+            this.btnSaveViewers.Click += new System.EventHandler(this.btnSaveViewers_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(797, 311);
+            this.Controls.Add(this.btnSaveViewers);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnROTSpreadmap);
             this.Controls.Add(this.btnROTDistmap);
@@ -203,6 +216,7 @@
         private System.Windows.Forms.Button btnROTDistmap;
         private System.Windows.Forms.Button btnROTSpreadmap;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnSaveViewers;
     }
 }
 

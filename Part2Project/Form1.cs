@@ -50,6 +50,7 @@ namespace Part2Project
                 btnROT.Visible = true;
                 btnSave.Visible = true;
                 btnROTHeatmap.Visible = true;
+                btnSaveViewers.Visible = true;
                 btnROTDistmap.Visible = true;
                 btnROTSpreadmap.Visible = true;
             }
@@ -230,6 +231,16 @@ namespace Part2Project
             rot3.Save(dlgChooseFolder.SelectedPath + "\\rot3.png", ImageFormat.Png);
 
             File.WriteAllText(dlgChooseFolder.SelectedPath + "\\values.txt", txt);
+        }
+
+        private void btnSaveViewers_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            if (dlgChooseFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
+
+            // Save original
+            viewer.Image.Save(dlgChooseFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+            viewer2.Image.Save(dlgChooseFolder.SelectedPath + "\\viewer2.png", ImageFormat.Png);
         }
     }
 }

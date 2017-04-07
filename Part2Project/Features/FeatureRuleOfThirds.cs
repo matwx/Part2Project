@@ -29,7 +29,7 @@ namespace Part2Project.Features
             for (int i = 0; i < rots.NumSegments; i++)
             {
 //                1) result += rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
-//                2) result += rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+//                2) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
 //                3) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
 //                4) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
 //                (5) (with c0.01) result += rots.GetSegmentsSaliency(i) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
@@ -37,7 +37,7 @@ namespace Part2Project.Features
                 
 
 //                1) factor += rots.GetSegmentsSaliency(i)*rots.GetSegmentsSize(i);
-//                2) factor += rots.GetSegmentsSaliency(i);
+//                2) (with c0.01) factor += rots.GetSegmentsSaliency(i);
 //                3) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
 //                4) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
 //                (5) (with c0.01) factor += rots.GetSegmentsSaliency(i) / segmentSpreads[i];
@@ -72,9 +72,9 @@ namespace Part2Project.Features
             double maxTemp = 0;
             for (int i = 0; i < rots.NumSegments; i++)
             {
-//                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
+                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
                 segmentTemps[i] =
-                    rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                    rots.GetSegmentsSaliency(i) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
                 if (segmentTemps[i] > maxTemp) maxTemp = segmentTemps[i];
             }
 
@@ -230,5 +230,234 @@ namespace Part2Project.Features
 
             return segmentSpreads;
         }
+
+        #region Other Options
+
+        public double ComputeFeature0(DirectBitmap image)
+        {
+            // Get saliency segmentation
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+
+            double[] segmentSpreads = GetRoTSpreads(rots);
+
+            double factor = 0;
+            double result = 0;
+            const double sigma = 0.17;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                //                1) result += rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+                //                2) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+                //                3) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                4) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                (5) (with c0.01) result += rots.GetSegmentsSaliency(i) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                6) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+
+
+                //                1) factor += rots.GetSegmentsSaliency(i)*rots.GetSegmentsSize(i);
+                //                2) (with c0.01) factor += rots.GetSegmentsSaliency(i);
+                //                3) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
+                //                4) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
+                //                (5) (with c0.01) factor += rots.GetSegmentsSaliency(i) / segmentSpreads[i];
+                //                6) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) / segmentSpreads[i];
+                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
+                {
+                    result +=
+                        rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                    factor += rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i);
+                }
+
+            }
+
+            result /= factor;
+
+            return result;
+        }
+        public Bitmap GetRoTHeatMap0(DirectBitmap image)
+        {
+            Bitmap result = new Bitmap(image.Bitmap);
+
+            // Get saliency segmentation
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+
+            double[] segmentSpreads = GetRoTSpreads(rots);
+            double[] segmentTemps = new double[rots.NumSegments];
+
+            // Compute segment contributions for the RoT
+            const double sigma = 0.17;
+            double maxTemp = 0;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
+                    segmentTemps[i] =
+                        rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                if (segmentTemps[i] > maxTemp) maxTemp = segmentTemps[i];
+            }
+
+            // Draw the image
+            for (int x = 0; x < rots.Width; x++)
+            {
+                for (int y = 0; y < rots.Height; y++)
+                {
+                    double val = segmentTemps[rots.GetPixelsSegmentIndex(x, y)];
+                    result.SetPixel(x, y, Color.FromArgb((int)(val / maxTemp * 255), (int)(val / maxTemp * 255), (int)(val / maxTemp * 255)));
+                }
+            }
+
+            return result;
+        }
+
+        public double ComputeFeature1(DirectBitmap image)
+        {
+            // Get saliency segmentation
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+
+            double[] segmentSpreads = GetRoTSpreads(rots);
+
+            double factor = 0;
+            double result = 0;
+            const double sigma = 0.17;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                //                1) result += rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+                //                2) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+                //                3) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                4) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                (5) (with c0.01) result += rots.GetSegmentsSaliency(i) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                6) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+
+
+                //                1) factor += rots.GetSegmentsSaliency(i)*rots.GetSegmentsSize(i);
+                //                2) (with c0.01) factor += rots.GetSegmentsSaliency(i);
+                //                3) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
+                //                4) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
+                //                (5) (with c0.01) factor += rots.GetSegmentsSaliency(i) / segmentSpreads[i];
+                //                6) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) / segmentSpreads[i];
+                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
+                {
+                    result +=
+                        rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                    factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
+                }
+
+            }
+
+            result /= factor;
+
+            return result;
+        }
+        public Bitmap GetRoTHeatMap1(DirectBitmap image)
+        {
+            Bitmap result = new Bitmap(image.Bitmap);
+
+            // Get saliency segmentation
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+
+            double[] segmentSpreads = GetRoTSpreads(rots);
+            double[] segmentTemps = new double[rots.NumSegments];
+
+            // Compute segment contributions for the RoT
+            const double sigma = 0.17;
+            double maxTemp = 0;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
+                    segmentTemps[i] =
+                        rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                if (segmentTemps[i] > maxTemp) maxTemp = segmentTemps[i];
+            }
+
+            // Draw the image
+            for (int x = 0; x < rots.Width; x++)
+            {
+                for (int y = 0; y < rots.Height; y++)
+                {
+                    double val = segmentTemps[rots.GetPixelsSegmentIndex(x, y)];
+                    result.SetPixel(x, y, Color.FromArgb((int)(val / maxTemp * 255), (int)(val / maxTemp * 255), (int)(val / maxTemp * 255)));
+                }
+            }
+
+            return result;
+        }
+
+        public double ComputeFeature2(DirectBitmap image)
+        {
+            // Get saliency segmentation
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+
+            double[] segmentSpreads = GetRoTSpreads(rots);
+
+            double factor = 0;
+            double result = 0;
+            const double sigma = 0.17;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                //                1) result += rots.GetSegmentsSaliency(i) * rots.GetSegmentsSize(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+                //                2) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i)*rots.GetSegmentsDistance(i)/(2*sigma));
+                //                3) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                4) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                (5) (with c0.01) result += rots.GetSegmentsSaliency(i) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                //                6) (with c0.01) result += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+
+
+                //                1) factor += rots.GetSegmentsSaliency(i)*rots.GetSegmentsSize(i);
+                //                2) (with c0.01) factor += rots.GetSegmentsSaliency(i);
+                //                3) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
+                //                4) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i));
+                //                (5) (with c0.01) factor += rots.GetSegmentsSaliency(i) / segmentSpreads[i];
+                //                6) (with c0.01) factor += rots.GetSegmentsSaliency(i) * Math.Log(rots.GetSegmentsSize(i)) / segmentSpreads[i];
+                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
+                {
+                    result +=
+                        rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                    factor += rots.GetSegmentsSaliency(i);
+                }
+
+            }
+
+            result /= factor;
+
+            return result;
+        }
+        public Bitmap GetRoTHeatMap2(DirectBitmap image)
+        {
+            Bitmap result = new Bitmap(image.Bitmap);
+
+            // Get saliency segmentation
+            Segmentation s = GraphBasedImageSegmentation.Segment(image.Bitmap, k, 0.0);
+            RuleOfThirdsSegmentation rots = new RuleOfThirdsSegmentation(s, image, segSigma);
+
+            double[] segmentSpreads = GetRoTSpreads(rots);
+            double[] segmentTemps = new double[rots.NumSegments];
+
+            // Compute segment contributions for the RoT
+            const double sigma = 0.17;
+            double maxTemp = 0;
+            for (int i = 0; i < rots.NumSegments; i++)
+            {
+                if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
+                    segmentTemps[i] =
+                        rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                if (segmentTemps[i] > maxTemp) maxTemp = segmentTemps[i];
+            }
+
+            // Draw the image
+            for (int x = 0; x < rots.Width; x++)
+            {
+                for (int y = 0; y < rots.Height; y++)
+                {
+                    double val = segmentTemps[rots.GetPixelsSegmentIndex(x, y)];
+                    result.SetPixel(x, y, Color.FromArgb((int)(val / maxTemp * 255), (int)(val / maxTemp * 255), (int)(val / maxTemp * 255)));
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
     }
 }

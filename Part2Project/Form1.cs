@@ -126,6 +126,16 @@ namespace Part2Project
             gfx.DrawLine(Pens.Red, 0, bmp.Height * 2 / 3, bmp.Width, bmp.Height * 2 / 3);
         }
 
+        private void DrawThirdLines(Bitmap bitmap)
+        {
+            Graphics gfx = Graphics.FromImage(bitmap);
+
+            gfx.DrawLine(Pens.Red, bmp.Width / 3, 0, bmp.Width / 3, bmp.Height);
+            gfx.DrawLine(Pens.Red, bmp.Width * 2 / 3, 0, bmp.Width * 2 / 3, bmp.Height);
+            gfx.DrawLine(Pens.Red, 0, bmp.Height / 3, bmp.Width, bmp.Height / 3);
+            gfx.DrawLine(Pens.Red, 0, bmp.Height * 2 / 3, bmp.Width, bmp.Height * 2 / 3);
+        }
+
         private void btnBatchROT_Click(object sender, EventArgs e)
         {
             dlgChooseFolder.ShowDialog();
@@ -191,10 +201,35 @@ namespace Part2Project
         private void btnSave_Click(object sender, EventArgs e)
         {
             dlgChooseFolder.ShowDialog();
-            if (dlgChooseFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
+            if (dlgChooseFolder.SelectedPath == "" || viewer.Image == null) return;
 
+            // Save original
             viewer.Image.Save(dlgChooseFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
-            viewer2.Image.Save(dlgChooseFolder.SelectedPath + "\\viewer2.png", ImageFormat.Png);
+
+            string txt = "";
+            string nl = Environment.NewLine;
+
+            txt += new FeatureRuleOfThirds().ComputeFeature0(bmp) + nl;
+            Bitmap rot0 = new FeatureRuleOfThirds().GetRoTHeatMap0(bmp);
+            DrawThirdLines(rot0);
+            rot0.Save(dlgChooseFolder.SelectedPath + "\\rot0.png", ImageFormat.Png);
+
+            txt += new FeatureRuleOfThirds().ComputeFeature1(bmp) + nl;
+            Bitmap rot1 = new FeatureRuleOfThirds().GetRoTHeatMap1(bmp);
+            DrawThirdLines(rot1);
+            rot1.Save(dlgChooseFolder.SelectedPath + "\\rot1.png", ImageFormat.Png);
+
+            txt += new FeatureRuleOfThirds().ComputeFeature2(bmp) + nl;
+            Bitmap rot2 = new FeatureRuleOfThirds().GetRoTHeatMap2(bmp);
+            DrawThirdLines(rot2);
+            rot2.Save(dlgChooseFolder.SelectedPath + "\\rot2.png", ImageFormat.Png);
+
+            txt += new FeatureRuleOfThirds().ComputeFeature(bmp) + nl;
+            Bitmap rot3 = new FeatureRuleOfThirds().GetRoTHeatMap(bmp);
+            DrawThirdLines(rot3);
+            rot3.Save(dlgChooseFolder.SelectedPath + "\\rot3.png", ImageFormat.Png);
+
+            File.WriteAllText(dlgChooseFolder.SelectedPath + "\\values.txt", txt);
         }
     }
 }

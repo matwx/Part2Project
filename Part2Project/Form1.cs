@@ -38,7 +38,6 @@ namespace Part2Project
             Graphics gfx = Graphics.FromImage(bmp.Bitmap);
 
             gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * (double)viewer.Height), viewer.Height);
-            viewer.Image = bmp.Bitmap;
 
             // Image loaded
             viewer2.Image = null;
@@ -54,6 +53,8 @@ namespace Part2Project
                 btnROTDistmap.Visible = true;
                 btnROTSpreadmap.Visible = true;
             }
+
+            DrawOrigThirdLines();
         }
 
         private void btnChooseImage_Click_1(object sender, EventArgs e)
@@ -93,6 +94,26 @@ namespace Part2Project
 
             viewer2.Image = new Bitmap(bmp.Bitmap);
             DrawThirdLines();
+        }
+
+        private void DrawOrigThirdLines()
+        {
+            Bitmap newBMP = new Bitmap(bmp.Width, bmp.Height);
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    newBMP.SetPixel(x, y, bmp.GetPixel(x, y));
+                }
+            }
+            Graphics gfx = Graphics.FromImage(newBMP);
+
+            gfx.DrawLine(Pens.Red, bmp.Width / 3, 0, bmp.Width / 3, bmp.Height);
+            gfx.DrawLine(Pens.Red, bmp.Width * 2 / 3, 0, bmp.Width * 2 / 3, bmp.Height);
+            gfx.DrawLine(Pens.Red, 0, bmp.Height / 3, bmp.Width, bmp.Height / 3);
+            gfx.DrawLine(Pens.Red, 0, bmp.Height * 2 / 3, bmp.Width, bmp.Height * 2 / 3);
+
+            viewer.Image = newBMP;
         }
 
         private void DrawThirdLines()

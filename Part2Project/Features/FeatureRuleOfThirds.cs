@@ -73,7 +73,8 @@ namespace Part2Project.Features
             for (int i = 0; i < rots.NumSegments; i++)
             {
                 if (rots.GetSegmentsSize(i) > 0.01 * rots.Width * rots.Height)
-                    segmentTemps[i] = rots.GetSegmentsSaliency(i) / segmentSpreads[i] * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
+                segmentTemps[i] = 
+                    rots.GetSegmentsSaliency(i) * Math.Exp(-rots.GetSegmentsDistance(i) * rots.GetSegmentsDistance(i) / (2 * sigma));
                 if (segmentTemps[i] > maxTemp) maxTemp = segmentTemps[i];
             }
 

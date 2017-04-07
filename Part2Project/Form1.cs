@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -48,6 +49,7 @@ namespace Part2Project
                 btnGBIS.Visible = true;
                 btnSegSaliency.Visible = true;
                 btnROT.Visible = true;
+                btnSave.Visible = true;
                 btnROTHeatmap.Visible = true;
                 btnROTDistmap.Visible = true;
                 btnROTSpreadmap.Visible = true;
@@ -163,6 +165,15 @@ namespace Part2Project
 
             viewer2.Image = result;
             DrawThirdLines();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            if (dlgChooseFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
+
+            viewer.Image.Save(dlgChooseFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+            viewer2.Image.Save(dlgChooseFolder.SelectedPath + "\\viewer2.png", ImageFormat.Png);
         }
     }
 }

@@ -118,11 +118,11 @@ namespace Part2Project.Features
 
                             for (int i = 0; i < ch.Count - 1; i++)
                             {
-                                gfx.DrawLine(new Pen(Color.FromArgb(200, c), 2f), (int)ch.ElementAt(i).Position[0], (int)ch.ElementAt(i).Position[1],
+                                gfx.DrawLine(new Pen(c, 5f), (int)ch.ElementAt(i).Position[0], (int)ch.ElementAt(i).Position[1],
                                     (int)ch.ElementAt(i + 1).Position[0], (int)ch.ElementAt(i + 1).Position[1]);
                             }
 
-                            gfx.DrawLine(new Pen(Color.FromArgb(200, c), 2f), (int)ch.Last().Position[0], (int)ch.Last().Position[1],
+                            gfx.DrawLine(new Pen(c, 5f), (int)ch.Last().Position[0], (int)ch.Last().Position[1],
                                 (int)ch.ElementAt(0).Position[0], (int)ch.ElementAt(0).Position[1]);
                         }
                     }
@@ -139,6 +139,50 @@ namespace Part2Project.Features
             }
 
             return (double)totalSufficientlySalientConvexSegmentArea / numSufficientlySalientPixels * (1 - cPart);
+        }
+
+        public static DirectBitmap GetSufficientlySalientMap(SaliencySegmentation ss)
+        {
+            DirectBitmap result = new DirectBitmap(ss.Width, ss.Height);
+
+            int numSufficientlySalientPixels = 0;
+
+            // Re-organise data into lists of points for each segment
+            List<DefaultVertex>[] segments = new List<DefaultVertex>[ss.NumSegments];
+            for (int i = 0; i < ss.NumSegments; i++)
+            {
+                if (ss.GetSegmentsSize(i) >= 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(i) > salRequired)
+                    segments[i] = new List<DefaultVertex>();
+            }
+            for (int x = 0; x < ss.Width; x++)
+            {
+                for (int y = 0; y < ss.Height; y++)
+                {
+                    if (ss.GetPixelsSegmentSize(x, y) >= 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(ss.GetPixelsSegmentIndex(x, y)) > salRequired)
+                    {
+                        DefaultVertex v = new DefaultVertex { Position = new double[] { x, y } };
+                        segments[ss.GetPixelsSegmentIndex(x, y)].Add(v);
+                        numSufficientlySalientPixels++;
+                    }
+                }
+            }
+
+            for (int x = 0; x < ss.Width; x++)
+            {
+                for (int y = 0; y < ss.Height; y++)
+                {
+                    result.SetPixel(x, y, Color.Black);
+                    for (int seg = 0; seg < ss.NumSegments; seg++)
+                    {
+                        if (ss.GetSegmentsSize(seg) >= 0.01 * ss.Width * ss.Height && ss.GetSegmentsSaliency(seg) > salRequired)
+                        {
+                            if (ss.GetPixelsSegmentIndex(x, y) == seg) result.SetPixel(x, y, Color.White);
+                        }
+                    }
+                }
+            }
+            
+            return result;
         }
 
         // http://stackoverflow.com/questions/6996942/c-sharp-sort-list-of-x-y-coordinates-clockwise

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -108,13 +109,21 @@ namespace Part2Project
                     gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
                 }
 
+                DirectBitmap orig = new DirectBitmap(image.Bitmap);
+
                 const int k = 125;
                 const double sigma = 0.6;
                 Segmentation s = GraphBasedImageSegmentation.Segment(image, k, sigma);
                 SaliencySegmentation ss = new SaliencySegmentation(s, image, sigma);
                 button1.Text = FeatureShapeConvexity.ComputeFeature(ss, image).ToString();
 
-                pictureBox1.Image = image.Bitmap;
+                viewer1.Image = orig.Bitmap;
+                viewer2.Image = ss.GetSegmentSaliencyMap();
+                viewer3.Image = FeatureShapeConvexity.GetSufficientlySalientMap(ss).Bitmap;
+                DirectBitmap suffSalConvexOverlay = new DirectBitmap((Bitmap) viewer3.Image);
+                FeatureShapeConvexity.ComputeFeature(ss, suffSalConvexOverlay);
+                viewer4.Image = suffSalConvexOverlay.Bitmap;
+                viewer5.Image = image.Bitmap;
             }
         }
 
@@ -128,6 +137,18 @@ namespace Part2Project
             folderBrowserDialog1.ShowDialog();
 
             ConvexityRenameFolder(folderBrowserDialog1.SelectedPath);
+        }
+
+        private void btnSaveAll_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog1.ShowDialog();
+            if (folderBrowserDialog1.SelectedPath == "") return;
+
+            if (viewer1.Image != null) viewer1.Image.Save(folderBrowserDialog1.SelectedPath + "\\orig.png", ImageFormat.Png);
+            if (viewer2.Image != null) viewer2.Image.Save(folderBrowserDialog1.SelectedPath + "\\salSeg.png", ImageFormat.Png);
+            if (viewer3.Image != null) viewer3.Image.Save(folderBrowserDialog1.SelectedPath + "\\suffSal.png", ImageFormat.Png);
+            if (viewer4.Image != null) viewer4.Image.Save(folderBrowserDialog1.SelectedPath + "\\convexHulls.png", ImageFormat.Png);
+            if (viewer5.Image != null) viewer5.Image.Save(folderBrowserDialog1.SelectedPath + "\\overlay.png", ImageFormat.Png);
         }
     }
 }

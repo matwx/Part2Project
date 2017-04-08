@@ -17,6 +17,29 @@ namespace Part2Project.Features
     {
         //https://www.researchgate.net/profile/Jia_Li87/publication/221304720_Studying_Aesthetics_in_Photographic_Images_Using_a_Computational_Approach/links/55a71b9b08ae51639c5762ed.pdf
         //https://designengrlab.github.io/MIConvexHull/
+        // For the convex hull algorithm
+//        The MIT License (MIT)
+//
+//        Copyright (c) 2010 David Sehnal, Matthew Campbell
+//
+//        Permission is hereby granted, free of charge, to any person obtaining a copy
+//        of this software and associated documentation files (the "Software"), to deal
+//        in the Software without restriction, including without limitation the rights
+//        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//        copies of the Software, and to permit persons to whom the Software is
+//        furnished to do so, subject to the following conditions:
+//
+//        The above copyright notice and this permission notice shall be included in all
+//        copies or substantial portions of the Software.
+//
+//        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//        SOFTWARE.
+
         public const double salRequired = 0.7;
         public const double convexityRequired = 0.7;
 
@@ -138,7 +161,11 @@ namespace Part2Project.Features
                 cPart = Math.Exp((3.0 - averageCHPoints) * alpha);
             }
 
-            return (double)totalSufficientlySalientConvexSegmentArea / numSufficientlySalientPixels * (1 - cPart);
+            double LHS = (double) totalSufficientlySalientConvexSegmentArea / numSufficientlySalientPixels;
+            double RHS = (1.0 - cPart);
+            double result = LHS * RHS;
+
+            return result;
         }
 
         public static DirectBitmap GetSufficientlySalientMap(SaliencySegmentation ss)

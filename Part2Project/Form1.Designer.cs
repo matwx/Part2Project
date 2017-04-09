@@ -35,6 +35,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnFolder = new System.Windows.Forms.Button();
             this.dlgFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -89,11 +90,22 @@
             this.btnFolder.UseVisualStyleBackColor = true;
             this.btnFolder.Click += new System.EventHandler(this.btnFolder_Click);
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(211, 30);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 53);
+            this.btnSave.TabIndex = 6;
+            this.btnSave.Text = "Save All";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1083, 610);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnFolder);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox2);
@@ -118,6 +130,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnFolder;
         private System.Windows.Forms.FolderBrowserDialog dlgFolder;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 

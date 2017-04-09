@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -60,8 +61,11 @@ namespace Part2Project
             openFileDialog1.ShowDialog();
         }
 
+        private string filename = "";
+
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
+            filename = openFileDialog1.FileName;
             using (Image selected = Image.FromFile(openFileDialog1.FileName))
             {
 //                DirectBitmap image = new DirectBitmap((int) ((double) selected.Width / (double) selected.Height * 512.0), 512);
@@ -70,7 +74,7 @@ namespace Part2Project
                 {
                     int originalWidth = (int) ((double) selected.Width / (double) selected.Height * 512.0);
 //                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 512.0), 512);
-                    gfx.DrawImage(selected, 256 -originalWidth / 2, 0, originalWidth, 512);
+                    gfx.DrawImage(selected, 256 - originalWidth / 2, 0, originalWidth, 512);
                 }
 
                 label1.Text = FeatureBlurriness.ComputeFeature(image).ToString();
@@ -93,12 +97,12 @@ namespace Part2Project
                     originals[i] = new DirectBitmap(512, 512);
                     using (Graphics gfx = Graphics.FromImage(originals[i].Bitmap))
                     {
-                        int originalWidth = (int)((double)selected.Width / (double)selected.Height * 512.0);
+                        int originalWidth = (int) ((double) selected.Width / (double) selected.Height * 512.0);
                         gfx.DrawImage(selected, 256 - originalWidth / 2, 0, originalWidth, 512);
                     }
                 }
             }
-            
+
             Task<double>[] tasks = new Task<double>[originals.Length];
 
             for (int i = 0; i < originals.Length; i++)
@@ -148,6 +152,36 @@ namespace Part2Project
             dlgFolder.ShowDialog();
 
             BlurrinessRenameFolder(dlgFolder.SelectedPath);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (filename == "") return;
+            dlgFolder.ShowDialog();
+            if (dlgFolder.SelectedPath == "") return;
+
+            using (Image selected = Image.FromFile(openFileDialog1.FileName))
+            {
+                using (DirectBitmap orig_image = new DirectBitmap((int)((double)selected.Width / (double)selected.Height * 240.0), 240))
+                {
+                    using (Graphics gfx = Graphics.FromImage(orig_image.Bitmap))
+                    {
+                        gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 240.0), 240);
+                    }
+                    orig_image.Bitmap.Save(dlgFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+                }
+
+                DirectBitmap image = new DirectBitmap(512, 512);
+                using (Graphics gfx = Graphics.FromImage(image.Bitmap))
+                {
+                    int originalWidth = (int) ((double) selected.Width / (double) selected.Height * 512.0);
+//                    gfx.DrawImage(selected, 0, 0, (int)((double)selected.Width / (double)selected.Height * 512.0), 512);
+                    gfx.DrawImage(selected, 256 - originalWidth / 2, 0, originalWidth, 512);
+                }
+
+                image.Bitmap.Save(dlgFolder.SelectedPath + "\\crop.png", ImageFormat.Png);
+                FeatureBlurriness.Get2DFFT(image).Bitmap.Save(dlgFolder.SelectedPath + "\\DFT.png", ImageFormat.Png);
+            }
         }
     }
 }

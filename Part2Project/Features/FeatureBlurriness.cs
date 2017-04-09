@@ -22,7 +22,8 @@ namespace Part2Project.Features
             using (var fft = new FFT(image512X512))
             {
                 fft.ForwardFFT();
-                fft.FFTPlot();
+                fft.FFTShift();
+                fft.FFTPlot(fft.FFTShifted);
 
                 for (int x = 271; x < 512; x++)
                 {

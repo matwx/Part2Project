@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -225,7 +226,21 @@ namespace Part2Project
                 }
             }
 
-            viewer3.Image = result;
+            viewer5.Image = result;
+
+            Bitmap result2 = new Bitmap(bmp.Width, bmp.Height);
+
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    Color c = bmp.GetPixel(i, j);
+                    double val = Math.Sqrt(0.299 * c.R * c.R + 0.587 * c.G * c.G + 0.114 * c.B * c.B);
+                    result2.SetPixel(i, j, Color.FromArgb((int)val, (int)val, (int)val));
+                }
+            }
+
+            viewer3.Image = result2;
         }
 
         private void btnDiff_Click(object sender, EventArgs e)
@@ -253,6 +268,15 @@ namespace Part2Project
             }
 
             viewer4.Image = result;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            if (dlgChooseFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
+
+            viewer.Image.Save(dlgChooseFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+            viewer2.Image.Save(dlgChooseFolder.SelectedPath + "\\grey.png", ImageFormat.Png);
         }
     }
 }

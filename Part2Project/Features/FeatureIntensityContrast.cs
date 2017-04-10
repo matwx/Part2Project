@@ -81,15 +81,56 @@ namespace Part2Project.Features
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    if (values[x][y] < 0)
+                    values[x][y] /= 180.08;
+                    // blue, cyan, green, yellow, red
+                    // -1  , -0.5,  0   ,  0.5  ,  1
+                    var blu = Color.DarkBlue;
+                    var cya = Color.Cyan;
+                    var gre = Color.ForestGreen;
+                    var yel = Color.Yellow;
+                    var red = Color.Red;
+
+                    if (values[x][y] < -0.5)
                     {
-                        result.SetPixel(x, y, Color.FromArgb(0, -(int)(values[x][y] / maxVal * 255), -(int)(values[x][y] / maxVal * 255)));
+                        double val = (values[x][y] + 1) * 2;
+                        result.SetPixel(x, y, Color.FromArgb(
+                            (int)(blu.R * (1 - val) + cya.R * val),
+                            (int)(blu.G * (1 - val) + cya.G * val),
+                            (int)(blu.B * (1 - val) + cya.B * val)));
+                    }
+                    else if (values[x][y] < 0)
+                    {
+                        double val = (values[x][y] + 0.5) * 2;
+                        result.SetPixel(x, y, Color.FromArgb(
+                            (int)(cya.R * (1 - val) + gre.R * val),
+                            (int)(cya.G * (1 - val) + gre.G * val),
+                            (int)(cya.B * (1 - val) + gre.B * val)));
+                    }
+                    else if (values[x][y] < 0.5)
+                    {
+                        double val = values[x][y] * 2;
+                        result.SetPixel(x, y, Color.FromArgb(
+                            (int)(gre.R * (1 - val) + yel.R * val),
+                            (int)(gre.G * (1 - val) + yel.G * val),
+                            (int)(gre.B * (1 - val) + yel.B * val)));
                     }
                     else
                     {
-                        result.SetPixel(x, y, Color.FromArgb((int)(values[x][y] / maxVal * 255), (int)(values[x][y] / maxVal * 255), 0));
+                        double val = (values[x][y] - 0.5) * 2;
+                        result.SetPixel(x, y, Color.FromArgb(
+                            (int)(yel.R * (1 - val) + red.R * val),
+                            (int)(yel.G * (1 - val) + red.G * val),
+                            (int)(yel.B * (1 - val) + red.B * val)));
                     }
-                    
+
+//                    if (values[x][y] < 0)
+//                    {
+//                        result.SetPixel(x, y, Color.FromArgb(0, -(int)(values[x][y] / maxVal * 255), -(int)(values[x][y] / maxVal * 255)));
+//                    }
+//                    else
+//                    {
+//                        result.SetPixel(x, y, Color.FromArgb((int)(values[x][y] / maxVal * 255), (int)(values[x][y] / maxVal * 255), 0));
+//                    }
                 }
             }
 

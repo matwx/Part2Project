@@ -38,6 +38,7 @@
             this.btnIC = new System.Windows.Forms.Button();
             this.viewer2 = new System.Windows.Forms.PictureBox();
             this.btnICDiffMap = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             this.SuspendLayout();
@@ -126,11 +127,22 @@
             this.btnICDiffMap.Visible = false;
             this.btnICDiffMap.Click += new System.EventHandler(this.btnICDiffMap_Click);
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(389, 10);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(86, 37);
+            this.btnSave.TabIndex = 33;
+            this.btnSave.Text = "Save Both";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(675, 311);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnICDiffMap);
             this.Controls.Add(this.viewer2);
             this.Controls.Add(this.btnIC);
@@ -160,6 +172,7 @@
         private System.Windows.Forms.Button btnIC;
         private System.Windows.Forms.PictureBox viewer2;
         private System.Windows.Forms.Button btnICDiffMap;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 

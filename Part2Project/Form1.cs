@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -164,6 +165,15 @@ namespace Part2Project
         private void btnICDiffMap_Click(object sender, EventArgs e)
         {
             viewer2.Image = new FeatureIntensityContrast().GetWeberContrastMap(bmp);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dlgChooseFolder.ShowDialog();
+            if (dlgChooseFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
+
+            viewer.Image.Save(dlgChooseFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+            viewer2.Image.Save(dlgChooseFolder.SelectedPath + "\\intCont.png", ImageFormat.Png);
         }
     }
 }

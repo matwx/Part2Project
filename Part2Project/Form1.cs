@@ -602,6 +602,100 @@ namespace Part2Project
                 }
             }
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                for (int seg = 1; seg >= 0; seg--)
+                {
+                    double totalRho = 0;
+
+                    //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                    // Compute spearmans for each record in dataset
+                    for (int i = 0; i < _records.Count; i++)
+                    {
+                        // If we have a record from dataset with the correct seg bool
+                        if (_records[i].DatasetNum == datasetNum && _records[i].SegFeaturesEnabled == (seg == 1) && _records[i].ManualSorting2[0].Length > 0)
+                        {
+                            // We want to compute the fraction of efficient top-10 that are in manual top-10
+                            double numinBothTopTen = 0;
+                            for (int r = 0; r < 10; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[i].ManualSorting2[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                if (jRank < 10)
+                                {
+                                    // It is in that bottom-left square of the scatterGraph
+                                    numinBothTopTen++;
+                                }
+                            }
+
+                            double rho = numinBothTopTen / 10.0;
+                            totalRho += rho;
+
+                            txt.Text += rho + Environment.NewLine;
+                            //                            txt.Text += _records[i].Name + " effCorrel: " + rho + Environment.NewLine;
+                        }
+                    }
+
+                    //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                    //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                    txt.Text += Environment.NewLine;
+                }
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+
+            for (int datasetNum = 1; datasetNum <= 4; datasetNum++)
+            {
+                for (int seg = 1; seg >= 0; seg--)
+                {
+                    double totalRho = 0, numPairs = 0;
+
+                    //txt.Text += "Dataset " + datasetNum + Environment.NewLine + Environment.NewLine;
+
+                    // Compute spearmans for each record in dataset
+                    for (int i = 0; i < _records.Count; i++)
+                    {
+                        // If we have a record from dataset with the correct seg bool
+                        if (_records[i].DatasetNum == datasetNum && _records[i].SegFeaturesEnabled == (seg == 1) && _records[i].ManualSorting2[0].Length > 0)
+                        {
+                            // We want to compute the correlation for the intuitive against manual
+                            int sum_d_squared = 0;
+                            for (int r = 0; r < 40; r++)
+                            {
+                                // The iRank is 'r'
+                                string searchFor = _records[i].ManualSorting2[r];
+                                // Search for 'searchFor' in the sorted feature list for feature i
+                                int jRank = Array.IndexOf(_records[i].ManualSorting, searchFor);
+                                int d = jRank - r;
+                                sum_d_squared += d * d;
+                            }
+
+                            double rho = 1.0 - 6.0 * sum_d_squared / (40.0 * (40.0 * 40.0 - 1.0));
+                            totalRho += rho;
+                            numPairs++;
+
+                            txt.Text += rho + Environment.NewLine;
+                            //                            txt.Text += _records[i].Name + " efficientCorrel: " + rho + Environment.NewLine;
+                        }
+                    }
+
+                    //txt.Text += Environment.NewLine + "average rho for dataset " + datasetNum + ": " + (totalRho / numPairs);
+                    //txt.Text += Environment.NewLine + Environment.NewLine + Environment.NewLine;
+                    txt.Text += Environment.NewLine;
+                }
+            }
+        }
     }
 
     public class Pair : IComparable
@@ -650,6 +744,7 @@ namespace Part2Project
         public string[] DatasetMapping { get; private set; }
         public string[] OriginalSorting { get; private set; }
         public string[] ManualSorting { get; private set; }
+        public string[] ManualSorting2 { get; private set; }
         public string[] IntuitiveSorting { get; private set; }
         public string[] EfficientSorting { get; private set; }
         public LoP LevelOfPhotography { get; private set; }
@@ -698,6 +793,7 @@ namespace Part2Project
             {
                 OriginalSorting[i] = canonicalNames[Array.IndexOf(DatasetMapping, OriginalSorting[i])];
                 ManualSorting[i] = canonicalNames[Array.IndexOf(DatasetMapping, ManualSorting[i])];
+                if (ManualSorting2[0].Length > 0) ManualSorting2[i] = canonicalNames[Array.IndexOf(DatasetMapping, ManualSorting2[i])];
                 IntuitiveSorting[i] = canonicalNames[Array.IndexOf(DatasetMapping, IntuitiveSorting[i])];
                 EfficientSorting[i] = canonicalNames[Array.IndexOf(DatasetMapping, EfficientSorting[i])];
             }
@@ -828,6 +924,14 @@ namespace Part2Project
                 case "Slider-based Assisted Sorting (Stage 2 Part 2)":
                     FavouriteMethod = Method.SliderBased;
                     break;
+            }
+            file.ReadLine();
+            file.ReadLine();
+            file.ReadLine();
+            ManualSorting2 = new string[40];
+            for (int i = 0; i < 40; i++)
+            {
+                ManualSorting2[i] = file.ReadLine();
             }
 
             // Close the file

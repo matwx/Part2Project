@@ -71,6 +71,7 @@
             this.viewer10 = new System.Windows.Forms.PictureBox();
             this.btnKMeansFolder = new System.Windows.Forms.Button();
             this.btnBGTGFolder = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.viewer3)).BeginInit();
@@ -446,11 +447,22 @@
             this.btnBGTGFolder.UseVisualStyleBackColor = true;
             this.btnBGTGFolder.Click += new System.EventHandler(this.btnBGTGFolder_Click);
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(1010, 12);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(94, 39);
+            this.btnSave.TabIndex = 39;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1319, 863);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnBGTGFolder);
             this.Controls.Add(this.btnKMeansFolder);
             this.Controls.Add(this.label13);
@@ -553,6 +565,7 @@
         private System.Windows.Forms.PictureBox viewer10;
         private System.Windows.Forms.Button btnKMeansFolder;
         private System.Windows.Forms.Button btnBGTGFolder;
+        private System.Windows.Forms.Button btnSave;
 
 
     }

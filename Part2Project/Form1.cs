@@ -1561,6 +1561,17 @@ namespace Part2Project
 
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dlgPRFolder.ShowDialog();
+            if (dlgPRFolder.SelectedPath == "" || viewer2.Image == null) return;
+
+            viewer1.Image.Save(dlgPRFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+            viewer2.Image.Save(dlgPRFolder.SelectedPath + "\\naive.png", ImageFormat.Png);
+            viewer3.Image.Save(dlgPRFolder.SelectedPath + "\\sal.png", ImageFormat.Png);
+            viewer7.Image.Save(dlgPRFolder.SelectedPath + "\\true.png", ImageFormat.Png);
+        }
+
         
     }
 

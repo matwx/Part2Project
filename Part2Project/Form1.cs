@@ -45,11 +45,11 @@ namespace Part2Project
             "Brightness",
             "Intensity_Contrast",
             "Saturation",
-            "RoT",
-            "RoI_Size",
             "Blurriness",
-            "Background_Distraction",
-            "Shape_Convexity"
+            "RoI_Size",
+            "RoT",
+            "Shape_Convexity",
+            "Background_Distraction"
         };
 
         private void btnDoTest_Click(object sender, EventArgs e)

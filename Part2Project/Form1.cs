@@ -700,11 +700,15 @@ namespace Part2Project
         private void button10_Click(object sender, EventArgs e)
         {
             txt.Text = "";
+            int count = 0;
+            string nl = Environment.NewLine;
             double[] averageFVs = new double[8];
             int[] favouriteFVs = new int[8];
 
             foreach (var record in _records)
             {
+                if (!record.SegFeaturesEnabled) continue;
+                count++;
                 // Normalise weights
                 double maxWeight = 0;
                 int bestYet = 0;
@@ -723,28 +727,31 @@ namespace Part2Project
                 favouriteFVs[bestYet]++;
             }
 
-            string nl = Environment.NewLine;
+
             for (int i = 0; i < 8; i++)
             {
-                averageFVs[i] /= _records.Count;
-                txt.Text += "Average " + featureNames[i] + " weight: " + averageFVs[i] + nl;
+                averageFVs[i] /= count;
+                txt.Text += averageFVs[i] + nl;
             }
             txt.Text += nl;
             for (int i = 0; i < 8; i++)
             {
-                averageFVs[i] /= _records.Count;
-                txt.Text += featureNames[i] + " popular count: " + favouriteFVs[i] + nl;
+                txt.Text += favouriteFVs[i] + nl;
             }
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
             txt.Text = "";
+            int count = 0;
+            string nl = Environment.NewLine;
             double[] averageFVs = new double[8];
             int[] favouriteFVs = new int[8];
 
             foreach (var record in _records)
             {
+                if (!record.SegFeaturesEnabled) continue;
+                count++;
                 // Normalise weights
                 double maxWeight = 0;
                 int bestYet = 0;
@@ -763,17 +770,102 @@ namespace Part2Project
                 favouriteFVs[bestYet]++;
             }
 
-            string nl = Environment.NewLine;
+
             for (int i = 0; i < 8; i++)
             {
-                averageFVs[i] /= _records.Count;
-                txt.Text += "Average " + featureNames[i] + " weight: " + averageFVs[i] + nl;
+                averageFVs[i] /= count;
+                txt.Text += averageFVs[i] + nl;
             }
             txt.Text += nl;
             for (int i = 0; i < 8; i++)
             {
-                averageFVs[i] /= _records.Count;
-                txt.Text += featureNames[i] + " popular count: " + favouriteFVs[i] + nl;
+                txt.Text += favouriteFVs[i] + nl;
+            }
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+            int count = 0;
+            string nl = Environment.NewLine;
+            double[] averageFVs = new double[4];
+            int[] favouriteFVs = new int[4];
+
+            foreach (var record in _records)
+            {
+                if (record.SegFeaturesEnabled) continue;
+                count++;
+                // Normalise weights
+                double maxWeight = 0;
+                int bestYet = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (Math.Abs(record.EfficientWeights[i]) > maxWeight)
+                    {
+                        maxWeight = Math.Abs(record.EfficientWeights[i]);
+                        bestYet = i;
+                    }
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    if (maxWeight > 0) averageFVs[i] += record.EfficientWeights[i] / maxWeight;
+                }
+                favouriteFVs[bestYet]++;
+            }
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                averageFVs[i] /= count;
+                txt.Text += averageFVs[i] + nl;
+            }
+            txt.Text += nl;
+            for (int i = 0; i < 4; i++)
+            {
+                txt.Text += favouriteFVs[i] + nl;
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+            int count = 0;
+            string nl = Environment.NewLine;
+            double[] averageFVs = new double[4];
+            int[] favouriteFVs = new int[4];
+
+            foreach (var record in _records)
+            {
+                if (record.SegFeaturesEnabled) continue;
+                count++;
+                // Normalise weights
+                double maxWeight = 0;
+                int bestYet = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (Math.Abs(record.IntuitiveWeights[i]) > maxWeight)
+                    {
+                        maxWeight = Math.Abs(record.IntuitiveWeights[i]);
+                        bestYet = i;
+                    }
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    if (maxWeight > 0) averageFVs[i] += record.IntuitiveWeights[i] / maxWeight;
+                }
+                favouriteFVs[bestYet]++;
+            }
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                averageFVs[i] /= count;
+                txt.Text += averageFVs[i] + nl;
+            }
+            txt.Text += nl;
+            for (int i = 0; i < 4; i++)
+            {
+                txt.Text += favouriteFVs[i] + nl;
             }
         }
     }

@@ -696,6 +696,46 @@ namespace Part2Project
                 }
             }
         }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            txt.Text = "";
+            double[] averageFVs = new double[8];
+            int[] favouriteFVs = new int[8];
+
+            foreach (var record in _records)
+            {
+                // Normalise weights
+                double maxWeight = 0;
+                int bestYet = 0;
+                for (int i = 0; i < 8; i++)
+                {
+                    if (Math.Abs(record.EfficientWeights[i]) > maxWeight)
+                    {
+                        maxWeight = Math.Abs(record.EfficientWeights[i]);
+                        bestYet = i;
+                    }
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    if (maxWeight > 0) averageFVs[i] += record.EfficientWeights[i] / maxWeight;
+                }
+                favouriteFVs[bestYet]++;
+            }
+
+            string nl = Environment.NewLine;
+            for (int i = 0; i < 8; i++)
+            {
+                averageFVs[i] /= _records.Count;
+                txt.Text += "Average " + featureNames[i] + " weight: " + averageFVs[i] + nl;
+            }
+            txt.Text += nl;
+            for (int i = 0; i < 8; i++)
+            {
+                averageFVs[i] /= _records.Count;
+                txt.Text += featureNames[i] + " popular count: " + favouriteFVs[i] + nl;
+            }
+        }
     }
 
     public class Pair : IComparable

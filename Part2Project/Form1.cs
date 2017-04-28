@@ -722,7 +722,7 @@ namespace Part2Project
                 }
                 for (int i = 0; i < 8; i++)
                 {
-                    if (maxWeight > 0) averageFVs[i] += record.EfficientWeights[i] / maxWeight;
+                    if (maxWeight > 0) averageFVs[i] += Math.Abs(record.EfficientWeights[i]) / maxWeight;
                 }
                 favouriteFVs[bestYet]++;
             }
@@ -765,7 +765,7 @@ namespace Part2Project
                 }
                 for (int i = 0; i < 8; i++)
                 {
-                    if (maxWeight > 0) averageFVs[i] += record.IntuitiveWeights[i] / maxWeight;
+                    if (maxWeight > 0) averageFVs[i] += Math.Abs(record.IntuitiveWeights[i]) / maxWeight;
                 }
                 favouriteFVs[bestYet]++;
             }
@@ -808,7 +808,7 @@ namespace Part2Project
                 }
                 for (int i = 0; i < 4; i++)
                 {
-                    if (maxWeight > 0) averageFVs[i] += record.EfficientWeights[i] / maxWeight;
+                    if (maxWeight > 0) averageFVs[i] += Math.Abs(record.EfficientWeights[i]) / maxWeight;
                 }
                 favouriteFVs[bestYet]++;
             }
@@ -851,7 +851,7 @@ namespace Part2Project
                 }
                 for (int i = 0; i < 4; i++)
                 {
-                    if (maxWeight > 0) averageFVs[i] += record.IntuitiveWeights[i] / maxWeight;
+                    if (maxWeight > 0) averageFVs[i] += Math.Abs(record.IntuitiveWeights[i]) / maxWeight;
                 }
                 favouriteFVs[bestYet]++;
             }

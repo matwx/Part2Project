@@ -183,5 +183,35 @@ namespace Part2Project
                 FeatureBlurriness.Get2DFFT(image).Bitmap.Save(dlgFolder.SelectedPath + "\\DFT.png", ImageFormat.Png);
             }
         }
+
+        private void btnInverse_Click(object sender, EventArgs e)
+        {
+            DirectBitmap image = new DirectBitmap(128,128);
+            for (int x = 0; x < 128; x++)
+            {
+                for (int y = 0; y < 128; y++)
+                {
+                    image.SetPixel(x, y, Color.Black);
+                }
+            }
+
+//            image.SetPixel(260, 252, Color.White);
+//            image.SetPixel(252, 260, Color.White);
+
+            image.SetPixel(70, 58, Color.White);
+            image.SetPixel(58, 70, Color.White);
+
+            pictureBox1.Image = image.Bitmap;
+            pictureBox2.Image = FeatureBlurriness.GetInverseFFT(image).Bitmap;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            dlgFolder.ShowDialog();
+            if (dlgFolder.SelectedPath == "") return;
+
+            pictureBox1.Image.Save(dlgFolder.SelectedPath + "\\orig.png", ImageFormat.Png);
+            pictureBox2.Image.Save(dlgFolder.SelectedPath + "\\out.png", ImageFormat.Png);
+        }
     }
 }

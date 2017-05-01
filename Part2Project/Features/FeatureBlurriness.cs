@@ -60,5 +60,48 @@ namespace Part2Project.Features
 
             return result;
         }
+
+        public static DirectBitmap GetInverseFFT(DirectBitmap image)
+        {
+            DirectBitmap result;
+
+            COMPLEX[,] Fourier = new COMPLEX[image.Width, image.Width];
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Width; y++)
+                {
+                    var val = image.GetPixel(x, y).R;
+                    Fourier[x,y] = new COMPLEX(val, val);
+                }
+            }
+
+
+            using (var fft = new FFT(Fourier))
+            {
+                fft.RemoveFFTShift();
+                fft.InverseFFT();
+                result = new DirectBitmap(fft.Obj.Bitmap);
+            }
+
+            int max = 0;
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Width; y++)
+                {
+                    if (result.GetPixel(x, y).R > max) max = result.GetPixel(x, y).R;
+                }
+            }
+
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Width; y++)
+                {
+                    var val = (int)(result.GetPixel(x, y).R / (double) max * 255.0);
+                    result.SetPixel(x, y, Color.FromArgb(val, val ,val));
+                }
+            }
+
+            return result;
+        }
     }
 }

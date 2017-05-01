@@ -171,6 +171,7 @@ namespace CP.FFTLibrary
         {
             int i, j;
             FFTNormal = new COMPLEX[nx, ny];
+            FFTShifted = Fourier;
 
             for (i = 0; i <= (nx / 2) - 1; i++)
                 for (j = 0; j <= (ny / 2) - 1; j++)
@@ -180,7 +181,7 @@ namespace CP.FFTLibrary
                     FFTNormal[i + (nx / 2), j] = FFTShifted[i, j + (ny / 2)];
                     FFTNormal[i, j + (nx / 2)] = FFTShifted[i + (nx / 2), j];
                 }
-            return;
+            Fourier = FFTNormal;
         }
         /// <summary>
         /// FFT Plot Method for Shifted FFT
@@ -335,6 +336,7 @@ namespace CP.FFTLibrary
             Obj = null;  // Setting Object Image to Null
             //Copying Real Image Back to Greyscale
             //Copy Image Data to the Complex Array
+            GreyImage = new int[nx, ny];
             for (i = 0; i <= Width - 1; i++)
                 for (j = 0; j <= Height - 1; j++)
                 {

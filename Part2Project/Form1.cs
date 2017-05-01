@@ -913,7 +913,7 @@ namespace Part2Project
                     int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
 
                     int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
-                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.IntuitiveSorting, canonicalNames[i]);
 
                     if (points.ContainsKey(Tuple.Create(x, y)))
                     {
@@ -954,7 +954,7 @@ namespace Part2Project
             }
 
             gfx.DrawString("Manual Rank", DefaultFont, Brushes.Black, baseX + 20 * gridDist - 30, graph.Height - (baseY - 10));
-            gfx.DrawString("Efficient Rank", DefaultFont, Brushes.Black, baseX - 80, graph.Height - (baseY + 20*gridDist));
+            gfx.DrawString("Intuitive Rank", DefaultFont, Brushes.Black, baseX - 80, graph.Height - (baseY + 20*gridDist));
 
             viewer.Image = graph.Bitmap;
         }
@@ -1028,7 +1028,7 @@ namespace Part2Project
                     int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
 
                     int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
-                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.IntuitiveSorting, canonicalNames[i]);
 
                     if (points.ContainsKey(Tuple.Create(x, y)))
                     {
@@ -1069,7 +1069,7 @@ namespace Part2Project
             }
 
             gfx.DrawString("Manual Rank", DefaultFont, Brushes.Black, baseX + 20 * gridDist - 30, graph.Height - (baseY - 10));
-            gfx.DrawString("Efficient Rank", DefaultFont, Brushes.Black, baseX - 80, graph.Height - (baseY + 20 * gridDist));
+            gfx.DrawString("Intuitive Rank", DefaultFont, Brushes.Black, baseX - 80, graph.Height - (baseY + 20 * gridDist));
 
             viewer.Image = graph.Bitmap;
         }

@@ -195,11 +195,14 @@ namespace Part2Project
                 }
             }
 
-//            image.SetPixel(260, 252, Color.White);
-//            image.SetPixel(252, 260, Color.White);
-
             image.SetPixel(70, 58, Color.White);
             image.SetPixel(58, 70, Color.White);
+            
+            image.SetPixel(64, 57, Color.White);
+            image.SetPixel(64, 73, Color.White);
+
+//            image.SetPixel(80, 48, Color.White);
+//            image.SetPixel(48, 80, Color.White);
 
             pictureBox1.Image = image.Bitmap;
             pictureBox2.Image = FeatureBlurriness.GetInverseFFT(image).Bitmap;

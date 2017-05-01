@@ -45,6 +45,12 @@
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
+            this.viewer = new System.Windows.Forms.PictureBox();
+            this.graph1 = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnChooseColours = new System.Windows.Forms.Button();
+            this.graph2 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
             // 
             // btnReadRecords
@@ -73,7 +79,7 @@
             this.txt.Multiline = true;
             this.txt.Name = "txt";
             this.txt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt.Size = new System.Drawing.Size(499, 418);
+            this.txt.Size = new System.Drawing.Size(499, 504);
             this.txt.TabIndex = 5;
             // 
             // button1
@@ -206,11 +212,64 @@
             this.button13.UseVisualStyleBackColor = true;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
+            // viewer
+            // 
+            this.viewer.Location = new System.Drawing.Point(517, 12);
+            this.viewer.Name = "viewer";
+            this.viewer.Size = new System.Drawing.Size(512, 512);
+            this.viewer.TabIndex = 19;
+            this.viewer.TabStop = false;
+            // 
+            // graph1
+            // 
+            this.graph1.Location = new System.Drawing.Point(618, 530);
+            this.graph1.Name = "graph1";
+            this.graph1.Size = new System.Drawing.Size(95, 48);
+            this.graph1.TabIndex = 20;
+            this.graph1.Text = "D1 and 3 Seg Man-Efficient Graph";
+            this.graph1.UseVisualStyleBackColor = true;
+            this.graph1.Click += new System.EventHandler(this.graph1_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(820, 530);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(95, 48);
+            this.btnSave.TabIndex = 21;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnChooseColours
+            // 
+            this.btnChooseColours.Location = new System.Drawing.Point(517, 530);
+            this.btnChooseColours.Name = "btnChooseColours";
+            this.btnChooseColours.Size = new System.Drawing.Size(95, 48);
+            this.btnChooseColours.TabIndex = 22;
+            this.btnChooseColours.Text = "Choose Colours";
+            this.btnChooseColours.UseVisualStyleBackColor = true;
+            this.btnChooseColours.Click += new System.EventHandler(this.btnChooseColours_Click);
+            // 
+            // graph2
+            // 
+            this.graph2.Location = new System.Drawing.Point(719, 530);
+            this.graph2.Name = "graph2";
+            this.graph2.Size = new System.Drawing.Size(95, 48);
+            this.graph2.TabIndex = 23;
+            this.graph2.Text = "D1 and 3 N-Seg Man-Efficient Graph";
+            this.graph2.UseVisualStyleBackColor = true;
+            this.graph2.Click += new System.EventHandler(this.graph2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(523, 598);
+            this.ClientSize = new System.Drawing.Size(1185, 687);
+            this.Controls.Add(this.graph2);
+            this.Controls.Add(this.btnChooseColours);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.graph1);
+            this.Controls.Add(this.viewer);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.button11);
@@ -230,6 +289,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.viewer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,6 +314,11 @@
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.PictureBox viewer;
+        private System.Windows.Forms.Button graph1;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnChooseColours;
+        private System.Windows.Forms.Button graph2;
 
 
 

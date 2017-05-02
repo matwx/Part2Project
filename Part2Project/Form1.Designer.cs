@@ -94,7 +94,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(464, 30);
+            this.btnSave.Location = new System.Drawing.Point(998, 30);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 53);
             this.btnSave.TabIndex = 6;
@@ -104,7 +104,7 @@
             // 
             // btnInverse
             // 
-            this.btnInverse.Location = new System.Drawing.Point(252, 30);
+            this.btnInverse.Location = new System.Drawing.Point(786, 30);
             this.btnInverse.Name = "btnInverse";
             this.btnInverse.Size = new System.Drawing.Size(75, 53);
             this.btnInverse.TabIndex = 7;
@@ -114,7 +114,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(333, 30);
+            this.button2.Location = new System.Drawing.Point(867, 30);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 53);
             this.button2.TabIndex = 8;

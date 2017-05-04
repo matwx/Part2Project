@@ -50,6 +50,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnChooseColours = new System.Windows.Forms.Button();
             this.graph2 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -260,11 +261,22 @@
             this.graph2.UseVisualStyleBackColor = true;
             this.graph2.Click += new System.EventHandler(this.graph2_Click);
             // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(618, 584);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(95, 48);
+            this.button14.TabIndex = 24;
+            this.button14.Text = "D13SegEffGraph w/o broken";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1185, 687);
+            this.Controls.Add(this.button14);
             this.Controls.Add(this.graph2);
             this.Controls.Add(this.btnChooseColours);
             this.Controls.Add(this.btnSave);
@@ -319,6 +331,7 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnChooseColours;
         private System.Windows.Forms.Button graph2;
+        private System.Windows.Forms.Button button14;
 
 
 

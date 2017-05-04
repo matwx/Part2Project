@@ -915,7 +915,7 @@ namespace Part2Project
                     int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
                     int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
 
-                    if (x == 4 && y == 32)
+                    if (x == 1 && y == 34)
                     {
                         Console.WriteLine();
                     }
@@ -1127,7 +1127,9 @@ namespace Part2Project
 
                     if (colourIndex == 22 ||
                         colourIndex == 2  ||
-                        colourIndex == 20)
+                        colourIndex == 20 ||
+                        colourIndex == 54 ||
+                        colourIndex == 66)
                     {
                         continue;
                     }

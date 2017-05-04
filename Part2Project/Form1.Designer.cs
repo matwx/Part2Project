@@ -50,7 +50,14 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnChooseColours = new System.Windows.Forms.Button();
             this.graph2 = new System.Windows.Forms.Button();
-            this.button14 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
+            this.button18 = new System.Windows.Forms.Button();
+            this.button19 = new System.Windows.Forms.Button();
+            this.button20 = new System.Windows.Forms.Button();
+            this.txtNumRemoved = new System.Windows.Forms.TextBox();
+            this.button21 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.viewer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -261,22 +268,96 @@
             this.graph2.UseVisualStyleBackColor = true;
             this.graph2.Click += new System.EventHandler(this.graph2_Click);
             // 
-            // button14
+            // button15
             // 
-            this.button14.Location = new System.Drawing.Point(618, 584);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(95, 48);
-            this.button14.TabIndex = 24;
-            this.button14.Text = "D13SegEffGraph w/o broken";
-            this.button14.UseVisualStyleBackColor = true;
-            this.button14.Click += new System.EventHandler(this.button14_Click);
+            this.button15.Location = new System.Drawing.Point(1110, 627);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(63, 48);
+            this.button15.TabIndex = 25;
+            this.button15.Text = "Find Most bad photos";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(1052, 627);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(52, 48);
+            this.button16.TabIndex = 26;
+            this.button16.Text = "Data without bad";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
+            // button17
+            // 
+            this.button17.Location = new System.Drawing.Point(994, 627);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(52, 48);
+            this.button17.TabIndex = 27;
+            this.button17.Text = "Data with bad";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(811, 584);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(90, 48);
+            this.button18.TabIndex = 28;
+            this.button18.Text = "Correlations removing Efficient";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(907, 584);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(90, 48);
+            this.button19.TabIndex = 29;
+            this.button19.Text = "Correlations removing Intuitive";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
+            // button20
+            // 
+            this.button20.Location = new System.Drawing.Point(618, 584);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(50, 48);
+            this.button20.TabIndex = 30;
+            this.button20.Text = "w/o n broken";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
+            // 
+            // txtNumRemoved
+            // 
+            this.txtNumRemoved.Location = new System.Drawing.Point(562, 599);
+            this.txtNumRemoved.Name = "txtNumRemoved";
+            this.txtNumRemoved.Size = new System.Drawing.Size(50, 20);
+            this.txtNumRemoved.TabIndex = 31;
+            // 
+            // button21
+            // 
+            this.button21.Location = new System.Drawing.Point(674, 584);
+            this.button21.Name = "button21";
+            this.button21.Size = new System.Drawing.Size(50, 48);
+            this.button21.TabIndex = 32;
+            this.button21.Text = "show n broken";
+            this.button21.UseVisualStyleBackColor = true;
+            this.button21.Click += new System.EventHandler(this.button21_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1185, 687);
-            this.Controls.Add(this.button14);
+            this.ClientSize = new System.Drawing.Size(1185, 698);
+            this.Controls.Add(this.button21);
+            this.Controls.Add(this.txtNumRemoved);
+            this.Controls.Add(this.button20);
+            this.Controls.Add(this.button19);
+            this.Controls.Add(this.button18);
+            this.Controls.Add(this.button17);
+            this.Controls.Add(this.button16);
+            this.Controls.Add(this.button15);
             this.Controls.Add(this.graph2);
             this.Controls.Add(this.btnChooseColours);
             this.Controls.Add(this.btnSave);
@@ -331,7 +412,14 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnChooseColours;
         private System.Windows.Forms.Button graph2;
-        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.TextBox txtNumRemoved;
+        private System.Windows.Forms.Button button21;
 
 
 

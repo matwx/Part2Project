@@ -915,7 +915,7 @@ namespace Part2Project
                     int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
                     int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
 
-                    if (x == 1 && y == 34)
+                    if (x == 1 && y == 37)
                     {
                         Console.WriteLine();
                     }
@@ -1125,11 +1125,16 @@ namespace Part2Project
                     int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
                     int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
 
-                    if (colourIndex == 22 ||
-                        colourIndex == 2  ||
+                    if (colourIndex == 2 ||
+                        colourIndex == 22  ||
                         colourIndex == 20 ||
+                        colourIndex == 19 ||
+                        colourIndex == 66 ||
                         colourIndex == 54 ||
-                        colourIndex == 66)
+                        colourIndex == 73 ||
+                        colourIndex == 40 ||
+                        colourIndex == 24 ||
+                        colourIndex == 77)
                     {
                         continue;
                     }
@@ -1154,6 +1159,702 @@ namespace Part2Project
                 int x = point.Key.Item1;
                 int y = point.Key.Item2;
                 int rad = pointRad + point.Value;
+
+                gfx.FillEllipse(new SolidBrush(graph.GetPixel(baseX + gridDist * (x + 1), baseY + gridDist * (y + 1))),
+                        baseX + gridDist * (x + 1) - rad,
+                        baseY + gridDist * (y + 1) - rad,
+                        rad * 2, rad * 2);
+            }
+
+            // Flip image in Y
+            for (int x = 0; x < graph.Width; x++)
+            {
+                for (int y = 0; y < graph.Height / 2; y++)
+                {
+                    Color tmp = graph.GetPixel(x, y);
+                    graph.SetPixel(x, y, graph.GetPixel(x, graph.Height - y - 1));
+                    graph.SetPixel(x, graph.Height - y - 1, tmp);
+                }
+            }
+
+            gfx.DrawString("Manual Rank", DefaultFont, Brushes.Black, baseX + 20 * gridDist - 30, graph.Height - (baseY - 10));
+            gfx.DrawString("Efficient Rank", DefaultFont, Brushes.Black, baseX - 80, graph.Height - (baseY + 20 * gridDist));
+
+            viewer.Image = graph.Bitmap;
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            string[] canonicalNames = new[]
+            {
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+            };
+
+            int[] residuals = new int[80];
+            Dictionary<int, int> resid = new Dictionary<int, int>();
+
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    if (resid.ContainsKey(colourIndex)) resid[colourIndex] += (x - y) * (x - y);
+                    else resid.Add(colourIndex, (x - y) * (x - y));
+                }
+            }
+        
+            var rList = resid.ToList();
+            rList.Sort((pair1,pair2) => pair1.Value.CompareTo(pair2.Value));
+            rList.Reverse();
+
+            txt.Text = "";
+            String nl = Environment.NewLine;
+            foreach (var keyValuePair in rList)
+            {
+                txt.Text += keyValuePair.Key + ": " + keyValuePair.Value + nl;
+            }
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            string[] canonicalNames = new[]
+            {
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+            };
+
+            txt.Text = "";
+            String nl = Environment.NewLine;
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    if (colourIndex == 2 ||
+                        colourIndex == 22 ||
+                        colourIndex == 20 ||
+                        colourIndex == 19 ||
+                        colourIndex == 66 ||
+                        colourIndex == 54 ||
+                        colourIndex == 73 ||
+                        colourIndex == 40 ||
+                        colourIndex == 24 ||
+                        colourIndex == 77)
+                    {
+                        continue;
+                    }
+
+                    txt.Text += x + "," + y + nl;
+                }
+            }
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            string[] canonicalNames = new[]
+            {
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+            };
+
+            txt.Text = "";
+            String nl = Environment.NewLine;
+            double xBar = 0, yBar = 0, count = 0;
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    if (colourIndex == 2 ||
+                        colourIndex == 22 ||
+                        colourIndex == 20 ||
+                        colourIndex == 19 ||
+                        colourIndex == 66 ||
+                        colourIndex == 54 ||
+                        colourIndex == 73 ||
+                        colourIndex == 40 ||
+                        colourIndex == 24 ||
+                        colourIndex == 77)
+                    {
+                        continue;
+                    }
+
+                    xBar += x;
+                    yBar += y;
+                    count++;
+                }
+            }
+            xBar /= count;
+            yBar /= count;
+
+            double numerator = 0, denLeft = 0, denRight = 0;
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    if (colourIndex == 2 ||
+                        colourIndex == 22 ||
+                        colourIndex == 20 ||
+                        colourIndex == 19 ||
+                        colourIndex == 66 ||
+                        colourIndex == 54 ||
+                        colourIndex == 73 ||
+                        colourIndex == 40 ||
+                        colourIndex == 24 ||
+                        colourIndex == 77)
+                    {
+                        continue;
+                    }
+
+                    numerator += (x - xBar) * (y - yBar);
+                    denLeft += (x - xBar) * (x - xBar);
+                    denRight += (y - yBar) * (y - yBar);
+                }
+            }
+
+            double r = numerator / (Math.Sqrt(denLeft) * Math.Sqrt(denRight));
+            txt.Text += r + nl;
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            string[] canonicalNames = new[]
+            {
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+            };
+
+            int[] residuals = new int[80];
+            Dictionary<int, int> resid = new Dictionary<int, int>();
+
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    if (resid.ContainsKey(colourIndex)) resid[colourIndex] += (x - y) * (x - y);
+                    else resid.Add(colourIndex, (x - y) * (x - y));
+                }
+            }
+
+            var rList = resid.ToList();
+            rList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+            rList.Reverse();
+
+            txt.Text = "";
+            String nl = Environment.NewLine;
+            for (int numRemoved = 0; numRemoved < 80; numRemoved++)
+            {
+                double xBar = 0, yBar = 0, count = 0;
+                foreach (UserRecord record in _records)
+                {
+                    // Seg only
+                    // Dataset 1 & 3 only
+                    // Each image has a different colour
+                    // Manual vs Efficient sorting
+
+                    if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+                    for (int i = 0; i < 40; i++)
+                    {
+                        // For each image in the set
+                        int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                        int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                        int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                        bool cont = false;
+                        for (int j = 0; j < numRemoved; j++)
+                        {
+                            if (colourIndex == rList[j].Key) cont = true;
+                        }
+                        if (cont) continue;
+
+                        xBar += x;
+                        yBar += y;
+                        count++;
+                    }
+                }
+                xBar /= count;
+                yBar /= count;
+
+                double numerator = 0, denLeft = 0, denRight = 0;
+                foreach (UserRecord record in _records)
+                {
+                    // Seg only
+                    // Dataset 1 & 3 only
+                    // Each image has a different colour
+                    // Manual vs Efficient sorting
+
+                    if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+                    for (int i = 0; i < 40; i++)
+                    {
+                        // For each image in the set
+                        int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                        int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                        int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                        bool cont = false;
+                        for (int j = 0; j < numRemoved; j++)
+                        {
+                            if (colourIndex == rList[j].Key) cont = true;
+                        }
+                        if (cont) continue;
+
+                        numerator += (x - xBar) * (y - yBar);
+                        denLeft += (x - xBar) * (x - xBar);
+                        denRight += (y - yBar) * (y - yBar);
+                    }
+                }
+
+                double r = numerator / (Math.Sqrt(denLeft) * Math.Sqrt(denRight));
+                txt.Text += numRemoved + ": " + r + nl;
+            }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            string[] canonicalNames = new[]
+            {
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+            };
+
+            int[] residuals = new int[80];
+            Dictionary<int, int> resid = new Dictionary<int, int>();
+
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.IntuitiveSorting, canonicalNames[i]);
+
+                    if (resid.ContainsKey(colourIndex)) resid[colourIndex] += (x - y) * (x - y);
+                    else resid.Add(colourIndex, (x - y) * (x - y));
+                }
+            }
+
+            var rList = resid.ToList();
+            rList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+            rList.Reverse();
+
+            txt.Text = "";
+            String nl = Environment.NewLine;
+            for (int numRemoved = 0; numRemoved < 80; numRemoved++)
+            {
+                double xBar = 0, yBar = 0, count = 0;
+                foreach (UserRecord record in _records)
+                {
+                    // Seg only
+                    // Dataset 1 & 3 only
+                    // Each image has a different colour
+                    // Manual vs Efficient sorting
+
+                    if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+                    for (int i = 0; i < 40; i++)
+                    {
+                        // For each image in the set
+                        int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                        int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                        int y = Array.IndexOf(record.IntuitiveSorting, canonicalNames[i]);
+
+                        bool cont = false;
+                        for (int j = 0; j < numRemoved; j++)
+                        {
+                            if (colourIndex == rList[j].Key) cont = true;
+                        }
+                        if (cont) continue;
+
+                        xBar += x;
+                        yBar += y;
+                        count++;
+                    }
+                }
+                xBar /= count;
+                yBar /= count;
+
+                double numerator = 0, denLeft = 0, denRight = 0;
+                foreach (UserRecord record in _records)
+                {
+                    // Seg only
+                    // Dataset 1 & 3 only
+                    // Each image has a different colour
+                    // Manual vs Efficient sorting
+
+                    if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+                    for (int i = 0; i < 40; i++)
+                    {
+                        // For each image in the set
+                        int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                        int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                        int y = Array.IndexOf(record.IntuitiveSorting, canonicalNames[i]);
+
+                        bool cont = false;
+                        for (int j = 0; j < numRemoved; j++)
+                        {
+                            if (colourIndex == rList[j].Key) cont = true;
+                        }
+                        if (cont) continue;
+
+                        numerator += (x - xBar) * (y - yBar);
+                        denLeft += (x - xBar) * (x - xBar);
+                        denRight += (y - yBar) * (y - yBar);
+                    }
+                }
+
+                double r = numerator / (Math.Sqrt(denLeft) * Math.Sqrt(denRight));
+                txt.Text += numRemoved + ": " + r + nl;
+            }
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            string[] canonicalNames = new[]
+            {
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+            };
+
+            int[] residuals = new int[80];
+            Dictionary<int, int> resid = new Dictionary<int, int>();
+
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    if (resid.ContainsKey(colourIndex)) resid[colourIndex] += (x - y) * (x - y);
+                    else resid.Add(colourIndex, (x - y) * (x - y));
+                }
+            }
+
+            var rList = resid.ToList();
+            rList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+            rList.Reverse();
+
+            DirectBitmap graph = new DirectBitmap(512, 512);
+            Graphics gfx = Graphics.FromImage(graph.Bitmap);
+
+            if (imColors == null) ChooseColours();
+
+            int baseX = 100, baseY = 30, gridDist = 10, pointRad = 4;
+            // Gridlines etc
+            gfx.FillRectangle(Brushes.White, 0, 0, baseX + 41 * gridDist, baseY + 41 * gridDist);
+            for (int i = 1; i <= 40; i++)
+            {
+                Color c = Color.FromArgb(240, 240, 240);
+                if (i % 5 == 0) c = Color.FromArgb(200, 200, 200);
+                gfx.DrawLine(new Pen(c), baseX + i * gridDist, baseY, baseX + i * gridDist, baseY + 40 * gridDist);
+                gfx.DrawLine(new Pen(c), baseX, baseY + i * gridDist, baseX + 40 * gridDist, baseY + i * gridDist);
+            }
+            gfx.DrawLine(Pens.Black, baseX, baseY, baseX + 40 * gridDist, baseY);
+            gfx.DrawLine(Pens.Black, baseX, baseY, baseX, baseY + 40 * gridDist);
+
+            Dictionary<Tuple<int, int>, int> points = new Dictionary<Tuple<int, int>, int>();
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    bool cont = false;
+                    int numRemoved = 0;
+                    try
+                    {
+                        numRemoved = int.Parse(txtNumRemoved.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (numRemoved < 0 || numRemoved > 79) continue;
+                    for (int j = 0; j < numRemoved; j++)
+                    {
+                        if (colourIndex == rList[j].Key) cont = true;
+                    }
+                    if (cont) continue;
+
+                    if (points.ContainsKey(Tuple.Create(x, y)))
+                    {
+                        points[Tuple.Create(x, y)]++;
+                    }
+                    else points.Add(Tuple.Create(x, y), 1);
+
+                    gfx.FillEllipse(new SolidBrush(imColors[colourIndex]),
+                        baseX + gridDist * (x + 1) - pointRad,
+                        baseY + gridDist * (y + 1) - pointRad,
+                        pointRad * 2, pointRad * 2);
+                }
+            }
+
+            // Enlarge spheres of larger radius
+            foreach (KeyValuePair<Tuple<int, int>, int> point in points)
+            {
+                if (point.Value == 1) continue;
+                int x = point.Key.Item1;
+                int y = point.Key.Item2;
+                int rad = pointRad + point.Value;
+
+                gfx.FillEllipse(new SolidBrush(graph.GetPixel(baseX + gridDist * (x + 1), baseY + gridDist * (y + 1))),
+                        baseX + gridDist * (x + 1) - rad,
+                        baseY + gridDist * (y + 1) - rad,
+                        rad * 2, rad * 2);
+            }
+
+            // Flip image in Y
+            for (int x = 0; x < graph.Width; x++)
+            {
+                for (int y = 0; y < graph.Height / 2; y++)
+                {
+                    Color tmp = graph.GetPixel(x, y);
+                    graph.SetPixel(x, y, graph.GetPixel(x, graph.Height - y - 1));
+                    graph.SetPixel(x, graph.Height - y - 1, tmp);
+                }
+            }
+
+            gfx.DrawString("Manual Rank", DefaultFont, Brushes.Black, baseX + 20 * gridDist - 30, graph.Height - (baseY - 10));
+            gfx.DrawString("Efficient Rank", DefaultFont, Brushes.Black, baseX - 80, graph.Height - (baseY + 20 * gridDist));
+
+            viewer.Image = graph.Bitmap;
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            string[] canonicalNames = new[]
+            {
+                "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+                "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"
+            };
+
+            int[] residuals = new int[80];
+            Dictionary<int, int> resid = new Dictionary<int, int>();
+
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    if (resid.ContainsKey(colourIndex)) resid[colourIndex] += (x - y) * (x - y);
+                    else resid.Add(colourIndex, (x - y) * (x - y));
+                }
+            }
+
+            var rList = resid.ToList();
+            rList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+            rList.Reverse();
+
+            DirectBitmap graph = new DirectBitmap(512, 512);
+            Graphics gfx = Graphics.FromImage(graph.Bitmap);
+
+            if (imColors == null) ChooseColours();
+
+            int baseX = 100, baseY = 30, gridDist = 10, pointRad = 4;
+            // Gridlines etc
+            gfx.FillRectangle(Brushes.White, 0, 0, baseX + 41 * gridDist, baseY + 41 * gridDist);
+            for (int i = 1; i <= 40; i++)
+            {
+                Color c = Color.FromArgb(240, 240, 240);
+                if (i % 5 == 0) c = Color.FromArgb(200, 200, 200);
+                gfx.DrawLine(new Pen(c), baseX + i * gridDist, baseY, baseX + i * gridDist, baseY + 40 * gridDist);
+                gfx.DrawLine(new Pen(c), baseX, baseY + i * gridDist, baseX + 40 * gridDist, baseY + i * gridDist);
+            }
+            gfx.DrawLine(Pens.Black, baseX, baseY, baseX + 40 * gridDist, baseY);
+            gfx.DrawLine(Pens.Black, baseX, baseY, baseX, baseY + 40 * gridDist);
+
+            Dictionary<Tuple<int, int>, int> points = new Dictionary<Tuple<int, int>, int>();
+            Dictionary<Tuple<int, int>, int> selected = new Dictionary<Tuple<int, int>, int>();
+            foreach (UserRecord record in _records)
+            {
+                // Seg only
+                // Dataset 1 & 3 only
+                // Each image has a different colour
+                // Manual vs Efficient sorting
+
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
+
+                for (int i = 0; i < 40; i++)
+                {
+                    // For each image in the set
+                    int colourIndex = i + (record.DatasetNum == 3 ? 40 : 0);
+
+                    int x = Array.IndexOf(record.ManualSorting, canonicalNames[i]);
+                    int y = Array.IndexOf(record.EfficientSorting, canonicalNames[i]);
+
+                    bool cont = false;
+                    int numRemoved = 0;
+                    try
+                    {
+                        numRemoved = int.Parse(txtNumRemoved.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (numRemoved < 0 || numRemoved > 79) continue;
+                    for (int j = 0; j < numRemoved; j++)
+                    {
+                        if (colourIndex == rList[j].Key) cont = true;
+                    }
+
+                    if (points.ContainsKey(Tuple.Create(x, y)))
+                    {
+                        points[Tuple.Create(x, y)]++;
+
+                        if (!graph.GetPixel(baseX + gridDist * (x + 1), baseY + gridDist * (y + 1)).Equals(Color.LightGray))
+                            continue;
+                    }
+                    else points.Add(Tuple.Create(x, y), 1);
+
+                    if (cont && selected.ContainsKey(Tuple.Create(x, y)))
+                    {
+                        selected[Tuple.Create(x, y)]++;
+                    }
+                    else if (cont) selected.Add(Tuple.Create(x, y), 1);
+
+                    if (cont)
+                        gfx.FillEllipse(new SolidBrush(imColors[colourIndex]),
+                            baseX + gridDist * (x + 1) - pointRad,
+                            baseY + gridDist * (y + 1) - pointRad,
+                            pointRad * 2, pointRad * 2);
+                    else
+                        gfx.FillEllipse(Brushes.LightGray, 
+                            baseX + gridDist * (x + 1) - pointRad,
+                            baseY + gridDist * (y + 1) - pointRad,
+                            pointRad * 2, pointRad * 2);
+                }
+            }
+
+            // Enlarge spheres of larger radius
+            foreach (KeyValuePair<Tuple<int, int>, int> point in points)
+            {
+                if (point.Value == 1) continue;
+                int x = point.Key.Item1;
+                int y = point.Key.Item2;
+                int rad = pointRad + point.Value;
+
+                if (selected.ContainsKey(Tuple.Create(x, y))) continue;
 
                 gfx.FillEllipse(new SolidBrush(graph.GetPixel(baseX + gridDist * (x + 1), baseY + gridDist * (y + 1))),
                         baseX + gridDist * (x + 1) - rad,

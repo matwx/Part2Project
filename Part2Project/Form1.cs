@@ -83,6 +83,8 @@ namespace Part2Project
 
         private void button1_Click(object sender, EventArgs e)
         {
+            dlgFolder.SelectedPath =
+                "D:\\Users\\Matt\\Dropbox\\1 - University\\1 - Work\\Part II\\Part II Project\\Deliverables\\Dissertation\\sections\\mainmatter";
             dlgFolder.ShowDialog();
             if (dlgFolder.SelectedPath == "" || viewer.Image == null || viewer2.Image == null) return;
 

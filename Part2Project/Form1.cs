@@ -173,7 +173,7 @@ namespace Part2Project
             sortedFeatureLists = new string[8][];
             for (int featureNum = 0; featureNum < 8; featureNum++)
             {
-                sortedFeatureLists[featureNum] = new string[160];
+                sortedFeatureLists[featureNum] = new string[80];
                 List<Pair> jthFeatureSortingList = new List<Pair>();
 
                 // Construct the list to sort based on the jth feature
@@ -212,7 +212,7 @@ namespace Part2Project
                 {
                     // We want to compute the correlation for the feature pair (i, j)
                     int sum_d_squared = 0;
-                    for (int r = 0; r < 160; r++)
+                    for (int r = 0; r < 80; r++)
                     {
                         // The iRank is 'r'
                         string searchFor = sortedFeatureLists[j][r];
@@ -222,7 +222,7 @@ namespace Part2Project
                         sum_d_squared += d * d;
                     }
 
-                    double rho = 1.0 - 6.0 * sum_d_squared / (160.0 * (160.0 * 160.0 - 1.0));
+                    double rho = 1.0 - 6.0 * sum_d_squared / (80.0 * (80.0 * 80.0 - 1.0));
 
                     toFile += featureNames[i] + " and " + featureNames[j] + "," + rho + Environment.NewLine;
                 }

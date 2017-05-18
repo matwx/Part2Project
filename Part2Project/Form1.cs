@@ -707,7 +707,7 @@ namespace Part2Project
 
             foreach (var record in _records)
             {
-                if (!record.SegFeaturesEnabled) continue;
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
                 count++;
                 // Normalise weights
                 double maxWeight = 0;
@@ -750,7 +750,7 @@ namespace Part2Project
 
             foreach (var record in _records)
             {
-                if (!record.SegFeaturesEnabled) continue;
+                if (!record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
                 count++;
                 // Normalise weights
                 double maxWeight = 0;
@@ -793,7 +793,7 @@ namespace Part2Project
 
             foreach (var record in _records)
             {
-                if (record.SegFeaturesEnabled) continue;
+                if (record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
                 count++;
                 // Normalise weights
                 double maxWeight = 0;
@@ -836,7 +836,7 @@ namespace Part2Project
 
             foreach (var record in _records)
             {
-                if (record.SegFeaturesEnabled) continue;
+                if (record.SegFeaturesEnabled || record.DatasetNum % 2 == 0) continue;
                 count++;
                 // Normalise weights
                 double maxWeight = 0;
